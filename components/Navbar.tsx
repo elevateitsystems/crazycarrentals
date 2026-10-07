@@ -15,10 +15,10 @@ import { navbarItems } from "@/lib/navbarItems"
 
 type BookNowButtonProps = {
   className?: string
-  href?: string
+  href: string
 }
 
-function BookNowButton({ className, href = "/book-now" }: BookNowButtonProps) {
+function BookNowButton({ className, href}: BookNowButtonProps) {
   return (
     <Link
       href={href}
@@ -81,7 +81,7 @@ function MobileMenu() {
         </nav>
 
         <div className="mt-6 px-4 sm:hidden">
-          <BookNowButton className="w-full justify-between" />
+          <BookNowButton href="/rent-a-car" className="w-full justify-between" />
         </div>
       </SheetContent>
     </Sheet>
@@ -91,22 +91,22 @@ function MobileMenu() {
 export default function Navbar() {
   return (
     <header className="w-full bg-secondary text-secondary-foreground">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:px-0">
         <Link href="/" className="justify-self-start">
           <Image
             src="/logo.avif"
             alt="TAS Drive Rentals"
-            width={72}
-            height={56}
+            width={200}
+            height={300}
             priority
-            className="h-12 w-auto sm:h-16"
+            className="h-16 w-auto sm:h-24"
           />
         </Link>
 
         <NavLinks />
 
         <div className="flex items-center gap-3 justify-self-end">
-          <BookNowButton className="hidden sm:inline-flex" />
+          <BookNowButton href="/rent-a-car" className="hidden sm:inline-flex" />
           <MobileMenu />
         </div>
       </div>

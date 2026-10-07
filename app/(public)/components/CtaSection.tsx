@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react";
 
 export default function CtaSection() {
   return (
-    <section className="relative isolate flex min-h-[420px] items-center justify-center overflow-hidden text-secondary-foreground sm:min-h-[480px] lg:min-h-[560px]">
+    <section className="relative isolate flex min-h-105 items-center justify-center overflow-hidden text-secondary-foreground sm:min-h-120 lg:min-h-140">
       {/* Background image */}
       <Image
         src="/cta-section-car.jpg"
@@ -17,7 +17,7 @@ export default function CtaSection() {
 
       {/* Dark overlay for text contrast (uses the secondary token) */}
       <div className="absolute inset-0 -z-10 bg-secondary/55" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-secondary/60 via-transparent to-secondary/20" />
+      <div className="absolute inset-0 -z-10 bg-linear-to-t from-secondary/60 via-transparent to-secondary/20" />
 
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 py-16 text-center sm:px-6 lg:py-24">
         {/* Badge */}

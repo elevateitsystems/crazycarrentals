@@ -74,7 +74,7 @@ export default function CarCard({ car }: { car: Car }) {
             View Details
           </Link>
           <Link
-            href={`/book?car=${car.slug}`}
+            href={`/book/${car.slug}`}
             className={cn(
               buttonVariants(),
               "h-9.5 flex-1 rounded-[14px] bg-primary text-xs font-semibold text-primary-foreground hover:bg-primary/90"

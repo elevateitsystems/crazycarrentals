@@ -72,7 +72,7 @@ function FooterColumn({
 export default function Footer() {
   return (
     <footer className="bg-secondary text-secondary-foreground">
-      <div className="mx-auto w-full max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl px-4 pt-12 sm:px-6 lg:px-0">
         <div className="grid gap-10 lg:grid-cols-[1.4fr_repeat(4,1fr)] lg:gap-8">
           {/* Brand */}
           <div className="max-w-xs">
@@ -80,9 +80,9 @@ export default function Footer() {
               <Image
                 src="/logo.avif"
                 alt="TasDrive Rentals"
-                width={83}
-                height={55}
-                className="h-14 w-auto rounded-md"
+                width={200}
+                height={300}
+                className="h-16 md:h-24 w-auto rounded-md"
               />
             </Link>
             <p className="mt-5 text-sm leading-relaxed text-secondary-foreground/60">

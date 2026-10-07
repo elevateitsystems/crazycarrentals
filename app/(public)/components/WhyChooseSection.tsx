@@ -26,8 +26,8 @@ const features = [
 
 export default function WhyChooseSection() {
   return (
-    <section className="bg-white px-6 pb-20 pt-[88px]">
-      <div className="mx-auto max-w-6xl">
+    <section className="bg-white pb-20 pt-22">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
         <div className="text-center">
           <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#86d72f]">
             Why TasDrive

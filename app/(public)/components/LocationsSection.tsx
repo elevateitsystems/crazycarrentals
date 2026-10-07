@@ -34,8 +34,8 @@ const locations = [
 
 export default function LocationsSection() {
   return (
-    <section className="bg-background px-6 pb-22 pt-25">
-      <div className="mx-auto max-w-278">
+    <section className="bg-background pb-22 pt-25">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
         <h2 className="text-[2.2rem] font-bold leading-[1.15] tracking-tight text-secondary">
           Wherever you&rsquo;re headed, start here.
         </h2>

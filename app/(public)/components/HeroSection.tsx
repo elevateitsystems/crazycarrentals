@@ -37,7 +37,7 @@ export default function HeroSection() {
       />
       <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/25 to-transparent" />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-20 md:px-10">
+      <div className="relative z-10 mx-auto w-full max-w-7xl py-20 px-4 sm:px-6 md:px-0">
         <span className="inline-flex items-center gap-2 rounded-full border border-[#9be33a]/40 bg-[#9be33a]/15 px-3 py-1 text-[11px] font-medium text-[#9be33a] backdrop-blur-sm">
           <span className="h-1.5 w-1.5 rounded-full bg-[#9be33a]" />
           Tasmania&apos;s Trusted Vehicle Partner

@@ -32,7 +32,7 @@ const trustPoints = [
 
 export default function TestimonialsSection() {
   return (
-    <section className="relative isolate overflow-hidden px-6 pb-21.5 pt-22">
+    <section className="relative isolate overflow-hidden pb-21.5 pt-22">
       <Image
         src="/testimonials-section-car.jpg"
         alt=""
@@ -41,7 +41,7 @@ export default function TestimonialsSection() {
       />
       <div className="absolute inset-0 -z-10 bg-black/80" />
 
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
         <div className="text-center">
           <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9cdc33]">
             Testimonials

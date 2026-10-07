@@ -24,8 +24,8 @@ const steps = [
 
 export default function AccidentProcessSection() {
   return (
-    <section className="bg-background px-6 py-22">
-      <div className="mx-auto max-w-6xl">
+    <section className="bg-background py-22">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
         <div className="text-center">
           <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9cdc33]">
             The Process

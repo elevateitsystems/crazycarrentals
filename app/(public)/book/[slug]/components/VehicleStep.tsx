@@ -1,0 +1,110 @@
+import Image from "next/image";
+import Link from "next/link";
+import type { Car } from "@/components/CarCard";
+import type { StepProps } from "@/lib/booking";
+import FormField from "./FormField";
+import StepCard from "./StepCard";
+
+export default function VehicleStep({ car, data, update, onNext }: StepProps & { car: Car }) {
+  const specs = [
+    { label: "Seats", value: car.seats },
+    { label: "Trans.", value: car.transmission === "Automatic" ? "Auto" : car.transmission },
+    { label: "Fuel", value: car.fuel },
+  ];
+
+  return (
+    <StepCard
+      title="Confirm your vehicle"
+      description="Review your selected vehicle and set your rental dates."
+      backHref="/fleet"
+      backLabel="Back to Fleet"
+      onSubmit={onNext}
+    >
+      <div className="grid overflow-hidden rounded-xl border-2 border-primary bg-card sm:grid-cols-[1fr_2fr]">
+        <div className="relative h-44 sm:h-auto">
+          <Image src={car.image} alt={car.name} fill sizes="240px" className="object-cover" />
+        </div>
+        <div className="p-5">
+          <span className="inline-block rounded bg-primary/15 px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-primary">
+            Selected vehicle
+          </span>
+          <h3 className="mt-2.5 text-lg font-bold text-foreground">{car.name}</h3>
+
+          <dl className="mt-3 flex gap-5">
+            {specs.map(({ label, value }) => (
+              <div key={label}>
+                <dt className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</dt>
+                <dd className="mt-0.5 text-[11px] font-semibold text-foreground">{value}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <p className="mt-4 text-[11px] text-muted-foreground">
+            From <span className="text-2xl font-bold text-foreground">${car.price}</span>/day
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-5 rounded-xl border border-border bg-muted/60 p-5">
+        <h3 className="text-sm font-semibold text-foreground">Rental details</h3>
+
+        <div className="mt-4 grid gap-x-3 gap-y-4 sm:grid-cols-2">
+          <FormField
+            id="pickupLocation"
+            label="Pickup location"
+            required
+            value={data.pickupLocation}
+            onChange={(e) => update({ pickupLocation: e.target.value })}
+          />
+          <FormField
+            id="returnLocation"
+            label="Return location"
+            placeholder="Same as pickup"
+            value={data.returnLocation}
+            onChange={(e) => update({ returnLocation: e.target.value })}
+          />
+          <FormField
+            id="pickupDate"
+            label="Pickup date"
+            type="date"
+            required
+            value={data.pickupDate}
+            onChange={(e) => update({ pickupDate: e.target.value })}
+          />
+          <FormField
+            id="pickupTime"
+            label="Pickup time"
+            type="time"
+            required
+            value={data.pickupTime}
+            onChange={(e) => update({ pickupTime: e.target.value })}
+          />
+          <FormField
+            id="returnDate"
+            label="Return date"
+            type="date"
+            required
+            min={data.pickupDate}
+            value={data.returnDate}
+            onChange={(e) => update({ returnDate: e.target.value })}
+          />
+          <FormField
+            id="returnTime"
+            label="Return time"
+            type="time"
+            required
+            value={data.returnTime}
+            onChange={(e) => update({ returnTime: e.target.value })}
+          />
+        </div>
+      </div>
+
+      <Link
+        href="/fleet"
+        className="mt-4 inline-block text-[11px] text-muted-foreground transition hover:text-foreground"
+      >
+        ← Change vehicle
+      </Link>
+    </StepCard>
+  );
+}

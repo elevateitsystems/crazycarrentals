@@ -1,18 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { SlidersHorizontal } from "lucide-react";
+import CarCard from "@/components/CarCard";
+import { cars } from "@/lib/cars";
 import { cn } from "@/lib/utils";
-import CarCard, { Car } from "@/components/CarCard";
+import { SlidersHorizontal } from "lucide-react";
+import { useMemo, useState } from "react";
  
-export const cars: Car[] = [
-  { slug: "suzuki-baleno", name: "Suzuki Baleno", category: "Compact Hatch", type: "Compact Cars", image: "/car-1.jpg", price: 59, seats: 5, doors: 5, transmission: "Automatic", fuel: "Petrol" },
-  { slug: "mg3", name: "MG3", category: "Compact Hatch", type: "Compact Cars", image: "/car-1.jpg", price: 55, seats: 5, doors: 5, transmission: "Automatic", fuel: "Petrol" },
-  { slug: "toyota-corolla-hatch", name: "Toyota Corolla Hatch", category: "Small Car", type: "Hatchback", image: "/car-1.jpg", price: 69, seats: 5, doors: 5, transmission: "Automatic", fuel: "Hybrid" },
-  { slug: "toyota-corolla-sedan", name: "Toyota Corolla Sedan", category: "Sedan", type: "Sedan", image: "/car-2.jpg", price: 74, seats: 5, doors: 4, transmission: "Automatic", fuel: "Hybrid" },
-  { slug: "hyundai-venue", name: "Hyundai Venue", category: "Small SUV", type: "SUVs", image: "/car-3.jpg", price: 72, seats: 5, doors: 5, transmission: "Manual", fuel: "Petrol" },
-  { slug: "kia-stonic", name: "Kia Stonic", category: "Small SUV", type: "SUVs", image: "/car-3.jpg", price: 74, seats: 5, doors: 5, transmission: "Automatic", fuel: "Petrol" },
-];
 
 const vehicleTypes = ["All", "Compact Cars", "Hatchback", "Sedan", "SUVs", "Premium SUV", "Commercial"];
 const transmissions = [
@@ -85,10 +78,10 @@ export default function FleetListing() {
   }, [type, transmission, maxPrice, sort]);
 
   return (
-    <section className="bg-background px-6 py-12 md:py-16">
-      <div className="mx-auto grid max-w-280 gap-6 lg:grid-cols-[170px_1fr] lg:items-start">
+    <section className="bg-background py-12 md:py-16">
+      <div className="mx-auto grid max-w-7xl px-4 sm:px-6 md:px-0 gap-6 lg:grid-cols-[170px_1fr] lg:items-start">
         {/* Filters */}
-        <aside className="rounded-xl border border-border bg-card p-4 shadow-sm lg:sticky lg:top-24">
+        <aside className="flex-1 rounded-xl border border-border bg-card p-4 shadow-sm lg:sticky lg:top-24">
           <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
             <SlidersHorizontal className="size-3.5 text-primary" />
             Filters

@@ -34,8 +34,8 @@ export default function SearchSection() {
   };
 
   return (
-    <section className="bg-[#f5f5f1] px-6 pb-14 pt-16">
-      <div className="mx-auto max-w-6xl">
+    <section className="bg-[#f5f5f1] pb-14 pt-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
         <div className="text-center">
           <h2 className="text-[2.4rem] font-bold leading-[1.15] tracking-tight text-neutral-900">
             Ready to hit the road?
@@ -45,8 +45,8 @@ export default function SearchSection() {
           </p>
         </div>
 
-        <Card className="mt-[34px] gap-0 rounded-2xl border-0 py-0 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-          <CardContent className="p-[26px]">
+        <Card className="mt-8.5 gap-0 rounded-2xl border-0 py-0 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+          <CardContent className="p-6.5">
             <form onSubmit={handleSubmit}>
               <div className="flex items-center gap-4">
                 <Switch
