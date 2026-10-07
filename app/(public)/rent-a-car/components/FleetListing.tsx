@@ -79,9 +79,9 @@ export default function FleetListing() {
 
   return (
     <section className="bg-background py-12 md:py-16">
-      <div className="mx-auto grid max-w-7xl px-4 sm:px-6 md:px-0 gap-6 lg:grid-cols-[170px_1fr] lg:items-start">
+      <div className="mx-auto flex flex-col sm:flex-row max-w-7xl px-4 sm:px-6 md:px-0 gap-6 lg:grid-cols-[170px_1fr] lg:items-start">
         {/* Filters */}
-        <aside className="flex-1 rounded-xl border border-border bg-card p-4 shadow-sm lg:sticky lg:top-24">
+        <aside className="w-full sm:w-1/4 rounded-xl border border-border bg-card p-4 shadow-sm lg:sticky lg:top-24">
           <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
             <SlidersHorizontal className="size-3.5 text-primary" />
             Filters
@@ -134,7 +134,7 @@ export default function FleetListing() {
         </aside>
 
         {/* Results */}
-        <div>
+        <div className="flex-1">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-sm text-muted-foreground">
               <span className="font-semibold text-foreground">{visibleCars.length}</span>{" "}

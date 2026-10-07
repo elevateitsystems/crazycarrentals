@@ -32,6 +32,18 @@ export default function OrderSummary({ car, pricing }: { car: Car; pricing: Pric
               <dd className="font-medium text-foreground">${extra.total}</dd>
             </div>
           ))}
+          {pricing.shuttleFee > 0 && (
+            <div className="flex justify-between text-muted-foreground">
+              <dt>Airport Shuttle</dt>
+              <dd className="font-medium text-foreground">${pricing.shuttleFee}</dd>
+            </div>
+          )}
+          {pricing.discount > 0 && (
+            <div className="flex justify-between text-primary">
+              <dt>Pay Now Discount</dt>
+              <dd className="font-medium">- ${pricing.discount}</dd>
+            </div>
+          )}
           <div className="flex justify-between text-muted-foreground">
             <dt>GST included</dt>
             <dd>—</dd>

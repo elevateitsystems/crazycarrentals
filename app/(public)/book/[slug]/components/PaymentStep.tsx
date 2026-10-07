@@ -1,5 +1,6 @@
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Info } from "lucide-react";
 import type { StepProps } from "@/lib/booking";
+import { adminSettings } from "@/lib/settings";
 import { cn } from "@/lib/utils";
 import FormField from "./FormField";
 import StepCard from "./StepCard";
@@ -15,11 +16,41 @@ export default function PaymentStep({ total, data, update, onNext, onBack }: Ste
   return (
     <StepCard
       title="Payment details"
-      description="Your card will be charged the total amount shown. A security bond is held separately at pickup."
-      nextLabel={`Confirm & Pay $${total}`}
+      description="Card details are securely tokenized via Stripe and never stored on our servers. A security bond will be held separately at pickup."
+      nextLabel={data.paymentTiming === "payNow" ? `Confirm & Pay $${total}` : "Reserve Now, Pay Later"}
       onSubmit={onNext}
       onBack={onBack}
     >
+      <div className="mb-6 grid gap-3 sm:grid-cols-2">
+        <button
+          type="button"
+          onClick={() => update({ paymentTiming: "payNow" })}
+          className={cn(
+            "flex flex-col items-start gap-1 rounded-xl border p-4 text-left transition",
+            data.paymentTiming === "payNow" ? "border-primary bg-primary/5" : "border-border hover:bg-muted"
+          )}
+        >
+          <div className="flex w-full justify-between items-center">
+            <span className="font-semibold text-foreground text-sm">Pay Now</span>
+            {data.paymentTiming === "payNow" && <span className="size-2 rounded-full bg-primary" />}
+          </div>
+          <span className="text-xs text-muted-foreground">Save {adminSettings.payNowDiscountPercent}% instantly.</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => update({ paymentTiming: "payDesk" })}
+          className={cn(
+            "flex flex-col items-start gap-1 rounded-xl border p-4 text-left transition",
+            data.paymentTiming === "payDesk" ? "border-foreground bg-foreground/5" : "border-border hover:bg-muted"
+          )}
+        >
+          <div className="flex w-full justify-between items-center">
+            <span className="font-semibold text-foreground text-sm">Pay at Desk</span>
+            {data.paymentTiming === "payDesk" && <span className="size-2 rounded-full bg-foreground" />}
+          </div>
+          <span className="text-xs text-muted-foreground">Normal price. Card required for guarantee.</span>
+        </button>
+      </div>
       <div className="flex gap-2">
         {methods.map(({ id, label }) => {
           const active = data.paymentMethod === id;

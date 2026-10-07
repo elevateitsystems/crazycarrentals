@@ -1,5 +1,6 @@
 import { Check, ChevronDown } from "lucide-react";
 import type { StepProps } from "@/lib/booking";
+import { adminSettings } from "@/lib/settings";
 import { cn } from "@/lib/utils";
 import FormField, { inputStyles } from "./FormField";
 import StepCard from "./StepCard";
@@ -31,6 +32,28 @@ export default function DriverStep({ data, update, onNext, onBack }: StepProps) 
           value={data.dob}
           onChange={(e) => update({ dob: e.target.value })}
         />
+        <FormField id="driverAge" label="Driver age">
+          <div className="relative">
+            <select
+              id="driverAge"
+              name="driverAge"
+              required
+              value={data.driverAge}
+              onChange={(e) => update({ driverAge: e.target.value })}
+              className={cn(
+                inputStyles,
+                "w-full appearance-none border outline-none text-foreground"
+              )}
+            >
+              {adminSettings.ageOptions.map((age) => (
+                <option key={age} value={age}>
+                  {age}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-3.5 -translate-y-1/2 text-foreground" />
+          </div>
+        </FormField>
         <FormField id="licenceState" label="Licence state">
           <div className="relative">
             <select

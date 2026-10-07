@@ -38,6 +38,9 @@ export type BookingData = {
   suburb: string;
   state: string;
   postcode: string;
+  driverAge: string;
+  airportShuttle: boolean;
+  paymentTiming: "payNow" | "payDesk";
 };
 
 export const initialBooking: BookingData = {
@@ -65,6 +68,9 @@ export const initialBooking: BookingData = {
   suburb: "",
   state: "",
   postcode: "",
+  driverAge: "25+",
+  airportShuttle: false,
+  paymentTiming: "payNow",
 };
 
 export type StepProps = {
@@ -73,6 +79,8 @@ export type StepProps = {
   onNext: () => void;
   onBack: () => void;
 };
+
+import { adminSettings } from "./settings";
 
 export function getPricing(car: Car, data: BookingData) {
   let days = DEFAULT_DAYS;
@@ -84,8 +92,22 @@ export function getPricing(car: Car, data: BookingData) {
   const selected = extrasList
     .filter((e) => data.extras.includes(e.id))
     .map((e) => ({ ...e, total: e.pricePerDay * days }));
-  const total = base + selected.reduce((sum, e) => sum + e.total, 0);
-  return { days, base, selected, total };
+  
+  let total = base + selected.reduce((sum, e) => sum + e.total, 0);
+  
+  let shuttleFee = 0;
+  if (data.airportShuttle) {
+    shuttleFee = adminSettings.shuttleFee;
+    total += shuttleFee;
+  }
+
+  let discount = 0;
+  if (data.paymentTiming === "payNow") {
+    discount = Number(((total * adminSettings.payNowDiscountPercent) / 100).toFixed(2));
+    total -= discount;
+  }
+
+  return { days, base, selected, shuttleFee, discount, total };
 }
 
 export type Pricing = ReturnType<typeof getPricing>;

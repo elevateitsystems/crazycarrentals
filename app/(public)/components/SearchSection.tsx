@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { Search, ChevronDown } from "lucide-react";
+import { adminSettings } from "@/lib/settings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ const fields = [
   { id: "pickupTime", label: "Pickup Time", type: "time" },
   { id: "returnDate", label: "Return Date", type: "date" },
   { id: "returnTime", label: "Return Time", type: "time" },
+  { id: "age", label: "Age", type: "number", placeholder: "e.g. 25", className: "text-center" },
 ];
 
 const labelStyles = "text-[11px] font-medium uppercase leading-4 tracking-wide text-neutral-500";
@@ -27,6 +29,8 @@ const pickerStyles =
 
 export default function SearchSection() {
   const [sameLocation, setSameLocation] = useState(true);
+  const [airportShuttle, setAirportShuttle] = useState(false);
+  const [driverAge, setDriverAge] = useState(adminSettings.ageOptions[1]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,21 +50,35 @@ export default function SearchSection() {
         </div>
 
         <Card className="mt-8.5 gap-0 rounded-2xl border-0 py-0 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-          <CardContent className="p-6.5">
+          <CardContent className="p-4">
             <form onSubmit={handleSubmit}>
-              <div className="flex items-center gap-4">
-                <Switch
-                  id="sameLocation"
-                  checked={sameLocation}
-                  onCheckedChange={setSameLocation}
-                  className="origin-left scale-[1.2] data-[state=checked]:bg-[#86d72f]"
-                />
-                <Label htmlFor="sameLocation" className="text-[12.5px] font-medium">
-                  Return to same location
-                </Label>
+              <div className="flex flex-wrap items-center gap-6">
+                <div className="flex items-center gap-4">
+                  <Switch
+                    id="sameLocation"
+                    checked={sameLocation}
+                    onCheckedChange={setSameLocation}
+                    className="origin-left scale-[1.2] data-[state=checked]:bg-[#86d72f]"
+                  />
+                  <Label htmlFor="sameLocation" className="text-[12.5px] font-medium">
+                    Return to same location
+                  </Label>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <Switch
+                    id="airportShuttle"
+                    checked={airportShuttle}
+                    onCheckedChange={setAirportShuttle}
+                    className="origin-left scale-[1.2] data-[state=checked]:bg-[#86d72f]"
+                  />
+                  <Label htmlFor="airportShuttle" className="text-[12.5px] font-medium">
+                    Airport Shuttle (+${adminSettings.shuttleFee})
+                  </Label>
+                </div>
               </div>
 
-              <div className="mt-[18px] grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+             <div className="mt-4.5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                 {fields.map(({ id, label, type, placeholder, className }) => (
                   <div key={id} className="flex flex-col gap-1.5">
                     <Label htmlFor={id} className={labelStyles}>
@@ -77,27 +95,13 @@ export default function SearchSection() {
                     />
                   </div>
                 ))}
+                
               </div>
-
-              {!sameLocation && (
-                <div className="mt-3 flex max-w-xs flex-col gap-1.5">
-                  <Label htmlFor="returnLocation" className={labelStyles}>
-                    Return Location
-                  </Label>
-                  <Input
-                    id="returnLocation"
-                    name="returnLocation"
-                    placeholder="e.g. Launceston Airport"
-                    required
-                    className={`${inputStyles} text-center`}
-                  />
-                </div>
-              )}
 
               <div className="mt-5 flex justify-end">
                 <Button
                   type="submit"
-                  className="h-[46px] rounded-xl bg-[#86d72f] px-8 text-sm font-semibold text-neutral-900 hover:bg-[#78c428] has-[>svg]:px-8"
+                  className="h-11.5 rounded-xl bg-[#86d72f] px-8 text-sm font-semibold text-neutral-900 hover:bg-[#78c428] has-[>svg]:px-8"
                 >
                   Search Cars
                   <Search />
