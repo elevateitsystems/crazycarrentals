@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Search, ChevronDown } from "lucide-react";
-import { adminSettings } from "@/lib/settings";
+import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 
 const fields = [
   { id: "pickupLocation", label: "Pickup Location", type: "text", placeholder: "e.g. Hobart Airport", className: "text-center" },
+  { id: "returnLocation", label: "Return Location", type: "text", placeholder: "e.g. Hobart CBD", className: "text-center" },
   { id: "pickupDate", label: "Pickup Date", type: "date" },
   { id: "pickupTime", label: "Pickup Time", type: "time" },
   { id: "returnDate", label: "Return Date", type: "date" },
@@ -30,11 +31,18 @@ const pickerStyles =
 export default function SearchSection() {
   const [sameLocation, setSameLocation] = useState(true);
   const [airportShuttle, setAirportShuttle] = useState(false);
-  const [driverAge, setDriverAge] = useState(adminSettings.ageOptions[1]);
+  const router = useRouter();
 
+  // Hands the trip details to /rent-a-car, which queries the backend's availability search.
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: handle search
+    const form = new FormData(e.currentTarget);
+    const params = new URLSearchParams();
+    for (const [key, value] of form.entries()) {
+      if (typeof value === "string" && value) params.set(key, value);
+    }
+    if (airportShuttle) params.set("airportShuttle", "1");
+    router.push(`/rent-a-car?${params}`);
   };
 
   return (
@@ -73,13 +81,13 @@ export default function SearchSection() {
                     className="origin-left scale-[1.2] data-[state=checked]:bg-[#86d72f]"
                   />
                   <Label htmlFor="airportShuttle" className="text-[12.5px] font-medium">
-                    Airport Shuttle (+${adminSettings.shuttleFee})
+                    Airport Shuttle
                   </Label>
                 </div>
               </div>
 
              <div className="mt-4.5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-                {fields.map(({ id, label, type, placeholder, className }) => (
+                {fields.filter((f) => f.id !== "returnLocation" || !sameLocation).map(({ id, label, type, placeholder, className }) => (
                   <div key={id} className="flex flex-col gap-1.5">
                     <Label htmlFor={id} className={labelStyles}>
                       {label}

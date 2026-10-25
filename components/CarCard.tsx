@@ -1,4 +1,4 @@
-import Image from "next/image";
+import CarImage from "@/components/CarImage";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 export type Car = {
-  slug: string;
+  id: string;
   name: string;
   category: string;
   type: string;
@@ -18,7 +18,8 @@ export type Car = {
   fuel: string;
 };
 
-export default function CarCard({ car }: { car: Car }) {
+export default function CarCard({ car, trip }: { car: Car; trip?: Record<string, string> }) {
+  const bookHref = trip ? `/book/${car.id}?${new URLSearchParams(trip)}` : `/book/${car.id}`;
   const specs: [string, string | number][] = [
     ["Seats", car.seats],
     ["Doors", car.doors],
@@ -29,13 +30,7 @@ export default function CarCard({ car }: { car: Car }) {
   return (
     <Card className="gap-0 overflow-hidden rounded-2xl border-border bg-card py-0 shadow-sm">
       <div className="relative h-67.25 bg-muted">
-        <Image
-          src={car.image}
-          alt={car.name}
-          fill
-          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-          className="object-cover"
-        />
+        <CarImage src={car.image} alt={car.name} />
       </div>
 
       <CardContent className="px-5 py-4.25">
@@ -65,7 +60,7 @@ export default function CarCard({ car }: { car: Car }) {
 
         <div className="mt-5 flex gap-2">
           <Link
-            href={`/fleet/${car.slug}`}
+            href={`/fleet/${car.id}`}
             className={cn(
               buttonVariants({ variant: "outline" }),
               "h-9.5 flex-1 rounded-[14px] border-border bg-card text-xs font-medium text-card-foreground shadow-none hover:bg-muted"
@@ -74,7 +69,7 @@ export default function CarCard({ car }: { car: Car }) {
             View Details
           </Link>
           <Link
-            href={`/book/${car.slug}`}
+            href={bookHref}
             className={cn(
               buttonVariants(),
               "h-9.5 flex-1 rounded-[14px] bg-primary text-xs font-semibold text-primary-foreground hover:bg-primary/90"

@@ -5,8 +5,8 @@ import { faqCategories, faqs, type FaqCategory } from "@/lib/faqs";
 import FaqTabs from "./FaqTabs";
 import FaqItem from "./FaqItem";
 
-export default function FaqSection() {
-  const [category, setCategory] = useState<FaqCategory>(faqCategories[0]);
+export default function FaqSection({ initialCategory = faqCategories[0] }: { initialCategory?: FaqCategory }) {
+  const [category, setCategory] = useState<FaqCategory>(initialCategory);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const handleCategory = (next: FaqCategory) => {

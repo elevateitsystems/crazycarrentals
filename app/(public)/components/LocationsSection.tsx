@@ -77,7 +77,7 @@ export default function LocationsSection() {
         </div>
 
         <Link
-          href="/rent"
+          href="/rent-a-car"
           className={cn(
             buttonVariants(),
             "mt-7 h-10.5 gap-2 rounded-[10px] bg-primary pl-5.5 pr-2 text-[13.5px] font-medium text-secondary shadow-[0_6px_16px_rgba(156,220,51,0.45)] hover:bg-primary"

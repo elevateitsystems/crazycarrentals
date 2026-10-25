@@ -12,6 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { navbarItems } from "@/lib/navbarItems"
+import AccountMenu from "@/components/AccountMenu"
 
 type BookNowButtonProps = {
   className?: string
@@ -80,6 +81,10 @@ function MobileMenu() {
           ))}
         </nav>
 
+        <div className="mt-4 px-7">
+          <AccountMenu />
+        </div>
+
         <div className="mt-6 px-4 sm:hidden">
           <BookNowButton href="/rent-a-car" className="w-full justify-between" />
         </div>
@@ -106,6 +111,7 @@ export default function Navbar() {
         <NavLinks />
 
         <div className="flex items-center gap-3 justify-self-end">
+          <AccountMenu className="hidden lg:flex" />
           <BookNowButton href="/rent-a-car" className="hidden sm:inline-flex" />
           <MobileMenu />
         </div>

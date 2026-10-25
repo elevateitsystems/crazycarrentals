@@ -9,7 +9,7 @@ const services = [
     title: "Rent a Car",
     description: "Flexible vehicles for everyday travel, holidays and business.",
     ctaLabel: "Find A Car",
-    href: "/rent",
+    href: "/rent-a-car",
     button: "bg-[#9be33a] text-neutral-900 shadow-[0_6px_16px_rgba(155,227,58,0.45)]",
     arrow: "bg-neutral-900 text-[#9be33a]",
   },

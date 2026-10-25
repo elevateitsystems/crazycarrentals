@@ -25,14 +25,13 @@ const companyLinks: FooterLink[] = [
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
   { label: "Locations", href: "/locations" },
-  { label: "Careers", href: "/careers" },
 ];
 
 const supportLinks: FooterLink[] = [
-  { label: "Help", href: "/help" },
-  { label: "Terms", href: "/terms" },
-  { label: "Privacy", href: "/privacy" },
+  { label: "Help & FAQs", href: "/faqs" },
   { label: "Contact", href: "/contact" },
+  { label: "My Bookings", href: "/my-bookings" },
+  { label: "Sign in", href: "/auth/signin" },
 ];
 
 const socials = [

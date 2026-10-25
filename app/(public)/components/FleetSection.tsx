@@ -1,21 +1,10 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import CarCard, { Car } from "@/components/CarCard";
-import { cars } from "@/lib/cars";
-
-const filters = ["All", "Compact Cars", "Sedans", "SUVs", "Commercial", "Electric"];
-
-
+import FleetBrowser from "@/components/FleetBrowser";
 
 export default function FleetSection() {
-  const [active, setActive] = useState("All");
-  const visibleCars = active === "All" ? cars : cars.filter((car) => car.type === active);
-
   return (
     <section className="bg-card py-27.5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
@@ -41,37 +30,7 @@ export default function FleetSection() {
           </Link>
         </div>
 
-        <div className="mt-8 flex flex-wrap gap-2">
-          {filters.map((filter) => (
-            <Button
-              key={filter}
-              type="button"
-              variant="outline"
-              aria-pressed={active === filter}
-              onClick={() => setActive(filter)}
-              className={cn(
-                "h-9.5 rounded-[10px] px-4 text-xs font-medium text-foreground shadow-none",
-                active === filter
-                  ? "border-primary bg-primary text-primary-foreground hover:bg-primary"
-                  : "border-border bg-card hover:bg-muted"
-              )}
-            >
-              {filter}
-            </Button>
-          ))}
-        </div>
-
-        {visibleCars.length === 0 && (
-          <p className="mt-11.25 text-sm text-muted-foreground">
-            No vehicles in this category yet.
-          </p>
-        )}
-
-        <div className="mt-11.25 grid gap-x-4 gap-y-5 md:grid-cols-2 lg:grid-cols-3">
-          {visibleCars.map((car) => (
-            <CarCard key={car.slug} car={car} />
-          ))}
-        </div>
+        <FleetBrowser limit={12} className="mt-8" />
       </div>
     </section>
   );

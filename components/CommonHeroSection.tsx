@@ -8,7 +8,7 @@ type HeroSectionProp = {
   title: string;
   bedgeText: string;
   description: string;
-  isCtaOpen?: Boolean;
+  isCtaOpen?: boolean;
 };
 
 export default function CommonHeroSection({
@@ -52,7 +52,7 @@ export default function CommonHeroSection({
         {isCtaOpen && (
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
-              href="#"
+              href="/accident-replacement/eligibility"
               className="group inline-flex h-11 items-center gap-3 rounded-lg bg-primary py-1.5 pl-4 pr-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-secondary"
             >
               Check Eligibility
@@ -62,7 +62,7 @@ export default function CommonHeroSection({
             </Link>
 
             <Link
-              href="#"
+              href="/accident-replacement/how-it-works"
               className="group inline-flex h-11 items-center gap-3 rounded-lg bg-secondary-foreground py-1.5 pl-4 pr-1.5 text-sm font-medium text-secondary transition-colors hover:bg-secondary-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-secondary"
             >
               How It Works
