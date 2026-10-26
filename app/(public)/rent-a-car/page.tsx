@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import CommonHeroSection from "@/components/CommonHeroSection";
 import SearchSection from "../components/SearchSection";
 import FleetListing from "./components/FleetListing";
@@ -15,7 +16,9 @@ export default function RentACarPage() {
       />
       <SearchSection />
 
-      <FleetListing />
+      <Suspense>
+        <FleetListing />
+      </Suspense>
     </>
   );
 }

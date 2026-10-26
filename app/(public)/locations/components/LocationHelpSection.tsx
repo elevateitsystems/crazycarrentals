@@ -27,7 +27,7 @@ export default function LocationHelpSection() {
             Call Us
           </a>
           <Link
-            href="#"
+            href="/contact"
             className={cn(
               buttonVariants({ variant: "outline" }),
               "h-11 rounded-lg border-background/20 bg-transparent px-5 text-[12px] font-medium text-background shadow-none hover:bg-background/10 hover:text-background"
