@@ -1,6 +1,14 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, BadgeCheck, CalendarCheck, MapPin } from "lucide-react";
 
+const highlights = [
+  { icon: CalendarCheck, text: "Free cancellation up to 24 hours before pickup" },
+  { icon: BadgeCheck, text: "Pay now and save, or pay at the desk" },
+  { icon: MapPin, text: "Local Tasmanian team, pickups across the state" },
+];
+
+/** Shared layout for sign-in, register and password reset: brand panel on large screens, form beside it. */
 export default function AuthCard({
   title,
   description,
@@ -13,20 +21,51 @@ export default function AuthCard({
   footer?: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-10">
-      <Card className="w-full max-w-md rounded-2xl border-border p-2 shadow-lg">
-        <CardHeader className="pb-4 text-center">
-          <Link href="/" className="mb-2 text-xs font-medium text-muted-foreground hover:text-foreground">
-            ← Back to website
+    <div className="grid min-h-screen bg-background lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+      {/* Brand panel */}
+      <aside className="relative hidden overflow-hidden bg-secondary text-secondary-foreground lg:block">
+        <Image src="/generic-hero.jpg" alt="" fill priority sizes="50vw" className="object-cover opacity-45" />
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-secondary via-secondary/70 to-secondary/30" />
+        <div className="relative flex h-full flex-col justify-between p-12 xl:p-16">
+          <Link href="/" aria-label="TasDrive Rentals home" className="w-fit">
+            <Image src="/logo.avif" alt="TasDrive Rentals" width={200} height={300} priority className="h-20 w-auto rounded-lg" />
           </Link>
-          <CardTitle className="text-2xl font-bold tracking-tight">{title}</CardTitle>
-          <CardDescription className="mt-2 text-sm text-muted-foreground">{description}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {children}
-          {footer && <div className="mt-6 space-y-2 border-t border-border pt-5 text-center text-sm text-muted-foreground">{footer}</div>}
-        </CardContent>
-      </Card>
+          <div>
+            <h2 className="max-w-md text-4xl font-bold leading-tight tracking-tight xl:text-[2.6rem]">
+              Your journey around Tasmania starts here.
+            </h2>
+            <ul className="mt-8 space-y-4">
+              {highlights.map(({ icon: Icon, text }) => (
+                <li key={text} className="flex items-center gap-3 text-[15px] text-secondary-foreground/85">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+                    <Icon className="size-4" aria-hidden />
+                  </span>
+                  {text}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      {/* Form */}
+      <main className="flex flex-col px-5 py-8 sm:px-10">
+        <div className="flex items-center justify-between">
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+            <ArrowLeft className="size-4" aria-hidden /> Back to website
+          </Link>
+          <Link href="/" aria-label="TasDrive Rentals home" className="lg:hidden">
+            <Image src="/logo.avif" alt="TasDrive Rentals" width={200} height={300} className="h-12 w-auto rounded-md" />
+          </Link>
+        </div>
+
+        <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center py-10">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-[2rem]">{title}</h1>
+          <p className="mt-2.5 text-[15px] leading-relaxed text-muted-foreground">{description}</p>
+          <div className="mt-8">{children}</div>
+          {footer && <div className="mt-8 space-y-2.5 border-t border-border pt-6 text-center text-sm text-muted-foreground">{footer}</div>}
+        </div>
+      </main>
     </div>
   );
 }

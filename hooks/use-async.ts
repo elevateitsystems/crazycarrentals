@@ -30,5 +30,7 @@ export function useAsync<T>(fetcher: () => Promise<T>, key: string = "") {
   const reload = useCallback(() => setTick((t) => t + 1), []);
   // Loading until the response for the *current* request has arrived; `data` is from the latest settled request.
   const loading = settled?.requestId !== requestId;
-  return { data: settled?.data ?? null, error: loading ? null : settled?.error ?? null, loading, reload };
+  const data = settled?.data ?? null;
+  // `refreshing`: a re-fetch (reload, new filters) while earlier data is still available to show.
+  return { data, error: loading ? null : settled?.error ?? null, loading, refreshing: loading && data !== null, reload };
 }

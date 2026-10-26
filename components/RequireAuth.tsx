@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import BrandLoader from "@/components/BrandLoader";
 import { useAuth } from "@/lib/auth";
 
 /** Client-side guard for customer pages. Admin pages use AdminGuard. The backend still enforces authorisation. */
@@ -15,11 +16,7 @@ export default function RequireAuth({ children }: { children: React.ReactNode })
   }, [status, router, pathname]);
 
   if (status !== "authenticated") {
-    return (
-      <div className="flex min-h-[40vh] items-center justify-center text-sm text-muted-foreground">
-        Checking your session…
-      </div>
-    );
+    return <BrandLoader label={status === "loading" ? "Checking your session…" : "Redirecting to sign in…"} />;
   }
   return <>{children}</>;
 }

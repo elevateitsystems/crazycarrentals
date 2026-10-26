@@ -4,7 +4,8 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Check, X } from "lucide-react";
-import { Notice, Spinner } from "@/components/Feedback";
+import BrandLoader from "@/components/BrandLoader";
+import { Notice } from "@/components/Feedback";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { bookingsApi } from "@/lib/api/services";
@@ -69,7 +70,7 @@ function PaymentReturn() {
     };
   }, [intentId, redirectStatus]);
 
-  if (outcome.kind === "working") return <Spinner label="Confirming your payment…" className="min-h-[50vh]" />;
+  if (outcome.kind === "working") return <BrandLoader label="Confirming your payment…" />;
 
   const ok = outcome.kind === "paid" || outcome.kind === "processing";
   return (
@@ -135,7 +136,7 @@ function PaymentReturn() {
 export default function PaymentReturnPage() {
   return (
     <main className="min-h-[70vh] bg-background px-6 py-16">
-      <Suspense fallback={<Spinner label="Confirming your payment…" />}>
+      <Suspense fallback={<BrandLoader label="Confirming your payment…" />}>
         <PaymentReturn />
       </Suspense>
     </main>

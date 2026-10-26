@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import BrandLoader from "@/components/BrandLoader";
 import { useAdminAuth } from "@/lib/admin-auth";
 
 /** Renders the dashboard only for a session the backend has verified as admin; otherwise sends to the sign-in page. */
@@ -18,11 +19,7 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
   }, [status, reason, router, pathname]);
 
   if (status !== "authenticated") {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
-        {status === "loading" ? "Verifying admin access…" : "Redirecting to sign in…"}
-      </div>
-    );
+    return <BrandLoader fullScreen label={status === "loading" ? "Verifying admin access…" : "Redirecting to sign in…"} />;
   }
   return <>{children}</>;
 }

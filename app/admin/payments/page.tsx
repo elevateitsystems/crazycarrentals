@@ -3,12 +3,13 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, CircleAlert } from "lucide-react";
-import { EmptyState, ErrorState, Notice, Spinner } from "@/components/Feedback";
+import { EmptyState, ErrorState, Notice, Refreshing, Spinner, TableSkeleton } from "@/components/Feedback";
 import Pagination from "@/components/Pagination";
 import StatusBadge from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAsync } from "@/hooks/use-async";
+import { useBusy } from "@/hooks/use-busy";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useQueryState } from "@/hooks/use-query-state";
 import { toList } from "@/lib/api/client";
@@ -43,7 +44,8 @@ function StripeStatus() {
 function Payments() {
   const { values: f, page, set } = useQueryState(FILTERS);
   const [confirm, confirmDialog] = useConfirm();
-  const [busyId, setBusyId] = useState<string | null>(null);
+  const [run, busy] = useBusy();
+  const [recordingId, setRecordingId] = useState<string | null>(null);
   const [flash, setFlash] = useState<{ kind: "success" | "error"; text: string } | null>(null);
 
   const summary = useAsync(async () => (await adminApi.bookingSummary()).data, "summary");
@@ -60,22 +62,23 @@ function Payments() {
     return { items: toList<Booking>(res.data), meta: res.meta };
   }, JSON.stringify([page, f]));
 
-  const collect = async (b: Booking) => {
-    const amount = money(latestPayment(b)?.amount ?? b.totalPrice);
-    if (!(await confirm({ title: `Record desk payment of ${amount}?`, description: `${bookingReference(b)} · ${bookingCustomer(b)}. Only do this once the customer has paid.`, confirmLabel: "Record payment", destructive: false }))) return;
-    setBusyId(b.id);
-    setFlash(null);
-    try {
-      const res = await adminApi.collectPayment(b.id);
-      setFlash({ kind: "success", text: res.message ?? "Payment recorded." });
-      list.reload();
-      summary.reload();
-    } catch (err) {
-      setFlash({ kind: "error", text: err instanceof Error ? err.message : "Could not record the payment." });
-    } finally {
-      setBusyId(null);
-    }
-  };
+  const collect = (b: Booking) =>
+    run(async () => {
+      const amount = money(latestPayment(b)?.amount ?? b.totalPrice);
+      if (!(await confirm({ title: `Record desk payment of ${amount}?`, description: `${bookingReference(b)} · ${bookingCustomer(b)}. Only do this once the customer has paid.`, confirmLabel: "Record payment", destructive: false }))) return;
+      setFlash(null);
+      setRecordingId(b.id);
+      try {
+        const res = await adminApi.collectPayment(b.id);
+        setFlash({ kind: "success", text: res.message ?? "Payment recorded." });
+        list.reload();
+        summary.reload();
+      } catch (err) {
+        setFlash({ kind: "error", text: err instanceof Error ? err.message : "Could not record the payment." });
+      } finally {
+        setRecordingId(null);
+      }
+    });
 
   const s = summary.data;
   const tiles = [
@@ -125,9 +128,9 @@ function Payments() {
 
       {flash && <Notice kind={flash.kind}>{flash.text}</Notice>}
 
-      <div className="rounded-xl border bg-card">
-        {list.loading ? (
-          <Spinner />
+      <Refreshing active={list.refreshing} className="rounded-xl border bg-card">
+        {list.loading && !list.refreshing ? (
+          <TableSkeleton />
         ) : list.error ? (
           <div className="px-6"><ErrorState message={list.error} onRetry={list.reload} /></div>
         ) : (
@@ -166,8 +169,8 @@ function Payments() {
                       <td className="px-6 py-4"><StatusBadge status={b.status} /></td>
                       <td className="px-6 py-4 text-right">
                         {adminActions(b).collect ? (
-                          <Button size="sm" onClick={() => collect(b)} disabled={busyId !== null}>
-                            {busyId === b.id ? "Recording…" : "Record desk payment"}
+                          <Button size="sm" onClick={() => collect(b)} disabled={busy} loading={recordingId === b.id}>
+                            {recordingId === b.id ? "Recording…" : "Record desk payment"}
                           </Button>
                         ) : (
                           <Link href={`/admin/bookings/${b.id}`} className="text-xs font-medium text-primary hover:underline">Details</Link>
@@ -189,7 +192,7 @@ function Payments() {
             )}
           </div>
         )}
-      </div>
+      </Refreshing>
       <Pagination meta={list.data?.meta} onPage={(p) => set({ page: p })} />
       {confirmDialog}
     </div>

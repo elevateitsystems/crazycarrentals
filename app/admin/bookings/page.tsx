@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import Link from "next/link";
-import { EmptyState, ErrorState, Spinner } from "@/components/Feedback";
+import { EmptyState, ErrorState, Refreshing, Spinner, TableSkeleton } from "@/components/Feedback";
 import Pagination from "@/components/Pagination";
 import StatusBadge from "@/components/StatusBadge";
 import { useAsync } from "@/hooks/use-async";
@@ -27,7 +27,7 @@ function Bookings() {
   const { values: f, page, set } = useQueryState(FILTERS);
   const sort = SORTS[f.sort as keyof typeof SORTS] ?? SORTS[""];
 
-  const { data, error, loading, reload } = useAsync(async () => {
+  const { data, error, loading, refreshing, reload } = useAsync(async () => {
     const res = await adminApi.bookings({
       page,
       limit: PAGE_SIZE,
@@ -62,9 +62,9 @@ function Bookings() {
         </select>
       </div>
 
-      <div className="rounded-xl border bg-card">
-        {loading ? (
-          <Spinner />
+      <Refreshing active={refreshing} className="rounded-xl border bg-card">
+        {loading && !refreshing ? (
+          <TableSkeleton />
         ) : error ? (
           <div className="px-6">
             <ErrorState message={error} onRetry={reload} />
@@ -118,7 +118,7 @@ function Bookings() {
             {!data?.items.length && <EmptyState>{filtered ? "No bookings match these filters." : "No bookings yet."}</EmptyState>}
           </div>
         )}
-      </div>
+      </Refreshing>
       <Pagination meta={data?.meta} onPage={(p) => set({ page: p })} />
     </div>
   );

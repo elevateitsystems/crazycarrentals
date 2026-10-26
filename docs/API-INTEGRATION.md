@@ -104,3 +104,17 @@ with the token, and sets the cookie only if the backend serves that admin-only e
   `payments[]`, and the Payments page is built on the booking list's payment filters.
 - `isAvailable` on a car cannot be changed through `PATCH /cars/update-car/:id`.
 - No settings, contact-form, or admin create-user endpoints, so those stay static / absent.
+
+## Loading states
+
+Every indicator is driven by a real pending request; nothing uses timers or fake data.
+
+| Situation | Component |
+| --- | --- |
+| Route/session waits (route change via `loading.tsx`, `RequireAuth`, `AdminGuard`, vehicle and payment-return pages) | `components/BrandLoader.tsx` (logo + ring) |
+| First load of a table or vehicle grid | `TableSkeleton` / `CardGridSkeleton` (`components/Feedback.tsx`) |
+| Re-fetch with data already on screen (filters, paging, after a mutation) | `Refreshing`: keeps content visible, dimmed, with a progress bar (`useAsync().refreshing`) |
+| Buttons and small actions | `<Button loading>` (spinner, `aria-busy`, disabled) |
+| Duplicate-submit protection | `hooks/use-busy.ts`: a ref-based guard that runs one action at a time (admin CRUD, cancellations, card payment) |
+
+Failures end every state: errors render through `ErrorState` (with retry) or an inline `Notice`, and spinners clear in `finally`.

@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Check } from "lucide-react";
 import CarImage from "@/components/CarImage";
-import { ErrorState, Spinner } from "@/components/Feedback";
+import BrandLoader from "@/components/BrandLoader";
+import { ErrorState } from "@/components/Feedback";
 import { buttonVariants } from "@/components/ui/button";
 import { useAsync } from "@/hooks/use-async";
 import { carsApi } from "@/lib/api/services";
@@ -16,7 +17,7 @@ export default function CarDetail({ id }: { id: string }) {
   const { data, error, loading, reload } = useAsync(async () => (await carsApi.get(id)).data, id);
   const [selected, setSelected] = useState(0);
 
-  if (loading) return <Spinner label="Loading vehicle…" className="min-h-[50vh]" />;
+  if (loading) return <BrandLoader label="Loading vehicle…" />;
   if (error || !data) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16">

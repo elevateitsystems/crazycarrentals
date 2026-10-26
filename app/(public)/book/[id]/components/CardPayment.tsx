@@ -7,6 +7,7 @@ import { Lock, ShieldCheck } from "lucide-react";
 import { Notice, Spinner } from "@/components/Feedback";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useBusy } from "@/hooks/use-busy";
 import { bookingsApi } from "@/lib/api/services";
 import type { Booking } from "@/lib/api/types";
 import { bookingReference, latestPayment, type BookingData } from "@/lib/booking";
@@ -89,7 +90,7 @@ function CheckoutForm({ booking, data, carId, onPaid, onReset }: Props) {
   const stripe = useStripe();
   const elements = useElements();
   const [ready, setReady] = useState(false);
-  const [paying, setPaying] = useState(false);
+  const [guard, paying] = useBusy(); // blocks a second charge attempt while one is in flight
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
   // Set when Stripe took the payment but the backend hasn't confirmed the booking yet: never charge again.
@@ -116,9 +117,9 @@ function CheckoutForm({ booking, data, carId, onPaid, onReset }: Props) {
     }
   };
 
-  const pay = async () => {
+  const pay = () =>
+    guard(async () => {
     if (!stripe || !elements || expired) return;
-    setPaying(true);
     setError(null);
     try {
       if (paidIntentId) {
@@ -142,10 +143,10 @@ function CheckoutForm({ booking, data, carId, onPaid, onReset }: Props) {
       } else {
         setError("The payment was not completed. Please try again or use a different card.");
       }
-    } finally {
-      setPaying(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong while paying. Please try again.");
     }
-  };
+    });
 
   if (processing) {
     return (
@@ -201,8 +202,8 @@ function CheckoutForm({ booking, data, carId, onPaid, onReset }: Props) {
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6">
         {paidIntentId ? <span /> : <CancelHold booking={booking} data={data} onReset={onReset} label="Cancel booking" disabled={paying} />}
-        <Button type="submit" disabled={!stripe || !elements || !ready || paying} className="h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold">
-          <Lock size={12} />
+        <Button type="submit" loading={paying} disabled={!stripe || !elements || !ready} className="h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold">
+          {!paying && <Lock size={12} />}
           {paying ? "Processing…" : paidIntentId ? "Confirm my booking" : `Pay ${money(amount)}`}
         </Button>
       </div>
@@ -217,7 +218,7 @@ function CheckoutForm({ booking, data, carId, onPaid, onReset }: Props) {
 
 /** Releases the hold (guests are identified by the booking email). */
 function CancelHold({ booking, data, onReset, label, disabled }: Pick<Props, "booking" | "data" | "onReset"> & { label: string; disabled?: boolean }) {
-  const [busy, setBusy] = useState(false);
+  const [guard, busy] = useBusy();
   const [error, setError] = useState<string | null>(null);
   const email = booking.bookingPersonDetails?.[0]?.email ?? data.email;
 
@@ -226,20 +227,21 @@ function CancelHold({ booking, data, onReset, label, disabled }: Pick<Props, "bo
       <Button
         type="button"
         variant="outline"
-        disabled={busy || disabled}
+        disabled={disabled}
+        loading={busy}
         className="h-9 rounded-lg px-4 text-xs"
-        onClick={async () => {
-          setBusy(true);
-          setError(null);
-          try {
-            await bookingsApi.cancel(booking.id, { email, reason: "Cancelled by customer before payment" });
-            pendingPayment.clear();
-            onReset();
-          } catch (err) {
-            setError(err instanceof Error ? err.message : "Could not cancel the booking.");
-            setBusy(false);
-          }
-        }}
+        onClick={() =>
+          guard(async () => {
+            setError(null);
+            try {
+              await bookingsApi.cancel(booking.id, { email, reason: "Cancelled by customer before payment" });
+              pendingPayment.clear();
+              onReset();
+            } catch (err) {
+              setError(err instanceof Error ? err.message : "Could not cancel the booking.");
+            }
+          })
+        }
       >
         {busy ? "Cancelling…" : label}
       </Button>

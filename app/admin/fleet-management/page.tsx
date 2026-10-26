@@ -3,12 +3,13 @@
 import { useMemo, useRef, useState } from "react";
 import { Plus, Edit2, Trash2, UploadCloud, UserRound, X } from "lucide-react";
 import CarImage from "@/components/CarImage";
-import { EmptyState, ErrorState, Notice, Spinner } from "@/components/Feedback";
+import { EmptyState, ErrorState, Notice, Refreshing, TableSkeleton } from "@/components/Feedback";
 import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useBusy } from "@/hooks/use-busy";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useAsync } from "@/hooks/use-async";
 import { toList } from "@/lib/api/client";
@@ -72,6 +73,7 @@ export default function FleetManagementPage() {
   const driverName = (id?: string | null) => (id ? drivers.data?.find((d) => d.id === id)?.name ?? "Assigned" : null);
 
   const [confirm, confirmDialog] = useConfirm();
+  const [run, busy] = useBusy();
   const [flash, setFlash] = useState<{ kind: "success" | "error"; text: string } | null>(null);
 
   // add/edit dialog
@@ -79,7 +81,6 @@ export default function FleetManagementPage() {
   const [editing, setEditing] = useState<Car | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [files, setFiles] = useState<File[]>([]);
-  const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -87,7 +88,6 @@ export default function FleetManagementPage() {
   const [assigning, setAssigning] = useState<Car | null>(null);
   const [driverId, setDriverId] = useState("");
   const [assignError, setAssignError] = useState<string | null>(null);
-  const [assignBusy, setAssignBusy] = useState(false);
 
   const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
 
@@ -109,56 +109,55 @@ export default function FleetManagementPage() {
   const set = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
-  const save = async (e: React.FormEvent) => {
+  const save = (e: React.FormEvent) => {
     e.preventDefault();
-    const body = new FormData();
-    for (const [k, v] of Object.entries(form)) if (v !== "") body.append(k, v);
-    files.forEach((f) => body.append("images", f));
-    setSaving(true);
-    setFormError(null);
-    try {
-      if (editing) await adminApi.updateCar(editing.id, body);
-      else await adminApi.createCar(body);
-      setFormOpen(false);
-      setFlash({ kind: "success", text: editing ? "Vehicle updated." : "Vehicle added." });
-      if (!editing && page !== 1) setPage(1);
-      else cars.reload();
-    } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Could not save the vehicle.");
-    } finally {
-      setSaving(false);
-    }
+    void run(async () => {
+      const body = new FormData();
+      for (const [k, v] of Object.entries(form)) if (v !== "") body.append(k, v);
+      files.forEach((f) => body.append("images", f));
+      setFormError(null);
+      try {
+        if (editing) await adminApi.updateCar(editing.id, body);
+        else await adminApi.createCar(body);
+        setFormOpen(false);
+        setFlash({ kind: "success", text: editing ? "Vehicle updated." : "Vehicle added." });
+        if (!editing && page !== 1) setPage(1);
+        else cars.reload();
+      } catch (err) {
+        setFormError(err instanceof Error ? err.message : "Could not save the vehicle.");
+      }
+    });
   };
 
-  const remove = async (car: Car) => {
-    if (!(await confirm({ title: `Delete ${carName(car)}?`, description: "This cannot be undone.", confirmLabel: "Delete" }))) return;
-    try {
-      await adminApi.deleteCar(car.id);
-      setFlash({ kind: "success", text: "Vehicle deleted." });
-      // step back a page if that was the last row on this one
-      if (cars.data?.items.length === 1 && page > 1) setPage(page - 1);
-      else cars.reload();
-    } catch (err) {
-      setFlash({ kind: "error", text: err instanceof Error ? err.message : "Could not delete the vehicle." });
-    }
-  };
+  const remove = (car: Car) =>
+    run(async () => {
+      if (!(await confirm({ title: `Delete ${carName(car)}?`, description: "This cannot be undone.", confirmLabel: "Delete" }))) return;
+      try {
+        await adminApi.deleteCar(car.id);
+        setFlash({ kind: "success", text: "Vehicle deleted." });
+        // step back a page if that was the last row on this one
+        if (cars.data?.items.length === 1 && page > 1) setPage(page - 1);
+        else cars.reload();
+      } catch (err) {
+        setFlash({ kind: "error", text: err instanceof Error ? err.message : "Could not delete the vehicle." });
+      }
+    });
 
-  const assign = async (e: React.FormEvent) => {
+  const assign = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!assigning) return;
-    setAssignBusy(true);
-    setAssignError(null);
-    try {
-      const res = await adminApi.assignDriver(assigning.id, driverId || null);
-      setAssigning(null);
-      setFlash({ kind: "success", text: res.message ?? (driverId ? "Driver assigned." : "Driver removed.") });
-      cars.reload();
-      drivers.reload();
-    } catch (err) {
-      setAssignError(err instanceof Error ? err.message : "Could not assign the driver.");
-    } finally {
-      setAssignBusy(false);
-    }
+    void run(async () => {
+      if (!assigning) return;
+      setAssignError(null);
+      try {
+        const res = await adminApi.assignDriver(assigning.id, driverId || null);
+        setAssigning(null);
+        setFlash({ kind: "success", text: res.message ?? (driverId ? "Driver assigned." : "Driver removed.") });
+        cars.reload();
+        drivers.reload();
+      } catch (err) {
+        setAssignError(err instanceof Error ? err.message : "Could not assign the driver.");
+      }
+    });
   };
 
   // Keep a car's current value selectable even if it isn't in the known list.
@@ -190,9 +189,9 @@ export default function FleetManagementPage() {
 
       {flash && <Notice kind={flash.kind}>{flash.text}</Notice>}
 
-      <div className="rounded-xl border bg-card">
-        {cars.loading ? (
-          <Spinner />
+      <Refreshing active={cars.refreshing} className="rounded-xl border bg-card">
+        {cars.loading && !cars.refreshing ? (
+          <TableSkeleton />
         ) : cars.error ? (
           <div className="px-6">
             <ErrorState message={cars.error} onRetry={cars.reload} />
@@ -251,7 +250,7 @@ export default function FleetManagementPage() {
                           <Button variant="ghost" size="icon" aria-label="Edit vehicle" onClick={() => openEdit(car)}>
                             <Edit2 className="size-4 text-muted-foreground" />
                           </Button>
-                          <Button variant="ghost" size="icon" aria-label="Delete vehicle" onClick={() => remove(car)}>
+                          <Button variant="ghost" size="icon" aria-label="Delete vehicle" disabled={busy} onClick={() => remove(car)}>
                             <Trash2 className="size-4 text-destructive/70" />
                           </Button>
                         </div>
@@ -264,7 +263,7 @@ export default function FleetManagementPage() {
             {!cars.data?.items.length && <EmptyState>{searchTerm ? "No vehicles match your search." : "No vehicles found. Add one to get started."}</EmptyState>}
           </div>
         )}
-      </div>
+      </Refreshing>
       <Pagination meta={cars.data?.meta} onPage={setPage} />
 
       <Dialog open={formOpen} onOpenChange={setFormOpen}>
@@ -357,7 +356,7 @@ export default function FleetManagementPage() {
 
             <div className="flex justify-end gap-2 border-t pt-4">
               <Button type="button" variant="outline" onClick={() => setFormOpen(false)}>Cancel</Button>
-              <Button type="submit" disabled={saving}>{saving ? "Saving…" : editing ? "Save Changes" : "Add Vehicle"}</Button>
+              <Button type="submit" loading={busy}>{busy ? "Saving…" : editing ? "Save Changes" : "Add Vehicle"}</Button>
             </div>
           </form>
         </DialogContent>
@@ -383,8 +382,8 @@ export default function FleetManagementPage() {
             </select>
             <div className="flex justify-end gap-2 border-t pt-4">
               <Button type="button" variant="outline" onClick={() => setAssigning(null)}>Cancel</Button>
-              <Button type="submit" disabled={assignBusy || driverId === (assigning?.driverInfoId ?? "")}>
-                {assignBusy ? "Saving…" : driverId ? "Assign" : "Remove driver"}
+              <Button type="submit" loading={busy} disabled={driverId === (assigning?.driverInfoId ?? "")}>
+                {busy ? "Saving…" : driverId ? "Assign" : "Remove driver"}
               </Button>
             </div>
           </form>

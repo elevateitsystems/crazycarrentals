@@ -24,14 +24,15 @@ const labelStyles = "text-[11px] font-medium uppercase leading-4 tracking-wide t
 const inputStyles =
   "h-[42px] rounded-lg border-[#ececE8] bg-[#fafaf8] px-3 text-[13.5px] shadow-none placeholder:text-neutral-400 md:text-[13.5px]";
 
-// hides the native mm/dd/yyyy text and calendar icon until the field is focused or filled
+// Native pickers keep their format hint (mm/dd/yyyy, --:-- --) and icon visible; the hint is muted while the field is empty.
 const pickerStyles =
-  "[&::-webkit-calendar-picker-indicator]:hidden [&:invalid:not(:focus)::-webkit-datetime-edit]:opacity-0";
+  "cursor-pointer [&:invalid]:text-neutral-400 [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-60 hover:[&::-webkit-calendar-picker-indicator]:opacity-100";
 
 export default function SearchSection() {
   const [sameLocation, setSameLocation] = useState(true);
   const [airportShuttle, setAirportShuttle] = useState(false);
   const router = useRouter();
+  const today = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD in the visitor's timezone
 
   // Hands the trip details to /rent-a-car, which queries the backend's availability search.
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -98,6 +99,7 @@ export default function SearchSection() {
                       type={type}
                       placeholder={placeholder}
                       required
+                      min={type === "date" ? today : undefined}
                       onClick={type === "text" ? undefined : (e) => e.currentTarget.showPicker?.()}
                       className={`${inputStyles} ${type === "text" ? "" : pickerStyles} ${className ?? ""}`}
                     />

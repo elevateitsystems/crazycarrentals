@@ -3,11 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import AuthCard, { authInput, authLabel } from "@/components/AuthCard";
+import AuthCard from "@/components/AuthCard";
+import AuthField from "@/components/AuthField";
 import { Notice } from "@/components/Feedback";
+import { KeyRound, Lock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { findString } from "@/lib/booking";
 import { authApi } from "@/lib/api/services";
 
@@ -71,15 +71,9 @@ export default function ForgotPasswordPage() {
         <form onSubmit={reset} className="space-y-4">
           {info && <Notice kind="info">{info}</Notice>}
           {error && <Notice>{error}</Notice>}
-          <div className="space-y-2">
-            <Label htmlFor="otp" className={authLabel}>One-time code</Label>
-            <Input id="otp" name="otp" inputMode="numeric" pattern="[0-9]*" className={authInput} required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password" className={authLabel}>New password</Label>
-            <Input id="password" name="password" type="password" minLength={8} autoComplete="new-password" className={authInput} required />
-          </div>
-          <Button type="submit" disabled={submitting} className="mt-4 h-11 w-full rounded-xl text-sm font-semibold">
+          <AuthField id="otp" label="One-time code" icon={KeyRound} inputMode="numeric" pattern="[0-9]*" />
+          <AuthField id="password" label="New password" icon={Lock} type="password" minLength={8} autoComplete="new-password" />
+          <Button type="submit" loading={submitting} className="mt-2 h-12 w-full rounded-xl text-[15px] font-semibold">
             {submitting ? "Resetting…" : "Reset password"}
           </Button>
         </form>
@@ -87,11 +81,8 @@ export default function ForgotPasswordPage() {
         <form onSubmit={requestOtp} className="space-y-4">
           {info && <Notice kind="info">{info}</Notice>}
           {error && <Notice>{error}</Notice>}
-          <div className="space-y-2">
-            <Label htmlFor="email" className={authLabel}>Email Address</Label>
-            <Input id="email" name="email" type="email" autoComplete="email" className={authInput} required />
-          </div>
-          <Button type="submit" disabled={submitting} className="mt-4 h-11 w-full rounded-xl text-sm font-semibold">
+          <AuthField id="email" label="Email address" icon={Mail} type="email" autoComplete="email" />
+          <Button type="submit" loading={submitting} className="mt-2 h-12 w-full rounded-xl text-[15px] font-semibold">
             {submitting ? "Sending…" : "Send code"}
           </Button>
         </form>

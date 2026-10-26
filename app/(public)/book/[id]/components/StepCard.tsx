@@ -78,11 +78,11 @@ export default function StepCard({
 
             <Button
               type="submit"
-              disabled={submitting}
+              loading={submitting}
               className={cn(footerButton, "gap-1.5 bg-primary px-5 font-semibold text-primary-foreground hover:bg-primary/90")}
             >
               {submitting ? "Please wait…" : nextLabel}
-              <ArrowRight size={12} />
+              {!submitting && <ArrowRight size={12} />}
             </Button>
           </div>
         </CardContent>

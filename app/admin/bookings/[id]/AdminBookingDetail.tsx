@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { ErrorState, Notice, Spinner } from "@/components/Feedback";
+import { ErrorState, Notice, Refreshing, Spinner } from "@/components/Feedback";
 import StatusBadge from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useBusy } from "@/hooks/use-busy";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useAsync } from "@/hooks/use-async";
 import { adminApi } from "@/lib/api/services";
@@ -37,13 +38,14 @@ function cardLabel(p: Payment) {
 }
 
 export default function AdminBookingDetail({ id }: { id: string }) {
-  const { data: b, error, loading, reload } = useAsync(async () => (await adminApi.booking(id)).data, id);
+  const { data: b, error, loading, refreshing, reload } = useAsync(async () => (await adminApi.booking(id)).data, id);
   const [confirm, confirmDialog] = useConfirm();
+  const [guard, working] = useBusy();
   const [busy, setBusy] = useState<Action | null>(null);
   const [reason, setReason] = useState("");
   const [flash, setFlash] = useState<{ kind: "success" | "error"; text: string } | null>(null);
 
-  const run = async (action: Action) => {
+  const perform = async (action: Action) => {
     if (action === "cancel" && !(await confirm({ title: "Cancel this booking?", description: "A card payment already taken is refunded by the system.", confirmLabel: "Cancel booking" }))) return;
     if (action === "complete" && !(await confirm({ title: "Mark booking as completed?", description: "Use this once the vehicle has been returned.", confirmLabel: "Complete", destructive: false }))) return;
     if (action === "collect" && !(await confirm({ title: `Record desk payment of ${money(b ? bookingTotal(b) : undefined)}?`, description: "Only do this once the customer has paid at the counter.", confirmLabel: "Record payment", destructive: false }))) return;
@@ -65,7 +67,10 @@ export default function AdminBookingDetail({ id }: { id: string }) {
     }
   };
 
-  if (loading) return <Spinner />;
+  // One action at a time, even if a button is clicked twice before React re-renders it as disabled.
+  const run = (action: Action) => void guard(() => perform(action));
+
+  if (loading && !refreshing) return <Spinner />;
   if (error || !b) {
     return (
       <div className="space-y-4">
@@ -80,11 +85,11 @@ export default function AdminBookingDetail({ id }: { id: string }) {
   const payment = latestPayment(b);
   const person = b.bookingPersonDetails?.[0];
   const actions = adminActions(b);
-  const disabled = busy !== null;
+  const disabled = working;
   const shuttle = b.airportShuttles?.find((s) => s.shuttleService);
 
   return (
-    <div className="space-y-6">
+    <Refreshing active={refreshing} className="space-y-6">
       <Link href="/admin/bookings" className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-3.5" /> All bookings
       </Link>
@@ -200,15 +205,15 @@ export default function AdminBookingDetail({ id }: { id: string }) {
           <>
             <div className="flex flex-wrap gap-2">
               {actions.confirm && (
-                <Button onClick={() => run("confirm")} disabled={disabled} title="Confirms the hold only if Stripe reports the card payment succeeded">
+                <Button onClick={() => run("confirm")} disabled={disabled} loading={busy === "confirm"} title="Confirms the hold only if Stripe reports the card payment succeeded">
                   {busy === "confirm" ? "Checking with Stripe…" : "Confirm Pay Now hold"}
                 </Button>
               )}
               {actions.collect && (
-                <Button onClick={() => run("collect")} disabled={disabled}>{busy === "collect" ? "Recording…" : "Collect desk payment"}</Button>
+                <Button onClick={() => run("collect")} disabled={disabled} loading={busy === "collect"}>{busy === "collect" ? "Recording…" : "Collect desk payment"}</Button>
               )}
               {actions.complete && (
-                <Button variant="outline" onClick={() => run("complete")} disabled={disabled}>{busy === "complete" ? "Completing…" : "Complete booking"}</Button>
+                <Button variant="outline" onClick={() => run("complete")} disabled={disabled} loading={busy === "complete"}>{busy === "complete" ? "Completing…" : "Complete booking"}</Button>
               )}
             </div>
             {actions.confirm && (
@@ -220,7 +225,7 @@ export default function AdminBookingDetail({ id }: { id: string }) {
                 <Label htmlFor="reason">Cancellation reason</Label>
                 <div className="flex flex-wrap gap-2">
                   <Input id="reason" className="min-w-56 flex-1" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. Customer called to cancel" />
-                  <Button variant="destructive" onClick={() => run("cancel")} disabled={disabled}>{busy === "cancel" ? "Cancelling…" : "Cancel booking"}</Button>
+                  <Button variant="destructive" onClick={() => run("cancel")} disabled={disabled} loading={busy === "cancel"}>{busy === "cancel" ? "Cancelling…" : "Cancel booking"}</Button>
                 </div>
               </div>
             )}
@@ -228,6 +233,6 @@ export default function AdminBookingDetail({ id }: { id: string }) {
         )}
       </div>
       {confirmDialog}
-    </div>
+    </Refreshing>
   );
 }

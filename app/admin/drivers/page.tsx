@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { Edit2, Plus, Trash2 } from "lucide-react";
-import { EmptyState, ErrorState, Notice, Spinner } from "@/components/Feedback";
+import { EmptyState, ErrorState, Notice, Refreshing, TableSkeleton } from "@/components/Feedback";
 import Pagination from "@/components/Pagination";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useBusy } from "@/hooks/use-busy";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useAsync } from "@/hooks/use-async";
 import { toList } from "@/lib/api/client";
@@ -34,11 +35,11 @@ export default function DriversPage() {
     return { items: toList<Driver>(res.data), meta: res.meta };
   }, JSON.stringify([page, searchTerm]));
   const [confirm, confirmDialog] = useConfirm();
+  const [run, busy] = useBusy();
   const [flash, setFlash] = useState<{ kind: "success" | "error"; text: string } | null>(null);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Driver | null>(null);
   const [form, setForm] = useState<Form>(empty);
-  const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
   const openCreate = () => {
@@ -60,36 +61,36 @@ export default function DriversPage() {
 
   const set = (k: keyof Form) => (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
-  const save = async (e: React.FormEvent) => {
+  const save = (e: React.FormEvent) => {
     e.preventDefault();
-    setSaving(true);
-    setFormError(null);
-    try {
-      if (editing) await adminApi.updateDriver(editing.id, { ...form });
-      else await adminApi.createDriver({ ...form });
-      setOpen(false);
-      setFlash({ kind: "success", text: editing ? "Driver updated." : "Driver added." });
-      if (!editing && page !== 1) setPage(1);
-      else drivers.reload();
-    } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Could not save the driver.");
-    } finally {
-      setSaving(false);
-    }
+    void run(async () => {
+      setFormError(null);
+      try {
+        if (editing) await adminApi.updateDriver(editing.id, { ...form });
+        else await adminApi.createDriver({ ...form });
+        setOpen(false);
+        setFlash({ kind: "success", text: editing ? "Driver updated." : "Driver added." });
+        if (!editing && page !== 1) setPage(1);
+        else drivers.reload();
+      } catch (err) {
+        setFormError(err instanceof Error ? err.message : "Could not save the driver.");
+      }
+    });
   };
 
-  const remove = async (d: Driver) => {
-    const assigned = d.cars?.length ? ` They are assigned to ${d.cars.map((c) => [c.brand, c.model].filter(Boolean).join(" ")).join(", ")}.` : "";
-    if (!(await confirm({ title: `Delete ${d.name ?? "this driver"}?`, description: `This cannot be undone.${assigned}`, confirmLabel: "Delete" }))) return;
-    try {
-      await adminApi.deleteDriver(d.id);
-      setFlash({ kind: "success", text: "Driver deleted." });
-      if (drivers.data?.items.length === 1 && page > 1) setPage(page - 1);
-      else drivers.reload();
-    } catch (err) {
-      setFlash({ kind: "error", text: err instanceof Error ? err.message : "Could not delete the driver." });
-    }
-  };
+  const remove = (d: Driver) =>
+    run(async () => {
+      const assigned = d.cars?.length ? ` They are assigned to ${d.cars.map((c) => [c.brand, c.model].filter(Boolean).join(" ")).join(", ")}.` : "";
+      if (!(await confirm({ title: `Delete ${d.name ?? "this driver"}?`, description: `This cannot be undone.${assigned}`, confirmLabel: "Delete" }))) return;
+      try {
+        await adminApi.deleteDriver(d.id);
+        setFlash({ kind: "success", text: "Driver deleted." });
+        if (drivers.data?.items.length === 1 && page > 1) setPage(page - 1);
+        else drivers.reload();
+      } catch (err) {
+        setFlash({ kind: "error", text: err instanceof Error ? err.message : "Could not delete the driver." });
+      }
+    });
 
   return (
     <div className="space-y-6">
@@ -117,9 +118,9 @@ export default function DriversPage() {
 
       {flash && <Notice kind={flash.kind}>{flash.text}</Notice>}
 
-      <div className="rounded-xl border bg-card">
-        {drivers.loading ? (
-          <Spinner />
+      <Refreshing active={drivers.refreshing} className="rounded-xl border bg-card">
+        {drivers.loading && !drivers.refreshing ? (
+          <TableSkeleton />
         ) : drivers.error ? (
           <div className="px-6">
             <ErrorState message={drivers.error} onRetry={drivers.reload} />
@@ -169,7 +170,7 @@ export default function DriversPage() {
                         <Button variant="ghost" size="icon" aria-label="Edit driver" onClick={() => openEdit(d)}>
                           <Edit2 className="size-4 text-muted-foreground" />
                         </Button>
-                        <Button variant="ghost" size="icon" aria-label="Delete driver" onClick={() => remove(d)}>
+                        <Button variant="ghost" size="icon" aria-label="Delete driver" disabled={busy} onClick={() => remove(d)}>
                           <Trash2 className="size-4 text-destructive/70" />
                         </Button>
                       </div>
@@ -181,7 +182,7 @@ export default function DriversPage() {
             {!drivers.data?.items.length && <EmptyState>{searchTerm ? "No drivers match your search." : "No drivers yet. Add one to get started."}</EmptyState>}
           </div>
         )}
-      </div>
+      </Refreshing>
       <Pagination meta={drivers.data?.meta} onPage={setPage} />
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -204,7 +205,7 @@ export default function DriversPage() {
             </div>
             <div className="flex justify-end gap-2 border-t pt-4">
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-              <Button type="submit" disabled={saving}>{saving ? "Saving…" : editing ? "Save Changes" : "Add Driver"}</Button>
+              <Button type="submit" loading={busy}>{busy ? "Saving…" : editing ? "Save Changes" : "Add Driver"}</Button>
             </div>
           </form>
         </DialogContent>

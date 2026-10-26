@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { ErrorState, Spinner } from "@/components/Feedback";
+import BrandLoader from "@/components/BrandLoader";
+import { ErrorState } from "@/components/Feedback";
 import { useAsync } from "@/hooks/use-async";
 import { ApiError } from "@/lib/api/client";
 import { bookingsApi, carsApi } from "@/lib/api/services";
@@ -123,7 +124,7 @@ export default function BookingFlow({ carId }: { carId: string }) {
     }
   };
 
-  if (carState.loading) return <Spinner label="Loading vehicle…" className="min-h-[60vh]" />;
+  if (carState.loading) return <BrandLoader label="Loading vehicle…" className="min-h-[60vh]" />;
   if (carState.error || !carState.data) {
     return (
       <div className="mx-auto max-w-2xl px-6 py-16">

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Edit2, Search, Trash2 } from "lucide-react";
-import { EmptyState, ErrorState, Notice, Spinner } from "@/components/Feedback";
+import { EmptyState, ErrorState, Notice, Refreshing, TableSkeleton } from "@/components/Feedback";
 import Pagination from "@/components/Pagination";
 import StatusBadge from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useBusy } from "@/hooks/use-busy";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useAsync } from "@/hooks/use-async";
 import { toList } from "@/lib/api/client";
@@ -39,10 +40,10 @@ export default function CustomersPage() {
   }, JSON.stringify([page, role, searchTerm]));
 
   const [confirm, confirmDialog] = useConfirm();
+  const [run, busy] = useBusy();
   const [flash, setFlash] = useState<{ kind: "success" | "error"; text: string } | null>(null);
   const [editing, setEditing] = useState<User | null>(null);
   const [form, setForm] = useState<Form>({ name: "", role: "USER", phoneNumber: "", address: "", isEmailVerified: false, unlockAccount: false });
-  const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   // Full record (bookings count, address, lock state) for the user being edited.
   const detail = useAsync(async () => (editing ? (await adminApi.user(editing.id)).data : null), editing?.id ?? "");
@@ -60,43 +61,43 @@ export default function CustomersPage() {
     setFormError(null);
   };
 
-  const save = async (e: React.FormEvent) => {
+  const save = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editing) return;
-    if (form.role !== (editing.role ?? "USER")) {
-      const ok = await confirm({
-        title: `Change role to ${enumLabel(form.role)}?`,
-        description: form.role === "USER" ? "They will lose access to the admin dashboard." : "They will get access to the admin dashboard and all customer data.",
-        confirmLabel: "Change role",
-        destructive: form.role === "USER",
-      });
-      if (!ok) return;
-    }
-    setSaving(true);
-    setFormError(null);
-    try {
-      await adminApi.updateUser(editing.id, { ...form });
-      setEditing(null);
-      setFlash({ kind: "success", text: "User updated." });
-      users.reload();
-    } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Could not update the user.");
-    } finally {
-      setSaving(false);
-    }
+    void run(async () => {
+      if (!editing) return;
+      if (form.role !== (editing.role ?? "USER")) {
+        const ok = await confirm({
+          title: `Change role to ${enumLabel(form.role)}?`,
+          description: form.role === "USER" ? "They will lose access to the admin dashboard." : "They will get access to the admin dashboard and all customer data.",
+          confirmLabel: "Change role",
+          destructive: form.role === "USER",
+        });
+        if (!ok) return;
+      }
+      setFormError(null);
+      try {
+        await adminApi.updateUser(editing.id, { ...form });
+        setEditing(null);
+        setFlash({ kind: "success", text: "User updated." });
+        users.reload();
+      } catch (err) {
+        setFormError(err instanceof Error ? err.message : "Could not update the user.");
+      }
+    });
   };
 
-  const remove = async (u: User) => {
-    if (!(await confirm({ title: `Delete ${u.name ?? u.email ?? "this user"}?`, description: "This permanently deletes the account and cannot be undone.", confirmLabel: "Delete" }))) return;
-    try {
-      await adminApi.deleteUser(u.id);
-      setFlash({ kind: "success", text: "User deleted." });
-      if (users.data?.items.length === 1 && page > 1) setPage(page - 1);
-      else users.reload();
-    } catch (err) {
-      setFlash({ kind: "error", text: err instanceof Error ? err.message : "Could not delete the user." });
-    }
-  };
+  const remove = (u: User) =>
+    run(async () => {
+      if (!(await confirm({ title: `Delete ${u.name ?? u.email ?? "this user"}?`, description: "This permanently deletes the account and cannot be undone.", confirmLabel: "Delete" }))) return;
+      try {
+        await adminApi.deleteUser(u.id);
+        setFlash({ kind: "success", text: "User deleted." });
+        if (users.data?.items.length === 1 && page > 1) setPage(page - 1);
+        else users.reload();
+      } catch (err) {
+        setFlash({ kind: "error", text: err instanceof Error ? err.message : "Could not delete the user." });
+      }
+    });
 
   return (
     <div className="space-y-6">
@@ -134,9 +135,9 @@ export default function CustomersPage() {
 
       {flash && <Notice kind={flash.kind}>{flash.text}</Notice>}
 
-      <div className="rounded-xl border bg-card">
-        {users.loading ? (
-          <Spinner />
+      <Refreshing active={users.refreshing} className="rounded-xl border bg-card">
+        {users.loading && !users.refreshing ? (
+          <TableSkeleton />
         ) : users.error ? (
           <div className="px-6">
             <ErrorState message={users.error} onRetry={users.reload} />
@@ -190,7 +191,7 @@ export default function CustomersPage() {
                           variant="ghost"
                           size="icon"
                           aria-label="Delete user"
-                          disabled={u.id === me?.id}
+                          disabled={busy || u.id === me?.id}
                           title={u.id === me?.id ? "You cannot delete your own account" : undefined}
                           onClick={() => remove(u)}
                         >
@@ -205,7 +206,7 @@ export default function CustomersPage() {
             {!users.data?.items.length && <EmptyState>No customers found.</EmptyState>}
           </div>
         )}
-      </div>
+      </Refreshing>
       <Pagination meta={users.data?.meta} onPage={setPage} />
 
       <Dialog open={editing !== null} onOpenChange={(o) => !o && setEditing(null)}>
@@ -259,7 +260,7 @@ export default function CustomersPage() {
             </div>
             <div className="flex justify-end gap-2 border-t pt-4">
               <Button type="button" variant="outline" onClick={() => setEditing(null)}>Cancel</Button>
-              <Button type="submit" disabled={saving}>{saving ? "Saving…" : "Save Changes"}</Button>
+              <Button type="submit" loading={busy}>{busy ? "Saving…" : "Save Changes"}</Button>
             </div>
           </form>
         </DialogContent>

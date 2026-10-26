@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import CarImage from "@/components/CarImage";
 import type { Car } from "@/components/CarCard";
 import type { Estimate } from "@/lib/booking";
@@ -37,8 +38,8 @@ export default function OrderSummary({ car, estimate, estimating, error, hasDate
 
         <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
           <span className="text-xs font-bold text-foreground">Total</span>
-          <span className="text-lg font-bold text-foreground">
-            {estimating ? "…" : estimate?.total != null ? money(estimate.total) : "—"}
+          <span className="text-lg font-bold text-foreground" aria-busy={estimating}>
+            {estimating ? <Spinner className="inline size-5 text-muted-foreground" /> : estimate?.total != null ? money(estimate.total) : "—"}
           </span>
         </div>
         {estimate?.gstIncluded && <p className="mt-1 text-right text-[10px] text-muted-foreground">GST included</p>}

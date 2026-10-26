@@ -3,11 +3,11 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import AuthCard, { authInput, authLabel } from "@/components/AuthCard";
+import AuthCard from "@/components/AuthCard";
+import AuthField from "@/components/AuthField";
 import { Notice } from "@/components/Feedback";
+import { Lock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { isAdminRole, useAuth } from "@/lib/auth";
 
 const isAdminPath = (p: string) => p === "/admin" || p.startsWith("/admin/");
@@ -54,35 +54,29 @@ function SignInForm() {
 
   return (
     <AuthCard
-      title="Sign in"
-      description="Enter your credentials to manage your bookings or access the admin dashboard."
+      title="Welcome back"
+      description="Sign in to manage your bookings. Staff are taken to the admin dashboard."
       footer={
         <>
           <p>
-            <Link href="/auth/forgot-password" className="font-medium text-foreground hover:underline">
+            <Link href="/auth/forgot-password" className="font-medium text-foreground underline-offset-4 hover:text-primary hover:underline">
               Forgot your password?
             </Link>
           </p>
           <p>
             New here?{" "}
-            <Link href="/auth/register" className="font-medium text-foreground hover:underline">
+            <Link href="/auth/register" className="font-semibold text-foreground underline-offset-4 hover:text-primary hover:underline">
               Create an account
             </Link>
           </p>
         </>
       }
     >
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-5">
         {error ? <Notice>{error}</Notice> : notice ? <Notice kind="info">{notice}</Notice> : null}
-        <div className="space-y-2">
-          <Label htmlFor="email" className={authLabel}>Email Address</Label>
-          <Input id="email" name="email" type="email" autoComplete="email" className={authInput} required />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="password" className={authLabel}>Password</Label>
-          <Input id="password" name="password" type="password" autoComplete="current-password" className={authInput} required />
-        </div>
-        <Button type="submit" disabled={submitting} className="mt-4 h-11 w-full rounded-xl text-sm font-semibold">
+        <AuthField id="email" label="Email address" icon={Mail} type="email" autoComplete="email" />
+        <AuthField id="password" label="Password" icon={Lock} type="password" autoComplete="current-password" />
+        <Button type="submit" loading={submitting} className="mt-2 h-12 w-full rounded-xl text-[15px] font-semibold">
           {submitting ? "Signing in…" : "Sign in"}
         </Button>
       </form>

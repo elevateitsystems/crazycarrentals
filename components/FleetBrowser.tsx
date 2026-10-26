@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import CarCard from "@/components/CarCard";
-import { EmptyState, ErrorState, Spinner } from "@/components/Feedback";
+import { CardGridSkeleton, EmptyState, ErrorState } from "@/components/Feedback";
 import { Button } from "@/components/ui/button";
 import { useAsync } from "@/hooks/use-async";
 import { toList } from "@/lib/api/client";
@@ -23,7 +23,7 @@ export default function FleetBrowser({ limit = 100, className }: { limit?: numbe
     [data, active],
   );
 
-  if (loading) return <Spinner label="Loading vehicles…" />;
+  if (loading) return <CardGridSkeleton label="Loading vehicles…" className="mt-8 lg:grid-cols-3" />;
   if (error) return <ErrorState message={error} onRetry={reload} />;
 
   return (

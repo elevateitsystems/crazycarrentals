@@ -8,10 +8,11 @@ const tone = (s: string) => {
   return "bg-neutral-50 text-neutral-600 ring-neutral-500/20";
 };
 
-export default function StatusBadge({ status, className }: { status?: unknown; className?: string }) {
+export default function StatusBadge({ status, className, prefix }: { status?: unknown; className?: string; prefix?: string }) {
   if (typeof status !== "string" || !status) return null;
   return (
     <span className={cn("inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset", tone(status), className)}>
+      {prefix && <span className="mr-1 opacity-70">{prefix}</span>}
       {enumLabel(status)}
     </span>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { LogOut, Car, Users, LayoutDashboard, CalendarCheck, IdCard, CreditCard } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAdminAuth } from "@/lib/admin-auth";
@@ -34,10 +35,9 @@ export function AdminSidebar() {
 
   return (
     <aside className="w-64 flex-col border-r bg-background hidden md:flex">
-      <div className="flex h-16 items-center px-6 border-b">
-        <Link href="/admin/dashboard" className="flex items-center gap-2 font-bold text-lg tracking-tight">
-          <span className="bg-[#86d72f] text-neutral-900 rounded px-1.5 py-0.5 text-sm">C</span>
-          Admin Panel
+      <div className="flex h-20 items-center border-b px-6">
+        <Link href="/admin/dashboard" aria-label="TasDrive Rentals admin dashboard">
+          <Image src="/logo.avif" alt="TasDrive Rentals" width={200} height={300} priority className="h-14 w-auto rounded-md" />
         </Link>
       </div>
 

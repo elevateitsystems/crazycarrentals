@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogOut, Menu } from "lucide-react";
@@ -13,9 +14,8 @@ export function AdminMobileNav() {
 
   return (
     <header className="flex h-16 items-center justify-between border-b bg-background px-4 md:hidden">
-      <Link href="/admin/dashboard" className="flex items-center gap-2 font-bold">
-        <span className="rounded bg-[#86d72f] px-1.5 py-0.5 text-sm text-neutral-900">C</span>
-        Admin Panel
+      <Link href="/admin/dashboard" aria-label="TasDrive Rentals admin dashboard">
+        <Image src="/logo.avif" alt="TasDrive Rentals" width={200} height={300} priority className="h-11 w-auto rounded-md" />
       </Link>
       <Sheet>
         <SheetTrigger aria-label="Open menu" className="flex size-10 items-center justify-center rounded-lg hover:bg-muted">
