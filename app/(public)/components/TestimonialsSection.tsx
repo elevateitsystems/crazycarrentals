@@ -8,7 +8,7 @@ const testimonials = [
     name: "Sarah M.",
     location: "Hobart, Tasmania",
     quote:
-      "Booking was seamless from start to finish. The RAV4 was in perfect condition and the team at Hobart was incredibly helpful. Will definitely use TasDrive again.",
+      "Booking was seamless from start to finish. The RAV4 was in perfect condition and the team was incredibly helpful. Will definitely use TasDrive again.",
   },
   {
     name: "James R.",

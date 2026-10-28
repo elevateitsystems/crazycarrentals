@@ -21,45 +21,47 @@ export default function VehicleStep({ car, data, update, onNext }: StepProps & {
       backLabel="Back to Fleet"
       onSubmit={onNext}
     >
-      <div className="grid overflow-hidden rounded-xl border-2 border-primary bg-card sm:grid-cols-[1fr_2fr]">
-        <div className="relative h-44 sm:h-auto">
+      <div className="grid overflow-hidden rounded-2xl border-2 border-primary bg-card sm:grid-cols-[1fr_1.6fr]">
+        <div className="relative h-52 sm:h-auto sm:min-h-56">
           <CarImage src={car.image} alt={car.name} />
         </div>
-        <div className="p-5">
-          <span className="inline-block rounded bg-primary/15 px-2 py-0.5 text-[8px] font-semibold uppercase tracking-wider text-primary">
+        <div className="p-6">
+          <span className="inline-block rounded bg-primary/15 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-primary">
             Selected vehicle
           </span>
-          <h3 className="mt-2.5 text-lg font-bold text-foreground">{car.name}</h3>
+          <h3 className="mt-3 text-2xl font-bold tracking-tight text-foreground">{car.name}</h3>
 
-          <dl className="mt-3 flex gap-5">
+          <dl className="mt-4 flex flex-wrap gap-x-7 gap-y-3">
             {specs.map(({ label, value }) => (
               <div key={label}>
-                <dt className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground">{label}</dt>
-                <dd className="mt-0.5 text-[11px] font-semibold text-foreground">{value}</dd>
+                <dt className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</dt>
+                <dd className="mt-1 text-base font-semibold text-foreground">{value}</dd>
               </div>
             ))}
           </dl>
 
-          <p className="mt-4 text-[11px] text-muted-foreground">
-            From <span className="text-2xl font-bold text-foreground">${car.price}</span>/day
+          <p className="mt-5 text-sm text-muted-foreground">
+            From <span className="text-4xl font-bold tracking-tight text-foreground">${car.price}</span>/day
           </p>
         </div>
       </div>
 
-      <div className="mt-5 rounded-xl border border-border bg-muted/60 p-5">
-        <h3 className="text-sm font-semibold text-foreground">Rental details</h3>
+      <div className="mt-6 rounded-2xl border border-border bg-muted/50 p-6">
+        <h3 className="text-lg font-semibold text-foreground">Rental details</h3>
 
-        <div className="mt-4 grid gap-x-3 gap-y-4 sm:grid-cols-2">
+        <div className="mt-5 grid gap-x-4 gap-y-5 sm:grid-cols-2">
           <FormField
             id="pickupLocation"
             label="Pickup location"
             required
+            wrapperClassName="sm:col-span-2"
             value={data.pickupLocation}
             onChange={(e) => update({ pickupLocation: e.target.value })}
           />
           <FormField
             id="returnLocation"
             label="Return location"
+            wrapperClassName="sm:col-span-2"
             placeholder="Same as pickup"
             value={data.returnLocation}
             onChange={(e) => update({ returnLocation: e.target.value })}
@@ -103,7 +105,7 @@ export default function VehicleStep({ car, data, update, onNext }: StepProps & {
 
       <Link
         href="/fleet"
-        className="mt-4 inline-block text-[11px] text-muted-foreground transition hover:text-foreground"
+        className="mt-5 inline-block text-sm font-medium text-muted-foreground transition hover:text-foreground"
       >
         ← Change vehicle
       </Link>

@@ -14,7 +14,7 @@ export default function ContactInfoItem({ icon: Icon, label, value, caption, hre
           {label}
         </span>
         {href ? (
-          <a href={href} className={`${valueClass} transition hover:text-primary`}>
+          <a href={href} {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})} className={`${valueClass} transition hover:text-primary`}>
             {value}
           </a>
         ) : (

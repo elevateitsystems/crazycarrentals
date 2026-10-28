@@ -44,7 +44,7 @@ export default function StorySection() {
 
         <div className="relative h-72 overflow-hidden rounded-2xl lg:h-84">
           <Image
-            src="/our-story-car.jpg"
+            src="/car-3.jpg"
             alt="Silver SUV driving on a Tasmanian road"
             fill
             sizes="(min-width: 1024px) 488px, 100vw"

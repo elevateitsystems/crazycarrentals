@@ -116,16 +116,18 @@ export default function Footer() {
             </p>
 
             <ul className="mt-5 space-y-2.5 text-sm text-secondary-foreground/75">
-              {contactInfo.map(({ icon: Icon, label, value, href }) => (
+              {contactInfo.map(({ icon: Icon, label, value, href }) => {
+                return (
                 <li key={label} className="flex items-start gap-2.5">
                   <Icon className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
                   {href ? (
-                    <a href={href} className="transition-colors hover:text-primary">{value}</a>
+                    <a href={href} {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})} className="transition-colors hover:text-primary">{value}</a>
                   ) : (
                     <span>{value}</span>
                   )}
                 </li>
-              ))}
+                );
+              })}
             </ul>
 
             <ul className="mt-6 flex items-center gap-3">

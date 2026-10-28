@@ -1,4 +1,5 @@
 import { Mail, MapPin, Phone, type LucideIcon } from "lucide-react";
+import { BUSINESS_ADDRESS, BUSINESS_EMAIL, BUSINESS_HOURS_SUMMARY, BUSINESS_PHONE, BUSINESS_PHONE_HREF, DIRECTIONS_URL } from "@/lib/business";
 
 export type ContactInfo = {
   icon: LucideIcon;
@@ -12,21 +13,22 @@ export const contactInfo: ContactInfo[] = [
   {
     icon: Phone,
     label: "Phone",
-    value: "(03) 6200 0000",
-    caption: "Mon–Fri 8am–6pm, Sat 9am–1pm",
-    href: "tel:0362000000",
+    value: BUSINESS_PHONE,
+    caption: BUSINESS_HOURS_SUMMARY,
+    href: BUSINESS_PHONE_HREF,
   },
   {
     icon: Mail,
     label: "Email",
-    value: "hello@tasdrive.com.au",
+    value: BUSINESS_EMAIL,
     caption: "We respond within 1 business day",
-    href: "mailto:hello@tasdrive.com.au",
+    href: `mailto:${BUSINESS_EMAIL}`,
   },
   {
     icon: MapPin,
-    label: "Head Office",
-    value: "78 Collins St, Hobart TAS 7000",
-    caption: "Walk-ins welcome during business hours",
+    label: "Address",
+    value: BUSINESS_ADDRESS,
+    caption: "Launceston branch · walk-ins welcome during opening hours",
+    href: DIRECTIONS_URL,
   },
 ];

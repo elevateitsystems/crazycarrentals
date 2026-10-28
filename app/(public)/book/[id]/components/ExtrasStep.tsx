@@ -30,7 +30,7 @@ export default function ExtrasStep({ data, update, onNext, onBack }: StepProps) 
       ) : !extras?.length ? (
         <EmptyState>No extras are available right now. You can continue without any.</EmptyState>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           {extras.map((extra) => {
             const selected = data.extras.includes(extra.id);
             return (
@@ -40,23 +40,23 @@ export default function ExtrasStep({ data, update, onNext, onBack }: StepProps) 
                 aria-pressed={selected}
                 onClick={() => toggle(extra.id)}
                 className={cn(
-                  "relative flex flex-col rounded-xl border bg-card p-4 text-left transition hover:border-primary/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+                  "relative flex flex-col rounded-2xl border bg-card p-5 text-left transition hover:border-primary/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                   selected ? "border-primary bg-primary/5" : "border-border"
                 )}
               >
                 {selected && (
-                  <span className="absolute right-3 top-3 flex size-4 items-center justify-center rounded-full bg-primary text-white">
-                    <Check size={10} strokeWidth={3} />
+                  <span className="absolute right-4 top-4 flex size-6 items-center justify-center rounded-full bg-primary text-white">
+                    <Check size={14} strokeWidth={3} />
                   </span>
                 )}
-                <span className="text-[13px] font-semibold text-foreground">{extraLabel(extra)}</span>
+                <span className="pr-7 text-base font-semibold text-foreground">{extraLabel(extra)}</span>
                 {extra.description && (
-                  <span className="mt-1.5 min-h-8 text-[12px] leading-4 text-slate-500">{extra.description}</span>
+                  <span className="mt-1.5 min-h-8 text-sm leading-5 text-muted-foreground">{extra.description}</span>
                 )}
                 {extra.pricePerDay != null && (
-                  <span className="mt-3 text-sm font-bold text-primary">
+                  <span className="mt-4 text-lg font-bold text-foreground">
                     {money(extra.pricePerDay)}
-                    <span className="text-[11px] font-medium text-muted-foreground"> / day</span>
+                    <span className="text-sm font-medium text-muted-foreground"> / day</span>
                   </span>
                 )}
               </button>
@@ -65,7 +65,7 @@ export default function ExtrasStep({ data, update, onNext, onBack }: StepProps) 
         </div>
       )}
       {catalog?.airportShuttle?.price != null && (
-        <p className="mt-4 text-[11px] text-muted-foreground">
+        <p className="mt-5 text-sm text-muted-foreground">
           {catalog.airportShuttle.name ?? "Airport shuttle"} ({money(catalog.airportShuttle.price)} flat) can be added on the next step.
         </p>
       )}

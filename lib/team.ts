@@ -7,7 +7,7 @@ export type TeamMember = {
 export const stats = [
   { value: "500+", label: "Happy customers", caption: "and counting" },
   { value: "11+", label: "Vehicles in fleet", caption: "and growing" },
-  { value: "3", label: "Pickup locations", caption: "across Tasmania" },
+  { value: "Statewide", label: "Accident replacement", caption: "delivery across Tasmania" },
   { value: "100%", label: "Tasmanian owned", caption: "& operated" },
 ];
 

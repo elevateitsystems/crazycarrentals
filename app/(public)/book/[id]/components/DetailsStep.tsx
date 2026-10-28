@@ -13,8 +13,8 @@ export default function DetailsStep({ data, update, onNext, onBack }: StepProps)
       onSubmit={onNext}
       onBack={onBack}
     >
-      <div className="grid gap-4">
-        <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-5">
+        <div className="grid gap-5 sm:grid-cols-2">
           <FormField
             id="firstName"
             label="First name"
@@ -56,12 +56,12 @@ export default function DetailsStep({ data, update, onNext, onBack }: StepProps)
           third parties.
         </InfoNote>
 
-        <div className="mt-2 rounded-xl border border-border bg-muted/30 p-4 flex items-center justify-between">
+        <div className="mt-2 flex items-center justify-between gap-4 rounded-2xl border border-border bg-muted/30 p-5">
           <div className="flex flex-col gap-1">
-            <Label htmlFor="airportShuttle" className="text-sm font-semibold">
+            <Label htmlFor="airportShuttle" className="text-base font-semibold">
               Airport Shuttle
             </Label>
-            <span className="text-[11px] text-muted-foreground">
+            <span className="text-sm text-muted-foreground">
               Add a convenient airport shuttle transfer (priced in your order summary)
             </span>
           </div>

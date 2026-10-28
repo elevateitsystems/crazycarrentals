@@ -68,12 +68,12 @@ export const faqs: Record<FaqCategory, Faq[]> = {
     {
       question: "Where are your pickup locations?",
       answer:
-        "We operate from Hobart Airport, Hobart CBD and Launceston. Visit our locations page for addresses and opening hours.",
+        "Our car rentals are picked up from and returned to 201 Wellington Street, Launceston TAS 7250. Accident replacement vehicles are delivered statewide across Tasmania.",
     },
     {
       question: "How can I contact your team?",
       answer:
-        "Call us on (03) 6200 0000 or send a message. Our team is available Monday to Friday, 8am–6pm.",
+        "Call us on 0437 793 645, email info@tasdriverentals.com.au or send a message. Our team is available Mon–Fri 8 AM–5 PM, Sat 9 AM–3 PM and Sun 9 AM–2 PM.",
     },
     {
       question: "Is my personal information secure?",

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, MapPin } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -23,12 +23,17 @@ export default function AccidentReplacementSection() {
           </span>
 
           <h2 className="mt-4 text-[2.4rem] font-bold leading-[1.4] tracking-tight text-neutral-900">
-            Had an accident? Get back on the road.
+            Not at fault in an accident?
           </h2>
 
           <p className="mt-3 text-[14.5px] leading-6.25 text-neutral-900/70">
-            If your vehicle has been damaged in an accident, TasDrive may be able to help you access
-            a replacement vehicle while yours is being repaired.
+            TasDrive can get you into a replacement vehicle while yours is being repaired or until your
+            total-loss claim is paid out.
+          </p>
+
+          <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-neutral-900/10 px-3.5 py-1.5 text-[13px] font-semibold text-neutral-900">
+            <MapPin className="size-4" aria-hidden />
+            Delivered statewide across Tasmania
           </p>
 
           <Link

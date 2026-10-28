@@ -12,7 +12,7 @@ export default function Page() {
         title="Frequently asked"
         hightlightTitle="questions."
         image="/rent-a-car-hero.jpg"
-        description="Pick up and return your vehicle at convenient locations across Tasmania, including Hobart Airport."
+        description="Answers about renting a car from our Launceston location, and about accident replacement vehicles delivered statewide across Tasmania."
       />
 
       <FaqSection />

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BUSINESS_PHONE_HREF, BUSINESS_PHONE } from "@/lib/business";
 import { Check, Phone } from "lucide-react";
 import CommonHeroSection from "@/components/CommonHeroSection";
 import { buttonVariants } from "@/components/ui/button";
@@ -39,8 +40,8 @@ export default function EligibilityPage() {
             <Link href="/accident-replacement/apply" className={cn(buttonVariants(), "h-10 px-5 font-semibold")}>
               Start an application
             </Link>
-            <a href="tel:0362000000" className={cn(buttonVariants({ variant: "outline" }), "h-10 gap-2 px-5")}>
-              <Phone /> (03) 6200 0000
+            <a href={BUSINESS_PHONE_HREF} className={cn(buttonVariants({ variant: "outline" }), "h-10 gap-2 px-5")}>
+              <Phone /> {BUSINESS_PHONE}
             </a>
           </div>
         </div>
