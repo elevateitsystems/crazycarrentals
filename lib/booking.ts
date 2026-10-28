@@ -1,3 +1,4 @@
+import { RENTAL_ADDRESS } from "@/lib/locations";
 import type { Booking, CreateBookingInput, Estimate as ApiEstimate, Payment, PaymentOption, PriceLine, TripInput } from "@/lib/api/types";
 
 export const steps = ["Vehicle", "Extras", "Your Details", "Payment", "Confirmation"] as const;
@@ -27,7 +28,7 @@ export type BookingData = {
 export function initialBooking(prefill: URLSearchParams | null): BookingData {
   const get = (k: string) => prefill?.get(k) ?? "";
   return {
-    pickupLocation: get("pickupLocation") || "Hobart Airport",
+    pickupLocation: get("pickupLocation") || RENTAL_ADDRESS,
     returnLocation: get("returnLocation"),
     pickupDate: get("pickupDate"),
     pickupTime: get("pickupTime"),

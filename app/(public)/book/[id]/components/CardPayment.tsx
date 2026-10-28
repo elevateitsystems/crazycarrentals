@@ -46,9 +46,9 @@ export default function CardPayment(props: Props) {
 
   return (
     <Card className="gap-0 rounded-2xl border-border py-0 shadow-sm">
-      <CardContent className="p-8">
-        <h2 className="text-xl font-bold tracking-tight text-foreground">Secure card payment</h2>
-        <p className="mt-1.5 text-xs text-muted-foreground">
+      <CardContent className="p-6 sm:p-10">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">Secure card payment</h2>
+        <p className="mt-2 text-[15px] leading-6 text-muted-foreground">
           Booking {bookingReference(props.booking)} is held for you while you pay. Card details go straight to Stripe and never reach our servers.
         </p>
         {loadError ? (
@@ -202,14 +202,14 @@ function CheckoutForm({ booking, data, carId, onPaid, onReset }: Props) {
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-6">
         {paidIntentId ? <span /> : <CancelHold booking={booking} data={data} onReset={onReset} label="Cancel booking" disabled={paying} />}
-        <Button type="submit" loading={paying} disabled={!stripe || !elements || !ready} className="h-9 gap-1.5 rounded-lg px-5 text-xs font-semibold">
+        <Button type="submit" loading={paying} disabled={!stripe || !elements || !ready} className="h-12 gap-2 rounded-xl px-7 text-[15px] font-semibold">
           {!paying && <Lock size={12} />}
           {paying ? "Processing…" : paidIntentId ? "Confirm my booking" : `Pay ${money(amount)}`}
         </Button>
       </div>
 
-      <p className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-        <ShieldCheck className="size-3.5 text-primary" />
+      <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+        <ShieldCheck className="size-4 text-primary" />
         Payments are processed by Stripe. Your bank may ask you to verify the payment.
       </p>
     </form>
@@ -229,7 +229,7 @@ function CancelHold({ booking, data, onReset, label, disabled }: Pick<Props, "bo
         variant="outline"
         disabled={disabled}
         loading={busy}
-        className="h-9 rounded-lg px-4 text-xs"
+        className="h-11 rounded-xl px-5 text-sm"
         onClick={() =>
           guard(async () => {
             setError(null);
@@ -245,7 +245,7 @@ function CancelHold({ booking, data, onReset, label, disabled }: Pick<Props, "bo
       >
         {busy ? "Cancelling…" : label}
       </Button>
-      {error && <span className="text-[11px] text-destructive">{error}</span>}
+      {error && <span className="text-sm text-destructive">{error}</span>}
     </div>
   );
 }

@@ -139,11 +139,11 @@ export default function BookingFlow({ carId }: { carId: string }) {
     <main className="min-h-screen bg-background">
       <BookingStepper current={step} />
 
-      <div className="mx-auto max-w-5xl px-6 py-10">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
         {step === LAST_STEP && booking ? (
           <ConfirmationStep car={car} data={data} booking={booking} />
         ) : (
-          <div className="grid items-start gap-6 lg:grid-cols-[1fr_20rem]">
+          <div className="grid items-start gap-8 lg:grid-cols-[1fr_24rem]">
             <div>
               {step === 1 && <VehicleStep car={car} {...stepProps} />}
               {step === 2 && <ExtrasStep {...stepProps} />}

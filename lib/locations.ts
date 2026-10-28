@@ -1,3 +1,5 @@
+import { BUSINESS_ADDRESS, BUSINESS_EMAIL, BUSINESS_HOURS, BUSINESS_HOURS_SUMMARY, BUSINESS_PHONE } from "@/lib/business";
+
 export type Location = {
   slug: string;
   region: string;
@@ -11,48 +13,23 @@ export type Location = {
   offers: string[];
 };
 
-const hours = [
-  { label: "Monday – Friday", time: "7:00am – 9:00pm" },
-  { label: "Saturday", time: "7:00am – 8:00pm" },
-  { label: "Sunday", time: "8:00am – 6:00pm" },
-  { label: "Public Holidays", time: "8:00am – 7:00pm" },
-];
+/** Regular car rentals operate from this single location. Do not list other pickup points for rentals. */
+export const RENTAL_ADDRESS = BUSINESS_ADDRESS;
+
+/** Accident replacement vehicles are delivered anywhere in Tasmania. */
+export const ACCIDENT_SERVICE_AREA = "Statewide across Tasmania";
 
 export const locations: Location[] = [
   {
-    slug: "hobart-airport",
-    region: "Hobart",
-    name: "Hobart Airport",
-    address: "Strachan St, Cambridge TAS 7170",
-    phone: "(03) 6200 0001",
-    email: "airport@tasdrive.com.au",
-    image: "/location-image.jpg",
-    hours,
-    summaryHours: "7:00am – 9:00pm",
-    offers: ["Airport pickup & drop-off", "After-hours key collection", "Express returns", "Free shuttle to terminal"],
-  },
-  {
-    slug: "hobart-cbd",
-    region: "Hobart",
-    name: "Hobart CBD",
-    address: "78 Collins St, Hobart TAS 7000",
-    phone: "(03) 6200 0002",
-    email: "cbd@tasdrive.com.au",
-    image: "/location-image.jpg",
-    hours,
-    summaryHours: "8:00am – 6:00pm",
-    offers: ["City centre pickup & drop-off", "Easy walk from the waterfront", "Express returns", "Street-level vehicle handover"],
-  },
-  {
     slug: "launceston",
     region: "Launceston",
-    name: "Launceston",
-    address: "121 Brisbane St, Launceston TAS 7250",
-    phone: "(03) 6200 0003",
-    email: "launceston@tasdrive.com.au",
+    name: "Launceston Branch",
+    address: BUSINESS_ADDRESS,
+    phone: BUSINESS_PHONE,
+    email: BUSINESS_EMAIL,
     image: "/location-image.jpg",
-    hours,
-    summaryHours: "8:00am – 6:00pm",
-    offers: ["Central pickup & drop-off", "After-hours key collection", "One-way rentals available", "Local touring advice"],
+    hours: BUSINESS_HOURS,
+    summaryHours: BUSINESS_HOURS_SUMMARY,
+    offers: ["Regular car rental pickup and drop-off"],
   },
 ];

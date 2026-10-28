@@ -19,7 +19,7 @@ type StepCardProps = {
   footerNote?: React.ReactNode;
 };
 
-const footerButton = "h-9 rounded-lg px-4 text-xs font-medium shadow-none";
+const footerButton = "h-11 rounded-xl px-5 text-sm font-medium shadow-none";
 
 export default function StepCard({
   title,
@@ -42,11 +42,11 @@ export default function StepCard({
       }}
     >
       <Card className="gap-0 rounded-2xl border-border py-0 shadow-sm">
-        <CardContent className="p-8">
-          <h2 className="text-xl font-bold tracking-tight text-foreground">{title}</h2>
-          <p className="mt-1.5 text-xs text-muted-foreground">{description}</p>
+        <CardContent className="p-6 sm:p-10">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">{title}</h2>
+          <p className="mt-2 text-[15px] leading-6 text-muted-foreground">{description}</p>
 
-          <div className="mt-6">{children}</div>
+          <div className="mt-8">{children}</div>
 
           {error && (
             <Notice className="mt-5">
@@ -55,13 +55,13 @@ export default function StepCard({
             </Notice>
           )}
 
-          <div className="mt-7 flex items-center justify-between border-t border-border pt-6">
+          <div className="mt-9 flex items-center justify-between border-t border-border pt-7">
             {backHref ? (
               <Link
                 href={backHref}
                 className={cn(buttonVariants({ variant: "outline" }), footerButton, "gap-1.5 border-border bg-card text-foreground hover:bg-muted")}
               >
-                <ArrowLeft size={12} />
+                <ArrowLeft size={15} />
                 {backLabel}
               </Link>
             ) : (
@@ -71,7 +71,7 @@ export default function StepCard({
                 onClick={onBack}
                 className={cn(footerButton, "gap-1.5 border-border bg-card text-foreground hover:bg-muted")}
               >
-                <ArrowLeft size={12} />
+                <ArrowLeft size={15} />
                 {backLabel}
               </Button>
             )}
@@ -82,7 +82,7 @@ export default function StepCard({
               className={cn(footerButton, "gap-1.5 bg-primary px-5 font-semibold text-primary-foreground hover:bg-primary/90")}
             >
               {submitting ? "Please wait…" : nextLabel}
-              {!submitting && <ArrowRight size={12} />}
+              {!submitting && <ArrowRight size={15} />}
             </Button>
           </div>
         </CardContent>

@@ -3,9 +3,9 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 export const inputStyles =
-  "h-10 rounded-lg border-border bg-muted/50 px-3.5 text-xs shadow-none placeholder:text-muted-foreground/70 focus-visible:border-primary focus-visible:ring-primary/30";
+  "h-12 rounded-xl border-border bg-muted/50 px-4 text-[15px] shadow-none placeholder:text-muted-foreground/70 focus-visible:border-primary focus-visible:ring-primary/30";
 
-export const labelStyles = "text-[9px] font-semibold uppercase tracking-wider text-muted-foreground";
+export const labelStyles = "text-[12px] font-semibold uppercase tracking-wider text-muted-foreground";
 
 type FormFieldProps = Omit<React.ComponentProps<"input">, "id"> & {
   id: string;
@@ -25,7 +25,7 @@ export default function FormField({
   const isPicker = type === "date" || type === "time";
 
   return (
-    <div className={cn("flex flex-col gap-1.5", wrapperClassName)}>
+    <div className={cn("flex flex-col gap-2", wrapperClassName)}>
       <Label htmlFor={id} className={labelStyles}>
         {label}
       </Label>

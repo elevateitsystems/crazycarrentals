@@ -42,6 +42,8 @@ export type Driver = {
 
 /** The licence snapshot embedded in cars and bookings (no name). */
 export type DriverInfo = {
+  /** Not returned by the public car API today; shown on the car page as soon as the backend includes it. */
+  name?: string;
   dateOfBirth?: string;
   age?: string;
   licenseState?: string;

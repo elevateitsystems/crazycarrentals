@@ -8,21 +8,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { RENTAL_ADDRESS } from "@/lib/locations";
+import { cn } from "@/lib/utils";
 
 const fields = [
-  { id: "pickupLocation", label: "Pickup Location", type: "text", placeholder: "e.g. Hobart Airport", className: "text-center" },
-  { id: "returnLocation", label: "Return Location", type: "text", placeholder: "e.g. Hobart CBD", className: "text-center" },
+  { id: "pickupLocation", label: "Pickup Location", type: "text", placeholder: "e.g. 201 Wellington Street, Launceston", defaultValue: RENTAL_ADDRESS },
+  { id: "returnLocation", label: "Return Location", type: "text", placeholder: "e.g. 201 Wellington Street, Launceston" },
   { id: "pickupDate", label: "Pickup Date", type: "date" },
   { id: "pickupTime", label: "Pickup Time", type: "time" },
   { id: "returnDate", label: "Return Date", type: "date" },
   { id: "returnTime", label: "Return Time", type: "time" },
-  { id: "age", label: "Age", type: "number", placeholder: "e.g. 25", className: "text-center" },
-];
+] as const;
 
-const labelStyles = "text-[11px] font-medium uppercase leading-4 tracking-wide text-neutral-500";
+// Driver age bands. The value is the minimum age sent to the backend's availability search as `age`.
+const AGE_OPTIONS = [
+  { value: "21", label: "21+" },
+  { value: "25", label: "25+" },
+] as const;
+
+const labelStyles = "text-xs font-semibold uppercase leading-4 tracking-wide text-neutral-600";
 
 const inputStyles =
-  "h-[42px] rounded-lg border-[#ececE8] bg-[#fafaf8] px-3 text-[13.5px] shadow-none placeholder:text-neutral-400 md:text-[13.5px]";
+  "h-12 rounded-xl border-[#e3e3de] bg-[#fafaf8] px-3.5 text-[15px] shadow-none placeholder:text-neutral-400 md:text-[15px]";
 
 // Native pickers keep their format hint (mm/dd/yyyy, --:-- --) and icon visible; the hint is muted while the field is empty.
 const pickerStyles =
@@ -47,19 +54,19 @@ export default function SearchSection() {
   };
 
   return (
-    <section className="bg-[#f5f5f1] pb-14 pt-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
+    <section className="bg-[#f5f5f1] pb-16 pt-16 sm:pt-20">
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-[2.4rem] font-bold leading-[1.15] tracking-tight text-neutral-900">
+          <h2 className="text-[2rem] font-bold leading-[1.15] tracking-tight text-neutral-900 sm:text-[2.8rem]">
             Ready to hit the road?
           </h2>
-          <p className="mt-4 text-[15px] text-neutral-500">
+          <p className="mt-4 text-base text-neutral-500 sm:text-lg">
             Enter your details below to find available vehicles.
           </p>
         </div>
 
-        <Card className="mt-8.5 gap-0 rounded-2xl border-0 py-0 shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
-          <CardContent className="p-4">
+        <Card className="mt-10 gap-0 rounded-3xl border-0 py-0 shadow-[0_12px_40px_rgba(0,0,0,0.10)]">
+          <CardContent className="p-5 sm:p-8">
             <form onSubmit={handleSubmit}>
               <div className="flex flex-wrap items-center gap-6">
                 <div className="flex items-center gap-4">
@@ -69,7 +76,7 @@ export default function SearchSection() {
                     onCheckedChange={setSameLocation}
                     className="origin-left scale-[1.2] data-[state=checked]:bg-[#86d72f]"
                   />
-                  <Label htmlFor="sameLocation" className="text-[12.5px] font-medium">
+                  <Label htmlFor="sameLocation" className="text-sm font-medium">
                     Return to same location
                   </Label>
                 </div>
@@ -81,37 +88,52 @@ export default function SearchSection() {
                     onCheckedChange={setAirportShuttle}
                     className="origin-left scale-[1.2] data-[state=checked]:bg-[#86d72f]"
                   />
-                  <Label htmlFor="airportShuttle" className="text-[12.5px] font-medium">
+                  <Label htmlFor="airportShuttle" className="text-sm font-medium">
                     Airport Shuttle
                   </Label>
                 </div>
               </div>
 
-             <div className="mt-4.5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-                {fields.filter((f) => f.id !== "returnLocation" || !sameLocation).map(({ id, label, type, placeholder, className }) => (
-                  <div key={id} className="flex flex-col gap-1.5">
-                    <Label htmlFor={id} className={labelStyles}>
-                      {label}
+              <div className="mt-6 grid gap-x-4 gap-y-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                {fields.filter((f) => f.id !== "returnLocation" || !sameLocation).map((f) => (
+                  <div key={f.id} className={cn("flex flex-col gap-2", f.type === "text" && "xl:col-span-2")}>
+                    <Label htmlFor={f.id} className={labelStyles}>
+                      {f.label}
                     </Label>
                     <Input
-                      id={id}
-                      name={id}
-                      type={type}
-                      placeholder={placeholder}
+                      id={f.id}
+                      name={f.id}
+                      type={f.type}
+                      placeholder={"placeholder" in f ? f.placeholder : undefined}
+                      defaultValue={"defaultValue" in f ? f.defaultValue : undefined}
                       required
-                      min={type === "date" ? today : undefined}
-                      onClick={type === "text" ? undefined : (e) => e.currentTarget.showPicker?.()}
-                      className={`${inputStyles} ${type === "text" ? "" : pickerStyles} ${className ?? ""}`}
+                      min={f.type === "date" ? today : undefined}
+                      onClick={f.type === "text" ? undefined : (e) => e.currentTarget.showPicker?.()}
+                      className={`${inputStyles} ${f.type === "text" ? "" : pickerStyles}`}
                     />
                   </div>
                 ))}
-                
               </div>
 
-              <div className="mt-5 flex justify-end">
+              <fieldset className="mt-6">
+                <legend className={labelStyles}>Driver age</legend>
+                <div className="mt-2 flex gap-3">
+                  {AGE_OPTIONS.map(({ value, label }) => (
+                    <label
+                      key={value}
+                      className="flex h-12 min-w-28 cursor-pointer items-center justify-center rounded-xl border border-[#e3e3de] bg-[#fafaf8] px-6 text-[15px] font-semibold text-neutral-700 transition-colors hover:border-[#86d72f] has-[:checked]:border-[#86d72f] has-[:checked]:bg-[#86d72f]/15 has-[:checked]:text-neutral-900 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#86d72f]"
+                    >
+                      <input type="radio" name="age" value={value} required className="sr-only" />
+                      {label}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <div className="mt-6 flex justify-end">
                 <Button
                   type="submit"
-                  className="h-11.5 rounded-xl bg-[#86d72f] px-8 text-sm font-semibold text-neutral-900 hover:bg-[#78c428] has-[>svg]:px-8"
+                  className="h-13 w-full rounded-xl bg-[#86d72f] px-10 text-base font-semibold text-neutral-900 hover:bg-[#78c428] has-[>svg]:px-10 sm:w-auto"
                 >
                   Search Cars
                   <Search />

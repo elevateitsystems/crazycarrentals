@@ -2,19 +2,19 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import FleetBrowser from "@/components/FleetBrowser";
+import VehicleTypes from "@/components/VehicleTypes";
 
 export default function FleetSection() {
   return (
     <section className="bg-card py-27.5">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
           <div>
             <h2 className="max-w-140 text-[2.4rem] font-bold leading-[1.4] tracking-tight text-foreground">
-              Find the right vehicle for your journey.
+              Vehicle Types
             </h2>
             <p className="mt-3 max-w-md text-[14.5px] leading-5 text-muted-foreground">
-              Choose from a growing range of vehicles for travel, business and everyday needs.
+              Choose a category to see the vehicles available, for travel, business and everyday needs.
             </p>
           </div>
 
@@ -30,7 +30,7 @@ export default function FleetSection() {
           </Link>
         </div>
 
-        <FleetBrowser limit={12} className="mt-8" />
+        <VehicleTypes className="mt-10" />
       </div>
     </section>
   );

@@ -49,34 +49,34 @@ export default function PaymentStep({ total, unavailable, submitting, error, nee
         )
       }
     >
-      <div className="mb-6 grid gap-3 sm:grid-cols-2">
+      <div className="mb-7 grid gap-4 sm:grid-cols-2">
         <button
           type="button"
           onClick={() => update({ paymentTiming: "payNow" })}
           className={cn(
-            "flex flex-col items-start gap-1 rounded-xl border p-4 text-left transition",
+            "flex flex-col items-start gap-1.5 rounded-2xl border-2 p-5 text-left transition",
             payNow ? "border-primary bg-primary/5" : "border-border hover:bg-muted"
           )}
         >
           <div className="flex w-full items-center justify-between">
-            <span className="text-sm font-semibold text-foreground">Pay Now</span>
-            {payNow && <span className="size-2 rounded-full bg-primary" />}
+            <span className="text-base font-semibold text-foreground">Pay Now</span>
+            {payNow && <span className="size-3 rounded-full bg-primary" />}
           </div>
-          <span className="text-xs text-muted-foreground">Pay online by card and get the Pay Now discount.</span>
+          <span className="text-sm text-muted-foreground">Pay online by card and get the Pay Now discount.</span>
         </button>
         <button
           type="button"
           onClick={() => update({ paymentTiming: "payDesk" })}
           className={cn(
-            "flex flex-col items-start gap-1 rounded-xl border p-4 text-left transition",
+            "flex flex-col items-start gap-1.5 rounded-2xl border-2 p-5 text-left transition",
             !payNow ? "border-foreground bg-foreground/5" : "border-border hover:bg-muted"
           )}
         >
           <div className="flex w-full items-center justify-between">
-            <span className="text-sm font-semibold text-foreground">Pay at Desk</span>
-            {!payNow && <span className="size-2 rounded-full bg-foreground" />}
+            <span className="text-base font-semibold text-foreground">Pay at Desk</span>
+            {!payNow && <span className="size-3 rounded-full bg-foreground" />}
           </div>
-          <span className="text-xs text-muted-foreground">Pay when you collect the vehicle.</span>
+          <span className="text-sm text-muted-foreground">Pay when you collect the vehicle.</span>
         </button>
       </div>
 
@@ -92,7 +92,7 @@ export default function PaymentStep({ total, unavailable, submitting, error, nee
                   aria-pressed={active}
                   onClick={() => update({ paymentMethod: method })}
                   className={cn(
-                    "flex h-9 items-center gap-2 rounded-lg border bg-card px-4 text-[11px] font-medium transition",
+                    "flex h-11 items-center gap-2 rounded-xl border bg-card px-5 text-sm font-medium transition",
                     active ? "border-foreground text-foreground" : "border-border text-muted-foreground hover:bg-muted"
                   )}
                 >
@@ -107,10 +107,10 @@ export default function PaymentStep({ total, unavailable, submitting, error, nee
             Your vehicle is held for 30 minutes while you enter your card on the next screen, on Stripe&apos;s secure form.
           </Notice>
 
-          <div className="mt-6 border-t border-border pt-5">
-            <h3 className="text-xs font-semibold text-foreground">Billing Address</h3>
+          <div className="mt-7 border-t border-border pt-6">
+            <h3 className="text-lg font-semibold text-foreground">Billing Address</h3>
 
-            <div className="mt-4 grid gap-4">
+            <div className="mt-5 grid gap-5">
               <FormField
                 id="street"
                 label="Street address"
@@ -123,7 +123,7 @@ export default function PaymentStep({ total, unavailable, submitting, error, nee
                 <FormField
                   id="suburb"
                   label="Suburb"
-                  placeholder="Hobart"
+                  placeholder="Launceston"
                   required
                   value={data.suburb}
                   onChange={(e) => update({ suburb: e.target.value })}
@@ -153,10 +153,10 @@ export default function PaymentStep({ total, unavailable, submitting, error, nee
         <Notice kind="info">Your vehicle is held for you. Payment is collected by our team at the desk on pickup.</Notice>
       )}
 
-      <ul className="mt-5 flex flex-wrap gap-x-4 gap-y-2">
+      <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
         {trust.map((item) => (
-          <li key={item} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-            <ShieldCheck className="size-3.5 text-primary" />
+          <li key={item} className="flex items-center gap-2 text-sm text-muted-foreground">
+            <ShieldCheck className="size-4 text-primary" />
             {item}
           </li>
         ))}

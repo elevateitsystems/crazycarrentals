@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Check, UserRound } from "lucide-react";
 import CarImage from "@/components/CarImage";
 import BrandLoader from "@/components/BrandLoader";
 import { ErrorState } from "@/components/Feedback";
 import { buttonVariants } from "@/components/ui/button";
 import { useAsync } from "@/hooks/use-async";
-import { carsApi } from "@/lib/api/services";
+import { ADMIN_SESSION_PATH } from "@/lib/api/config";
+import { adminApi, carsApi } from "@/lib/api/services";
 import { FALLBACK_CAR_IMAGE } from "@/lib/cars";
 import { carFeatures, carImages, carName, enumLabel, money } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,23 @@ import { cn } from "@/lib/utils";
 export default function CarDetail({ id }: { id: string }) {
   const { data, error, loading, reload } = useAsync(async () => (await carsApi.get(id)).data, id);
   const [selected, setSelected] = useState(0);
+
+  // The public car API doesn't include the driver's name (only licence details). Signed-in admins may read
+  // driver records, so for them the name is looked up through the admin session; visitors never trigger an admin call.
+  const driverId = data?.driverInfoId ?? null;
+  const needsLookup = Boolean(driverId && !data?.driverInfo?.name);
+  const lookup = useAsync(async () => {
+    if (!driverId || !needsLookup) return null;
+    const session = await fetch(ADMIN_SESSION_PATH, { credentials: "same-origin", cache: "no-store" })
+      .then((r) => r.json())
+      .catch(() => null);
+    if (!session?.data?.user) return null;
+    try {
+      return (await adminApi.driver(driverId)).data.name?.trim() || null;
+    } catch {
+      return null;
+    }
+  }, `${id}:${driverId}:${needsLookup}`);
 
   if (loading) return <BrandLoader label="Loading vehicle…" />;
   if (error || !data) {
@@ -30,6 +48,9 @@ export default function CarDetail({ id }: { id: string }) {
   const images = carImages(car);
   const gallery = images.length ? images : [FALLBACK_CAR_IMAGE];
   const features = carFeatures(car);
+  // Only the driver's name is shown: the licence details in `driverInfo` are personal and stay private.
+  const driverAssigned = Boolean(car.driverInfoId || car.driverInfo);
+  const driverName = car.driverInfo?.name?.trim() || lookup.data || null;
   const specs: [string, string | number | undefined][] = [
     ["Type", enumLabel(car.carType)],
     ["Year", car.year],
@@ -89,6 +110,18 @@ export default function CarDetail({ id }: { id: string }) {
                   </div>
                 ))}
             </dl>
+
+            <div className="mt-4 flex items-center gap-3.5 rounded-xl border border-border bg-card p-4">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+                <UserRound className="size-5" aria-hidden />
+              </span>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Driver</p>
+                <p className={cn("text-base font-semibold", driverName ? "text-foreground" : "text-muted-foreground")}>
+                  {driverName ?? (driverAssigned ? (lookup.loading && needsLookup ? "Loading driver…" : "Driver assigned") : "No driver assigned")}
+                </p>
+              </div>
+            </div>
 
             {car.safetyRatings && (
               <p className="mt-4 text-sm">
