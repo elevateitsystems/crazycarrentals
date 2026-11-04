@@ -4,7 +4,9 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-const steps = [
+type Step = { number: string; title: string; description: string };
+
+const defaultSteps: Step[] = [
   {
     number: "01",
     title: "Tell us what happened",
@@ -22,17 +24,30 @@ const steps = [
   },
 ];
 
-export default function AccidentProcessSection() {
+type Props = {
+  eyebrow?: string;
+  heading?: string;
+  subheading?: string;
+  steps?: Step[];
+};
+
+export default function AccidentProcessSection({
+  eyebrow = "The Process",
+  heading = "How accident replacement works",
+  subheading,
+  steps = defaultSteps,
+}: Props) {
   return (
     <section className="bg-background py-22">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
         <div className="text-center">
           <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9cdc33]">
-            The Process
+            {eyebrow}
           </span>
           <h2 className="mt-4 text-[2.4rem] font-bold leading-[1.15] tracking-tight text-[#131414]">
-            How accident replacement works
+            {heading}
           </h2>
+          {subheading && <p className="mx-auto mt-3 max-w-xl text-[15px] leading-6 text-[#747d79]">{subheading}</p>}
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">

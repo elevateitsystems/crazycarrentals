@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils";
 import SectionBadge from "./SectionBadge";
 
 const paragraphs = [
-  "TasDrive Rentals was founded with one simple goal: to give Tasmanians access to reliable, well-priced vehicles without the hassle that usually comes with car rental.",
-  "As locals ourselves, we know that getting around Tasmania is different to the mainland. From winding mountain roads to coastal drives and everything in between — we know the roads, and we know what kind of vehicle you need.",
-  "We've also built a dedicated accident replacement service to support Tasmanians who find themselves without a vehicle through no fault of their own. Our team handles the complexity so you can focus on what matters.",
+  "While TasDrive Rentals is a fresh name on the island, our team brings a proven history of industry expertise dating back to 2015.",
+  "For over a decade, we have operated behind the scenes in the vehicle rental industry, perfecting what drivers truly value: reliable vehicles, transparent pricing, and a seamless experience. Our background spans comprehensive fleet management, streamlined customer service, and delivering exceptional service to thousands of customers.",
+  "At TasDrive Rentals, we believe renting a vehicle should be simple, straightforward, and stress-free. We're committed to providing reliable vehicles, clear communication, and a personalised approach that puts our customers first.",
+  "With years of experience behind us and a fresh approach to vehicle rental, we're here to make getting on the road as easy as possible.",
 ];
 
 export default function StorySection() {

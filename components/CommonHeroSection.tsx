@@ -4,8 +4,11 @@ import { ArrowUpRight } from "lucide-react";
 
 type HeroSectionProp = {
   image?: string;
-  hightlightTitle: string;
+  imageAlt?: string;
+  hightlightTitle?: string;
   title: string;
+  /** Optional highlighted line shown under a long title (smaller than `hightlightTitle`). */
+  subtitle?: string;
   bedgeText: string;
   description: string;
   isCtaOpen?: boolean;
@@ -13,8 +16,10 @@ type HeroSectionProp = {
 
 export default function CommonHeroSection({
   image,
+  imageAlt = "Dark sports car parked at sunset",
   hightlightTitle,
   title,
+  subtitle,
   bedgeText,
   description,
   isCtaOpen = true,
@@ -23,7 +28,7 @@ export default function CommonHeroSection({
     <section className="relative flex w-full items-center min-h-[75vh]">
       <Image
         src={image || "/generic-hero.jpg"}
-        alt="Dark sports car parked at sunset"
+        alt={imageAlt}
         fill
         priority
         quality={100}
@@ -32,6 +37,8 @@ export default function CommonHeroSection({
       />
       <div className="absolute inset-0 bg-linear-to-r from-secondary/85 via-secondary/45 to-transparent" />
       <div className="absolute inset-0 bg-linear-to-t from-secondary/50 via-transparent to-transparent" />
+      {/* Long copy needs extra contrast over bright photos on narrow screens. */}
+      {subtitle && <div className="absolute inset-0 bg-secondary/45 md:hidden" />}
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-0 py-40">
         <span className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/15 px-3 py-1 text-[11px] font-medium text-primary backdrop-blur-sm">
@@ -39,13 +46,31 @@ export default function CommonHeroSection({
           {bedgeText}
         </span>
 
-        <h1 className="mt-5 font-heading text-5xl font-semibold leading-[1.1] tracking-tight text-secondary-foreground md:text-7xl">
+        <h1
+          className={
+            subtitle
+              ? "mt-5 max-w-3xl font-heading text-4xl font-semibold leading-[1.15] tracking-tight text-secondary-foreground md:text-6xl"
+              : "mt-5 font-heading text-5xl font-semibold leading-[1.1] tracking-tight text-secondary-foreground md:text-7xl"
+          }
+        >
           {title}
-          <br />
-          <span className="text-primary">{hightlightTitle}</span>
+          {hightlightTitle && (
+            <>
+              <br />
+              <span className="text-primary">{hightlightTitle}</span>
+            </>
+          )}
         </h1>
 
-        <p className="mt-6 max-w-md text-base leading-relaxed text-secondary-foreground/70">
+        {subtitle && <p className="mt-4 max-w-2xl font-heading text-xl font-medium text-primary md:text-2xl">{subtitle}</p>}
+
+        <p
+          className={
+            subtitle
+              ? "mt-4 max-w-xl text-base leading-relaxed text-secondary-foreground/70"
+              : "mt-6 max-w-md text-base leading-relaxed text-secondary-foreground/70"
+          }
+        >
           {description}
         </p>
 
