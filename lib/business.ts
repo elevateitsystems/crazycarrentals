@@ -6,10 +6,10 @@ export const BUSINESS_EMAIL = "info@tasdriverentals.com.au";
 export const BUSINESS_ADDRESS = "201 Wellington St, Launceston TAS 7250, Australia";
 
 export const BUSINESS_HOURS = [
-  { label: "Monday – Friday", time: "8 AM – 5 PM" },
-  { label: "Saturday", time: "9 AM – 3 PM" },
-  { label: "Sunday", time: "9 AM – 2 PM" },
+  { label: "Monday – Friday", time: "8:00am – 5:00pm" },
+  { label: "Saturday", time: "9:00am – 3:00pm" },
+  { label: "Sunday", time: "9:00am – 2:00pm" },
 ];
-export const BUSINESS_HOURS_SUMMARY = "Mon–Fri 8 AM–5 PM, Sat 9 AM–3 PM, Sun 9 AM–2 PM";
+export const BUSINESS_HOURS_SUMMARY = "Mon–Fri 8:00am–5:00pm, Sat 9:00am–3:00pm, Sun 9:00am–2:00pm";
 
 export const DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(BUSINESS_ADDRESS)}`;

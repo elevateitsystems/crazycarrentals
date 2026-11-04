@@ -2,7 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
-export default function CtaSection() {
+type Props = {
+  /** Small pill above the heading. */
+  badge?: string;
+  /** Replaces the default heading. */
+  heading?: React.ReactNode;
+};
+
+export default function CtaSection({ badge = "Tasmania's Vehicle Partner", heading }: Props = {}) {
   return (
     <section className="relative isolate flex min-h-105 items-center justify-center overflow-hidden text-secondary-foreground sm:min-h-120 lg:min-h-140">
       {/* Background image */}
@@ -23,13 +30,16 @@ export default function CtaSection() {
         {/* Badge */}
         <span className="inline-flex items-center gap-2 rounded-full border border-secondary-foreground/15 bg-secondary/40 px-3 py-1.5 text-xs font-medium text-secondary-foreground/90 backdrop-blur-md">
           <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)]" />
-          Tasmania&apos;s Vehicle Partner
+          {badge}
         </span>
 
         {/* Heading */}
         <h2 className="mt-6 max-w-3xl text-balance font-heading text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-          Wherever the road takes you,{" "}
-          <span className="text-primary">TasDrive</span> can help.
+          {heading ?? (
+            <>
+              Wherever the road takes you, <span className="text-primary">TasDrive</span> can help.
+            </>
+          )}
         </h2>
 
         {/* Description */}
