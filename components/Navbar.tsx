@@ -26,7 +26,7 @@ type BookNowButtonProps = {
   href: string
 }
 
-function BookNowButton({ className, href}: BookNowButtonProps) {
+function BookNowButton({ className, href }: BookNowButtonProps) {
   return (
     <Link
       href={href}
@@ -125,20 +125,20 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#181617] text-secondary-foreground">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-6 lg:px-6 xl:px-8">
-       <Link
-  href="/"
-  className="shrink-0 justify-self-start"
-  aria-label="TAS Drive Rentals home"
->
-  <Image
-    src="/logo.avif"
-    alt="TAS Drive Rentals"
-    width={200}
-    height={300}
-    priority
-    className="h-20 w-auto py-1 sm:h-24"
-  />
-</Link>
+        <Link
+          href="/"
+          className="shrink-0 justify-self-start"
+          aria-label="TAS Drive Rentals home"
+        >
+          <Image
+            src="/logo.avif"
+            alt="TAS Drive Rentals"
+            width={200}
+            height={300}
+            priority
+            className="h-20 w-auto py-1 sm:h-24"
+          />
+        </Link>
 
         <div className="hidden justify-self-center lg:block">
           <NavLinks />

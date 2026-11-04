@@ -165,6 +165,7 @@ export default function BookingFlow({ carId }: { carId: string }) {
               {step === 4 && !hold && (
                 <PaymentStep
                   total={estimate?.total}
+                  estimate={estimate}
                   unavailable={estimate && !estimate.available ? estimate.unavailableReason ?? "This vehicle isn't available for those dates." : null}
                   submitting={submitting}
                   error={submitError}

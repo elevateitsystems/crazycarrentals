@@ -83,6 +83,11 @@ export type ExtraService = {
   name?: string;
   description?: string;
   pricePerDay?: number;
+  /** Admin list only. Inactive extras are hidden from customers' booking step. */
+  isActive?: boolean;
+  /** Admin list only: how many bookings used this extra. */
+  bookingsCount?: number;
+  updatedAt?: string;
   [key: string]: unknown;
 };
 

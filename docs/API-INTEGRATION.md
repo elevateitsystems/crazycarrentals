@@ -36,7 +36,7 @@ with the token, and sets the cookie only if the backend serves that admin-only e
 
 - `proxy.ts` redirects `/admin/*` to `/auth/signin?next=…` when there's no admin cookie (optimistic only), and `/admin`
   to `/admin/dashboard`. A signed-in customer sent there is told the account has no admin access.
-- Proxy route: only admin path prefixes are forwarded (`admin/dashboard`, `bookings/admin/*`, `auth/users`, `auth/user/*`,
+- Proxy route: only admin path prefixes are forwarded (`admin/dashboard`, `admin/extras/*`, `bookings/admin/*`, `auth/users`, `auth/user/*`,
   `drivers/*`, `cars*`, `payments/config`); writes must carry a same-site `Origin` header (CSRF). Bodies are passed through
   unchanged, so multipart car images keep their boundary.
 - 401 from the backend clears the cookie and the UI returns to `/auth/signin?reason=expired`. A 403 triggers a re-check;
@@ -61,6 +61,7 @@ with the token, and sets the cookie only if the backend serves that admin-only e
 | `/admin/payments` | `GET /payments/config`, `GET /bookings/admin/summary`, `GET /bookings/admin/all` (payment filters), `POST /bookings/admin/collect-payment/:id` |
 | `/admin/fleet-management` | `GET /cars` (page, limit, searchTerm), `POST /cars/add-new-car`, `PATCH /cars/update-car/:id`, `DELETE /cars/delete-car/:id`, `PATCH /cars/:id/assign-driver` (`driverId: null` unassigns), `GET /drivers/all` |
 | `/admin/drivers` | `GET /drivers/all` (page, limit, searchTerm), `POST /drivers/add`, `PATCH /drivers/update/:id`, `DELETE /drivers/delete/:id` |
+| `/admin/extras` | `GET /admin/extras/all` (unpaginated, includes `isActive` and `bookingsCount`), `POST /admin/extras/add { name, pricePerDay }`, `PATCH /admin/extras/update/:id { name?, pricePerDay?, isActive? }`, `DELETE /admin/extras/delete/:id` |
 | `/admin/customers` | `GET /auth/users` (page, limit, role, searchTerm), `GET /auth/user/:id`, `PATCH /auth/user/update/:id`, `DELETE /auth/user/delete/:id` |
 
 ## Payments (Stripe)

@@ -7,6 +7,7 @@ import type {
   DashboardStats,
   Driver,
   Estimate,
+  ExtraService,
   ExtrasCatalog,
   TripInput,
   User,
@@ -99,6 +100,13 @@ export const adminApi = {
   createDriver: (body: Record<string, unknown>) => request<Driver>("/drivers/add", { ...admin, method: "POST", body }),
   updateDriver: (id: string, body: Record<string, unknown>) => request<Driver>(`/drivers/update/${id}`, { ...admin, method: "PATCH", body }),
   deleteDriver: (id: string) => request<unknown>(`/drivers/delete/${id}`, { ...admin, method: "DELETE" }),
+
+  /** Not paginated: the backend returns every extra, active or not. */
+  extras: () => request<ExtraService[]>("/admin/extras/all", admin),
+  createExtra: (body: { name: string; pricePerDay: number }) => request<ExtraService>("/admin/extras/add", { ...admin, method: "POST", body }),
+  updateExtra: (id: string, body: { name?: string; pricePerDay?: number; isActive?: boolean }) =>
+    request<ExtraService>(`/admin/extras/update/${id}`, { ...admin, method: "PATCH", body }),
+  deleteExtra: (id: string) => request<unknown>(`/admin/extras/delete/${id}`, { ...admin, method: "DELETE" }),
 
   paymentConfig: () => request<{ publishableKey?: string }>("/payments/config", admin),
 };
