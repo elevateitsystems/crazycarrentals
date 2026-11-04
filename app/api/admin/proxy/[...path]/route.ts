@@ -5,7 +5,7 @@ import { ADMIN_COOKIE, isSameOrigin } from "@/lib/server/admin-session";
 type Ctx = { params: Promise<{ path: string[] }> };
 
 // Only the backend areas the admin dashboard uses can be reached with the admin token.
-const ALLOWED = [/^admin\/dashboard$/, /^bookings\/admin(\/|$)/, /^auth\/users$/, /^auth\/user\//, /^drivers\//, /^cars(\/|$)/, /^payments\/config$/];
+const ALLOWED = [/^admin\/dashboard$/, /^admin\/extras(\/|$)/, /^bookings\/admin(\/|$)/, /^auth\/users$/, /^auth\/user\//, /^drivers\//, /^cars(\/|$)/, /^payments\/config$/];
 
 function fail(status: number, message: string) {
   return NextResponse.json({ success: false, message }, { status });

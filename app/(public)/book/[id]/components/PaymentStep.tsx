@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShieldCheck } from "lucide-react";
+import { BadgePercent, ShieldCheck } from "lucide-react";
 import { Notice } from "@/components/Feedback";
-import type { StepProps } from "@/lib/booking";
+import { useAsync } from "@/hooks/use-async";
+import { bookingsApi } from "@/lib/api/services";
+import type { Estimate, StepProps } from "@/lib/booking";
 import { money } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import FormField from "./FormField";
@@ -14,6 +16,7 @@ const trust = ["Encrypted connection", "Card details are never stored by us", "P
 
 type Props = StepProps & {
   total?: number;
+  estimate?: Estimate | null;
   /** Set when the price check says the car can't be booked for these dates. */
   unavailable?: string | null;
   submitting: boolean;
@@ -21,9 +24,13 @@ type Props = StepProps & {
   needsLogin: boolean;
 };
 
-export default function PaymentStep({ total, unavailable, submitting, error, needsLogin, data, update, onNext, onBack }: Props) {
+export default function PaymentStep({ total, estimate, unavailable, submitting, error, needsLogin, data, update, onNext, onBack }: Props) {
   const payNow = data.paymentTiming === "payNow";
   const pathname = usePathname();
+  // The discount percentage is owned by the backend; never hardcode it here.
+  const catalog = useAsync(async () => (await bookingsApi.extras()).data, "pay-now-discount");
+  const percent = catalog.data?.discounts?.payNowDiscountPercent ?? (payNow ? estimate?.discountPercentage : undefined) ?? 0;
+  const saving = payNow ? estimate?.discount : undefined;
 
   return (
     <StepCard
@@ -60,9 +67,16 @@ export default function PaymentStep({ total, unavailable, submitting, error, nee
         >
           <div className="flex w-full items-center justify-between">
             <span className="text-base font-semibold text-foreground">Pay Now</span>
-            {payNow && <span className="size-3 rounded-full bg-primary" />}
+            <span className="flex items-center gap-2">
+              {percent > 0 && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold text-primary-foreground">
+                  <BadgePercent className="size-3.5" aria-hidden /> Save {percent}%
+                </span>
+              )}
+              {payNow && <span className="size-3 rounded-full bg-primary" />}
+            </span>
           </div>
-          <span className="text-sm text-muted-foreground">Pay online by card and get the Pay Now discount.</span>
+          <span className="text-sm text-muted-foreground">Pay online by card{percent > 0 ? ` and save ${percent}% on your booking` : ""}.</span>
         </button>
         <button
           type="button"
@@ -79,6 +93,26 @@ export default function PaymentStep({ total, unavailable, submitting, error, nee
           <span className="text-sm text-muted-foreground">Pay when you collect the vehicle.</span>
         </button>
       </div>
+
+      {payNow ? (
+        percent > 0 && (
+          <div role="status" className="mb-5 flex items-start gap-3 rounded-xl border border-primary/40 bg-primary/10 px-4 py-3.5 text-sm">
+            <BadgePercent className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden />
+            <p className="text-foreground">
+              <span className="font-semibold">{percent}% Pay Now discount applied.</span>{" "}
+              {saving ? `You save ${money(saving)}${total != null ? `, bringing your total to ${money(total)}` : ""}.` : "Choose your dates to see how much you save."}
+            </p>
+          </div>
+        )
+      ) : (
+        <div role="status" className="mb-5 flex items-start gap-3 rounded-xl border border-border bg-muted/40 px-4 py-3.5 text-sm">
+          <ShieldCheck className="mt-0.5 size-5 shrink-0 text-muted-foreground" aria-hidden />
+          <p className="text-muted-foreground">
+            <span className="font-semibold text-foreground">No discount with Pay at Desk.</span>{" "}
+            {estimate?.payAtDeskTotal != null ? `You pay the full ${money(estimate.payAtDeskTotal)} when you collect the vehicle.` : "You pay the full amount when you collect the vehicle."}
+          </p>
+        </div>
+      )}
 
       {payNow ? (
         <>

@@ -95,6 +95,12 @@ function isRecord(v: unknown): v is Record<string, unknown> {
 export type Estimate = {
   lines: PriceLine[];
   total?: number;
+  /** Amount taken off by the Pay Now discount (0 for Pay at Desk). */
+  discount?: number;
+  discountPercentage?: number;
+  /** Both totals come back whichever option was estimated. */
+  payNowTotal?: number;
+  payAtDeskTotal?: number;
   rentalDays?: number;
   gstIncluded?: boolean;
   available: boolean;
@@ -106,6 +112,10 @@ export function readEstimate(raw: ApiEstimate | null | undefined): Estimate {
   return {
     lines: (pricing?.summary ?? []).filter((l) => typeof l?.amount === "number"),
     total: pricing?.totalPrice,
+    discount: pricing?.discount,
+    discountPercentage: pricing?.discountPercentage,
+    payNowTotal: pricing?.payNowTotal,
+    payAtDeskTotal: pricing?.payAtDeskTotal,
     rentalDays: pricing?.rentalDays ?? raw?.rentalDetails?.rentalDays,
     gstIncluded: pricing?.gstIncluded,
     available: raw?.isAvailable !== false,
