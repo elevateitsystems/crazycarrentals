@@ -4,7 +4,6 @@ import CarImage from "@/components/CarImage";
 import type { Car } from "@/components/CarCard";
 import type { Estimate } from "@/lib/booking";
 import { money } from "@/lib/format";
-import { normaliseName, protectionTiers, type ProtectionKey } from "@/lib/protection";
 import InfoNote from "./InfoNote";
 
 type Props = {
@@ -13,13 +12,10 @@ type Props = {
   estimating: boolean;
   error: string | null;
   hasDates: boolean;
-  protection?: ProtectionKey;
+  protectionName?: string;
 };
 
-export default function OrderSummary({ car, estimate, estimating, error, hasDates, protection = "standard" }: Props) {
-  const tier = protectionTiers.find((t) => t.key === protection);
-  // A paid package shows up as its own price line when the backend has an extra for it; otherwise it isn't in the total.
-  const priced = !!tier && !tier.free && !!estimate?.lines.some((l) => tier.match.some((m) => normaliseName(l.label).includes(m)));
+export default function OrderSummary({ car, estimate, estimating, error, hasDates, protectionName }: Props) {
   return (
     <Card className="gap-0 rounded-2xl border-border py-0 shadow-md lg:sticky lg:top-6">
       <CardContent className="p-6">
@@ -35,10 +31,10 @@ export default function OrderSummary({ car, estimate, estimating, error, hasDate
         <p className="mt-0.5 text-sm text-muted-foreground">{car.category}</p>
 
         <dl className="mt-5 space-y-3 text-[15px]">
-          {tier && (
+          {protectionName && (
             <div className="flex justify-between gap-3 text-muted-foreground">
               <dt>Protection</dt>
-              <dd className="text-right font-medium text-foreground">{tier.name}</dd>
+              <dd className="text-right font-medium text-foreground">{protectionName}</dd>
             </div>
           )}
           <div className="flex justify-between text-muted-foreground">
@@ -59,9 +55,6 @@ export default function OrderSummary({ car, estimate, estimating, error, hasDate
             {estimating ? <Spinner className="inline size-5 text-muted-foreground" /> : estimate?.total != null ? money(estimate.total) : "—"}
           </span>
         </div>
-        {tier && !tier.free && !priced && (
-          <p className="mt-2 text-[13px] text-muted-foreground">{tier.name} isn&apos;t included in this total. Our team will confirm its price with you.</p>
-        )}
         {estimate?.gstIncluded && <p className="mt-1 text-right text-[13px] text-muted-foreground">GST included</p>}
         {!hasDates && <p className="mt-2 text-[13px] text-muted-foreground">Choose your dates and times to see the total.</p>}
         {estimate && !estimate.available && (

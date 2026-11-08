@@ -15,7 +15,6 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { useAsync } from "@/hooks/use-async";
 import { bookingsApi } from "@/lib/api/services";
 import { bookingReference, bookingTotal, canCancel, latestPayment } from "@/lib/booking";
-import { FALLBACK_CAR_IMAGE } from "@/lib/cars";
 import { carImage, carName, enumLabel, formatDateTime, formatTimestamp, money } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -73,7 +72,7 @@ function Detail({ id }: { id: string }) {
             {/* Header card */}
             <div className="grid overflow-hidden rounded-2xl border border-border bg-card shadow-sm md:grid-cols-[18rem_1fr]">
               <div className="relative h-52 bg-muted md:h-full md:min-h-48">
-                <CarImage src={carImage(b.car) ?? FALLBACK_CAR_IMAGE} alt={b.car ? carName(b.car) : "Vehicle"} />
+                <CarImage src={carImage(b.car)} alt={b.car ? carName(b.car) : "Vehicle"} />
               </div>
               <div className="flex flex-col justify-center gap-3 p-6">
                 <div className="flex flex-wrap gap-1.5">

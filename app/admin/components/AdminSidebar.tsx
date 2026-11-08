@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Car, Users, LayoutDashboard, CalendarCheck, IdCard, CreditCard, PackagePlus } from "lucide-react";
+import { LogOut, Car, Users, LayoutDashboard, CalendarCheck, IdCard, CreditCard, PackagePlus, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -15,6 +15,7 @@ export const adminLinks = [
   { href: "/admin/fleet-management", label: "Fleet Management", icon: Car },
   { href: "/admin/drivers", label: "Drivers", icon: IdCard },
   { href: "/admin/extras", label: "Extras", icon: PackagePlus },
+  { href: "/admin/protections", label: "Protection", icon: ShieldCheck },
   { href: "/admin/customers", label: "Customers", icon: Users },
 ];
 

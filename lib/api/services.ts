@@ -8,6 +8,8 @@ import type {
   Driver,
   Estimate,
   ExtraService,
+  Protection,
+  ProtectionInput,
   ExtrasCatalog,
   TripInput,
   User,
@@ -107,6 +109,13 @@ export const adminApi = {
   updateExtra: (id: string, body: { name?: string; pricePerDay?: number; isActive?: boolean }) =>
     request<ExtraService>(`/admin/extras/update/${id}`, { ...admin, method: "PATCH", body }),
   deleteExtra: (id: string) => request<unknown>(`/admin/extras/delete/${id}`, { ...admin, method: "DELETE" }),
+
+  /** Protection packages shown on the booking page. Not paginated. */
+  protections: () => request<Protection[]>("/admin/protections/all", admin),
+  createProtection: (body: ProtectionInput) => request<Protection>("/admin/protections/add", { ...admin, method: "POST", body }),
+  updateProtection: (id: string, body: Partial<ProtectionInput>) =>
+    request<Protection>(`/admin/protections/update/${id}`, { ...admin, method: "PATCH", body }),
+  deleteProtection: (id: string) => request<unknown>(`/admin/protections/delete/${id}`, { ...admin, method: "DELETE" }),
 
   paymentConfig: () => request<{ publishableKey?: string }>("/payments/config", admin),
 };

@@ -5,15 +5,15 @@ import { bookingsApi } from "@/lib/api/services";
 import type { StepProps } from "@/lib/booking";
 import { extraLabel, money } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { protectionKeyFor } from "@/lib/protection";
 import ProtectionPicker from "./ProtectionPicker";
 import StepCard from "./StepCard";
 
 export default function ExtrasStep({ data, update, onNext, onBack }: StepProps) {
   const { data: catalog, error, loading, reload } = useAsync(async () => (await bookingsApi.extras()).data, "extras");
-  const allExtras = catalog?.extras ?? [];
-  // Protection packages are chosen above, so they are not repeated in the extras list.
-  const extras = allExtras.filter((e) => !protectionKeyFor(e.name));
+  const protections = catalog?.protections ?? [];
+  // Protection packages are chosen above (each is also an extra on the backend), so they are not repeated in the extras list.
+  const protectionIds = new Set(protections.map((p) => p.id));
+  const extras = (catalog?.extras ?? []).filter((e) => !protectionIds.has(e.id));
 
   const toggle = (id: string) =>
     update({
@@ -34,10 +34,10 @@ export default function ExtrasStep({ data, update, onNext, onBack }: StepProps) 
       ) : (
         <>
           <ProtectionPicker
-            extras={allExtras}
+            protections={protections}
             selected={data.protection}
             selectedIds={data.extras}
-            onChange={(protection, ids) => update({ protection, extras: ids })}
+            onChange={(tier, ids) => update({ protection: tier.id, protectionName: tier.name, extras: ids })}
           />
 
           <h3 className="mb-1 mt-10 text-lg font-semibold text-foreground">Optional extras and additional services</h3>
