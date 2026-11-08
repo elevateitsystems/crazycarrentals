@@ -3,7 +3,6 @@ import React from "react";
 import StorySection from "./components/StorySection";
 import ValuesSection from "./components/ValuesSection";
 import StatsSection from "./components/StatsSection";
-import TeamSection from "./components/TeamSection";
 import ContactSection from "./components/ContactSection";
 
 export default function Page() {
@@ -23,7 +22,6 @@ export default function Page() {
       <StorySection />
       <ValuesSection />
       <StatsSection />
-      <TeamSection />
       <ContactSection />
     </>
   );

@@ -1,4 +1,5 @@
 import { Minus, Plus } from "lucide-react";
+import RichText from "@/components/RichText";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -21,7 +22,7 @@ export default function FaqItem({ id, question, answer, open, onToggle }: Props)
           aria-expanded={open}
           aria-controls={`${id}-panel`}
           onClick={onToggle}
-          className="flex h-12.5 w-full items-center justify-between gap-4 rounded-xl px-5 text-left text-[13.5px] font-medium text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="flex min-h-12.5 w-full items-center py-3 justify-between gap-4 rounded-xl px-5 text-left text-[13.5px] font-medium text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           {question}
           <Icon size={14} className="shrink-0 text-primary" />
@@ -38,7 +39,7 @@ export default function FaqItem({ id, question, answer, open, onToggle }: Props)
         )}
       >
         <div className="overflow-hidden">
-          <p className="px-5 pb-5 text-[13.5px] leading-6 text-muted-foreground">{answer}</p>
+          <RichText source={answer} headings={false} className="px-5 pb-5 text-[13.5px] leading-6" />
         </div>
       </div>
     </div>

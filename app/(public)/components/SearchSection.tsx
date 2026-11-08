@@ -8,12 +8,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { RENTAL_ADDRESS } from "@/lib/locations";
+import { RENTAL_LOCATION_LABEL } from "@/lib/locations";
 import { cn } from "@/lib/utils";
 
 const fields = [
-  { id: "pickupLocation", label: "Pickup Location", type: "text", placeholder: "e.g. 201 Wellington Street, Launceston", defaultValue: RENTAL_ADDRESS },
-  { id: "returnLocation", label: "Return Location", type: "text", placeholder: "e.g. 201 Wellington Street, Launceston" },
+  { id: "pickupLocation", label: "Pickup Location", type: "text", placeholder: "e.g. Launceston Downtown, Tasmania Australia", defaultValue: RENTAL_LOCATION_LABEL },
+  { id: "returnLocation", label: "Return Location", type: "text", placeholder: "e.g. Launceston Downtown, Tasmania Australia" },
   { id: "pickupDate", label: "Pickup Date", type: "date" },
   { id: "pickupTime", label: "Pickup Time", type: "time" },
   { id: "returnDate", label: "Return Date", type: "date" },
@@ -89,7 +89,7 @@ export default function SearchSection() {
                     className="origin-left scale-[1.2] data-[state=checked]:bg-[#86d72f]"
                   />
                   <Label htmlFor="airportShuttle" className="text-sm font-medium">
-                    Airport Shuttle
+                    Complimentary Airport Transfers
                   </Label>
                 </div>
               </div>

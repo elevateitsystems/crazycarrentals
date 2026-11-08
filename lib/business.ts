@@ -13,3 +13,13 @@ export const BUSINESS_HOURS = [
 export const BUSINESS_HOURS_SUMMARY = "Mon–Fri 8:00am–5:00pm, Sat 9:00am–3:00pm, Sun 9:00am–2:00pm";
 
 export const DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(BUSINESS_ADDRESS)}`;
+
+/** Coordinates of the branch (geocoded from the address with OpenStreetMap). Used for the key-free map embed. */
+export const BUSINESS_COORDS = { lat: -41.4464707, lon: 147.1396547 };
+const pad = 0.004;
+export const MAP_EMBED_URL = `https://www.openstreetmap.org/export/embed.html?bbox=${[
+  BUSINESS_COORDS.lon - pad,
+  BUSINESS_COORDS.lat - pad,
+  BUSINESS_COORDS.lon + pad,
+  BUSINESS_COORDS.lat + pad,
+].join(",")}&layer=mapnik&marker=${BUSINESS_COORDS.lat},${BUSINESS_COORDS.lon}`;

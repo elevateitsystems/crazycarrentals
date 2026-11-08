@@ -76,7 +76,7 @@ export default function AccidentProcessSection({
 
         <div className="mt-10 flex justify-center">
           <Link
-            href="/accident-replacement"
+            href="/accident-replacement/eligibility"
             className={cn(
               buttonVariants(),
               "h-10.5 gap-2 rounded-[10px] bg-[#9cdc33] pl-5.5 pr-2 text-[13.5px] font-medium text-[#111512] shadow-[0_6px_16px_rgba(156,220,51,0.45)] hover:bg-[#8fce2b]"

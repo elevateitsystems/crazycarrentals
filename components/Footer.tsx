@@ -28,6 +28,7 @@ const companyLinks: FooterLink[] = [
 const supportLinks: FooterLink[] = [
   { label: "Help & FAQs", href: "/faqs" },
   { label: "Contact", href: "/contact" },
+  { label: "Terms & Conditions", href: "/terms-and-conditions" },
   { label: "My Bookings", href: "/my-bookings" },
   { label: "Sign in", href: "/auth/signin" },
 ];
@@ -94,10 +95,11 @@ function FooterColumn({
   );
 }
 
+// Solid #181617 is the logo file's own background colour (same as the navbar), so the logo blends in instead of showing as a box.
 export default function Footer() {
   return (
-    <footer className="border-t-2 border-primary/70 bg-secondary text-secondary-foreground">
-      <div className="mx-auto w-full max-w-7xl px-4 pt-14 sm:px-6 lg:px-8">
+    <footer className="border-t-2 border-primary/70 bg-[#181617] text-secondary-foreground">
+      <div className="mx-auto w-full max-w-[88rem] px-4 pt-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_repeat(4,1fr)] lg:gap-10">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1 lg:max-w-xs">
@@ -107,7 +109,7 @@ export default function Footer() {
                 alt="TasDrive Rentals"
                 width={200}
                 height={300}
-                className="h-16 w-auto rounded-md md:h-20"
+                className="h-20 w-auto py-1 sm:h-24"
               />
             </Link>
             <p className="mt-5 text-sm leading-relaxed text-secondary-foreground/65">

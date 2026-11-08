@@ -13,7 +13,7 @@ export default function AccidentFaqsPage() {
         description="Answers to common questions about replacement vehicles after an accident."
         isCtaOpen={false}
       />
-      <FaqSection initialCategory="Accident Replacement" />
+      <FaqSection initialCategory="Accident Replacement Vehicles" />
       <StillHaveQuestionSection />
     </>
   );

@@ -82,6 +82,8 @@ export default function FleetManagementPage() {
   const [form, setForm] = useState<FormState>(emptyForm);
   const [files, setFiles] = useState<File[]>([]);
   const [formError, setFormError] = useState<string | null>(null);
+  // A new car that was created but whose images have not been saved yet (so "Save" retries only the upload).
+  const [pendingCar, setPendingCar] = useState<Car | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   // driver assignment dialog
@@ -93,6 +95,7 @@ export default function FleetManagementPage() {
 
   const openCreate = () => {
     setEditing(null);
+    setPendingCar(null);
     setForm(emptyForm);
     setFiles([]);
     setFormError(null);
@@ -100,6 +103,7 @@ export default function FleetManagementPage() {
   };
   const openEdit = (car: Car) => {
     setEditing(car);
+    setPendingCar(null);
     setForm(fromCar(car));
     setFiles([]);
     setFormError(null);
@@ -111,14 +115,49 @@ export default function FleetManagementPage() {
 
   const save = (e: React.FormEvent) => {
     e.preventDefault();
+    // A new vehicle must have at least one image.
+    if (!editing && files.length === 0) {
+      setFormError("Please add at least one image of the vehicle.");
+      return;
+    }
     void run(async () => {
-      const body = new FormData();
-      for (const [k, v] of Object.entries(form)) if (v !== "") body.append(k, v);
-      files.forEach((f) => body.append("images", f));
+      const fieldsBody = () => {
+        const body = new FormData();
+        for (const [k, v] of Object.entries(form)) if (v !== "") body.append(k, v);
+        return body;
+      };
+      const withImages = () => {
+        const body = fieldsBody();
+        files.forEach((f) => body.append("images", f));
+        return body;
+      };
       setFormError(null);
       try {
-        if (editing) await adminApi.updateCar(editing.id, body);
-        else await adminApi.createCar(body);
+        if (editing) {
+          await adminApi.updateCar(editing.id, withImages());
+        } else {
+          // Images are sent with the create request. If the car comes back without them (or an earlier attempt created
+          // the car but the upload failed), they are uploaded through the same update call that Edit uses.
+          let car = pendingCar;
+          if (!car) {
+            car = (await adminApi.createCar(withImages())).data;
+            if (!car?.id) throw new Error("The vehicle was created but the server did not return its id.");
+          }
+          const hasNoImages = (c: Car | undefined) => Array.isArray(c?.images) && c.images.length === 0;
+          try {
+            if (pendingCar || hasNoImages(car)) {
+              setPendingCar(car);
+              const saved = (await adminApi.updateCar(car.id, withImages())).data;
+              if (hasNoImages(saved)) throw new Error("The server did not store the images.");
+            }
+          } catch (err) {
+            cars.reload(); // the vehicle exists now, so show it in the list
+            throw new Error(
+              `The vehicle was created but its images could not be uploaded${err instanceof Error ? ` (${err.message})` : ""}. Press Save to retry the upload.`
+            );
+          }
+          setPendingCar(null);
+        }
         setFormOpen(false);
         setFlash({ kind: "success", text: editing ? "Vehicle updated." : "Vehicle added." });
         if (!editing && page !== 1) setPage(1);
@@ -279,7 +318,7 @@ export default function FleetManagementPage() {
             {formError && <Notice>{formError}</Notice>}
 
             <div className="space-y-2">
-              <Label>Images</Label>
+              <Label>Images{!editing && <span className="text-destructive"> *</span>}</Label>
               <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                 {previews.map((src, i) => (
                   <div key={src} className="group relative aspect-video overflow-hidden rounded-lg border">
@@ -304,7 +343,11 @@ export default function FleetManagementPage() {
                   Add images
                 </button>
               </div>
-              {editing && <p className="text-xs text-muted-foreground">Choosing images uploads them with this update. Leave empty to keep the current ones.</p>}
+              {editing ? (
+                <p className="text-xs text-muted-foreground">Choosing images uploads them with this update. Leave empty to keep the current ones.</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">At least one image is required.</p>
+              )}
               <input
                 ref={fileRef}
                 type="file"
@@ -312,8 +355,11 @@ export default function FleetManagementPage() {
                 multiple
                 className="hidden"
                 onChange={(e) => {
-                  setFiles((fs) => [...fs, ...Array.from(e.target.files ?? [])]);
-                  e.target.value = "";
+                  // Copy the picked files first: clearing the input empties e.target.files, and React may run the
+                  // state updater after that, which used to drop the selection.
+                  const picked = Array.from(e.target.files ?? []);
+                  e.target.value = ""; // lets the same file be picked again
+                  if (picked.length) setFiles((fs) => [...fs, ...picked]);
                 }}
               />
             </div>

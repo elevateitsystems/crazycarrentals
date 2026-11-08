@@ -4,7 +4,7 @@ import AccidentBenefitsSection from "../components/AccidentBenefitsSection";
 import AccidentProcessSection from "../components/AccidentProcessSection";
 import AccidentReplacementSection from "../components/AccidentReplacementSection";
 import CtaSection from "../components/CtaSection";
-import EligibilityChoiceSection from "../components/EligibilityChoiceSection";
+import EligibilitySection from "../components/EligibilitySection";
 
 const steps = [
   {
@@ -35,7 +35,7 @@ export default function Page() {
         image="/accident-hero.jpg"
         imageAlt="Tow truck carrying a replacement car along a wet city road at dusk"
       />
-      <EligibilityChoiceSection />
+      <EligibilitySection />
       <AccidentProcessSection
         eyebrow="Three simple steps"
         heading="How It Works"
@@ -45,7 +45,7 @@ export default function Page() {
       <AccidentReplacementSection />
       <AccidentBenefitsSection />
       <div className="mx-auto max-w-7xl my-22 rounded-[19px] overflow-hidden">
-        <CtaSection badge="TasDrive Rentals" heading="Tasmania's Trusted Vehicle Partner" />
+        <CtaSection />
       </div>
     </>
   );

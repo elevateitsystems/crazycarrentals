@@ -8,11 +8,11 @@ export default function Page() {
   return (
     <>
       <CommonHeroSection
-        bedgeText="Accident Replacement  Vehicles"
+        bedgeText="FAQs"
         title="Frequently asked"
         hightlightTitle="questions."
         image="/rent-a-car-hero.jpg"
-        description="Answers about renting a car from our Launceston location, and about accident replacement vehicles delivered statewide across Tasmania."
+        description="Answers about regular rentals and about accident replacement vehicles across Tasmania."
       />
 
       <FaqSection />
