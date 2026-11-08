@@ -10,7 +10,6 @@ import { useAsync } from "@/hooks/use-async";
 import { toList } from "@/lib/api/client";
 import { carsApi } from "@/lib/api/services";
 import type { Car } from "@/lib/api/types";
-import { FALLBACK_CAR_IMAGE } from "@/lib/cars";
 import { carImage, carName, enumLabel } from "@/lib/format";
 
 type Category = { type: string; representative: Car; count: number };
@@ -56,7 +55,7 @@ export default function VehicleTypes({ className }: { className?: string }) {
             className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-muted shadow-sm ring-1 ring-border transition-all hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <CarImage
-              src={carImage(representative) ?? FALLBACK_CAR_IMAGE}
+              src={carImage(representative)}
               alt={`${enumLabel(type)}: ${carName(representative)}`}
               className="transition-transform duration-500 group-hover:scale-105"
             />

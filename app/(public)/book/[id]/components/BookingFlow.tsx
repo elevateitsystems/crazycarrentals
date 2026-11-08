@@ -175,7 +175,7 @@ export default function BookingFlow({ carId }: { carId: string }) {
                 />
               )}
             </div>
-            <OrderSummary car={car} estimate={estimate} estimating={estimating} error={estimateError} hasDates={canEstimate} protection={data.protection} />
+            <OrderSummary car={car} estimate={estimate} estimating={estimating} error={estimateError} hasDates={canEstimate} protectionName={data.protectionName} />
           </div>
         )}
       </div>

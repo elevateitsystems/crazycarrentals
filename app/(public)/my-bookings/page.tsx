@@ -14,7 +14,6 @@ import { bookingsApi } from "@/lib/api/services";
 import type { Booking } from "@/lib/api/types";
 import { bookingReference, bookingTotal, latestPayment } from "@/lib/booking";
 import { carImage, carName, enumLabel, formatDate, money } from "@/lib/format";
-import { FALLBACK_CAR_IMAGE } from "@/lib/cars";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -25,7 +24,7 @@ const TABS = [
 
 function BookingCard({ b }: { b: Booking }) {
   const payment = latestPayment(b);
-  const img = carImage(b.car) ?? FALLBACK_CAR_IMAGE;
+  const img = carImage(b.car);
   return (
     <Link
       href={`/my-bookings/${b.id}`}

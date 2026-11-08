@@ -91,8 +91,28 @@ export type ExtraService = {
   [key: string]: unknown;
 };
 
+/** A protection package (Admin → Protection management). Its id is also an extra id: book it by sending the id in `extraServiceIds`. */
+export type Protection = {
+  id: string;
+  name: string;
+  pricePerDay: number;
+  isPopular?: boolean;
+  included?: string[];
+  excluded?: string[];
+  excessLabel?: string;
+  excessOver25?: string;
+  excessUnder25?: string;
+  bondCredit?: number;
+  bondDebit?: number;
+  updatedAt?: string;
+};
+
+/** Fields sent when creating or updating a protection. */
+export type ProtectionInput = Omit<Protection, "id" | "updatedAt">;
+
 export type ExtrasCatalog = {
   extras: ExtraService[];
+  protections?: Protection[];
   airportShuttle?: { name?: string; price?: number; type?: string; description?: string };
   discounts?: { payNowDiscountPercent?: number; description?: string };
 };

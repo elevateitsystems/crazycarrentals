@@ -1,5 +1,5 @@
 import { RENTAL_LOCATION_LABEL } from "@/lib/locations";
-import type { ProtectionKey } from "@/lib/protection";
+import { STANDARD_TIER } from "@/lib/protection";
 import type { Booking, CreateBookingInput, Estimate as ApiEstimate, Payment, PaymentOption, PriceLine, TripInput } from "@/lib/api/types";
 
 export const steps = ["Vehicle", "Protection & Extras", "Your Details", "Payment", "Confirmation"] as const;
@@ -13,8 +13,9 @@ export type BookingData = {
   returnDate: string;
   returnTime: string;
   extras: string[];
-  /** Chosen protection package. Standard is included; the others are charged when a matching backend extra exists. */
-  protection: ProtectionKey;
+  /** Chosen protection package: "standard" (included) or a backend protection id, which is also sent in `extras`. */
+  protection: string;
+  protectionName: string;
   airportShuttle: boolean;
   firstName: string;
   lastName: string;
@@ -38,7 +39,8 @@ export function initialBooking(prefill: URLSearchParams | null): BookingData {
     returnDate: get("returnDate"),
     returnTime: get("returnTime"),
     extras: [],
-    protection: "standard",
+    protection: STANDARD_TIER.id,
+    protectionName: STANDARD_TIER.name,
     airportShuttle: get("airportShuttle") === "1",
     firstName: "",
     lastName: "",

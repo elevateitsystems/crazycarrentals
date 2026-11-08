@@ -1,91 +1,76 @@
-// Protection packages as set out by the client (PDF "insurance package and extras").
-// Prices are NOT defined here: they are charged by the backend. A paid package is bookable only when the backend has an
-// extra with a matching name (Admin → Extras), so the price shown is always the price that is charged.
+import { money } from "@/lib/format";
+import type { Protection } from "@/lib/api/types";
 
-export type ProtectionKey = "standard" | "medium" | "platinum";
+// Protection packages are managed in Admin → Protection management and served by the backend with the booking extras.
+// Standard Cover is included in every rental, so it is not a backend record: it is defined here from the client's PDF
+// ("insurance package and extras") and is always offered first.
 
+export const STANDARD_ID = "standard";
+
+/** What the booking page shows for one package, whether it is Standard Cover or a backend protection. */
 export type ProtectionTier = {
-  key: ProtectionKey;
+  /** "standard", or the backend protection id (which is also the extra id to book). */
+  id: string;
   name: string;
-  popular?: boolean;
+  popular: boolean;
   /** Included in the rental price. */
-  free?: boolean;
-  /** Normalised backend extra names that identify this package (see `normaliseName`). */
-  match: string[];
+  free: boolean;
+  pricePerDay: number;
   included: string[];
   excluded: string[];
-  /** Damage excess by driver age. */
-  excess: { label: string; over25: string; under25: string };
+  excessLabel: string;
+  excessOver25: string;
+  excessUnder25: string;
+  bondCredit: string;
+  bondDebit: string;
 };
 
-export const normaliseName = (s: string | undefined) => (s ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+export const DEFAULT_BOND = { credit: 200, debit: 500 };
 
-export const SECURITY_BOND = { credit: "$200.00", debit: "$500.00" };
+export const STANDARD_TIER: ProtectionTier = {
+  id: STANDARD_ID,
+  name: "Standard Cover",
+  popular: false,
+  free: true,
+  pricePerDay: 0,
+  included: ["Third Party", "Personal Injury", "Damage to the Vehicle, Fire & Theft"],
+  excluded: [
+    "Animal Damage",
+    "Hail & Storm Damage",
+    "Vehicle Interior Damage",
+    "Overhead & Underbody Damage",
+    "Key replacement",
+    "Tyres & Windscreen",
+    "Accident Fees",
+    "Loss of Use",
+    "Accident-Related Towage",
+  ],
+  excessLabel: "Excess applicable",
+  excessOver25: "$6,000",
+  excessUnder25: "$6,500",
+  bondCredit: money(DEFAULT_BOND.credit),
+  bondDebit: money(DEFAULT_BOND.debit),
+};
 
-export const protectionTiers: ProtectionTier[] = [
-  {
-    key: "standard",
-    name: "Standard Cover",
-    free: true,
-    match: [],
-    included: ["Third Party", "Personal Injury", "Damage to the Vehicle, Fire & Theft"],
-    excluded: [
-      "Animal Damage",
-      "Hail & Storm Damage",
-      "Vehicle Interior Damage",
-      "Overhead & Underbody Damage",
-      "Key replacement",
-      "Tyres & Windscreen",
-      "Accident Fees",
-      "Loss of Use",
-      "Accident-Related Towage",
-    ],
-    excess: { label: "Excess applicable", over25: "$6,000", under25: "$6,500" },
-  },
-  {
-    key: "medium",
-    name: "Medium Protection",
-    match: ["mediumprotection", "medium"],
-    included: [
-      "Third Party",
-      "Personal Injury",
-      "Damage to the Vehicle, Fire & Theft",
-      "Animal Damage",
-      "24hr Roadside",
-      "Hail & Storm Damage",
-      "Vehicle Interior Damage",
-    ],
-    // The client's table also lists Hail & Storm and Vehicle Interior under "not covered" for Medium while ticking them as
-    // covered, and the Terms and Conditions (10.2) say Medium covers them. They are shown as covered only; see the handover notes.
-    excluded: ["Windscreen/Tyres", "Accident Towing", "Key replacement", "Overhead & Underbody Damage", "Accident Fees", "Loss of Use"],
-    excess: { label: "Accident excess applicable", over25: "$3,000", under25: "$3,500" },
-  },
-  {
-    key: "platinum",
-    name: "Platinum Premium",
-    popular: true,
-    match: ["platinumpremium", "platinumpremiumprotection", "platinumprotection", "platinum"],
-    included: [
-      "Third Party",
-      "Personal Injury",
-      "Damage to the Vehicle, Fire & Theft",
-      "Animal Damage",
-      "24hr Roadside",
-      "Hail & Storm Damage",
-      "Vehicle Interior Damage",
-      "Tyres & Windscreen",
-      "Accident Fees",
-      "Loss of Use",
-      "Accident Towing",
-    ],
-    excluded: ["Overhead & Underbody Damage", "Key replacement"],
-    excess: { label: "Accident excess applicable", over25: "$0 (zero excess)", under25: "N/A" },
-  },
-];
+export function toTier(p: Protection): ProtectionTier {
+  return {
+    id: p.id,
+    name: p.name,
+    popular: Boolean(p.isPopular),
+    free: false,
+    pricePerDay: p.pricePerDay,
+    included: p.included ?? [],
+    excluded: p.excluded ?? [],
+    excessLabel: p.excessLabel || "Accident excess applicable",
+    excessOver25: p.excessOver25 || "—",
+    excessUnder25: p.excessUnder25 || "—",
+    bondCredit: money(p.bondCredit ?? DEFAULT_BOND.credit),
+    bondDebit: money(p.bondDebit ?? DEFAULT_BOND.debit),
+  };
+}
 
-/** Which package a backend extra represents, if any. */
-export function protectionKeyFor(extraName: string | undefined): ProtectionKey | null {
-  const n = normaliseName(extraName);
-  if (!n) return null;
-  return protectionTiers.find((t) => t.match.includes(n))?.key ?? null;
+/** Standard Cover first, then the backend's packages from cheapest to dearest. */
+export function buildTiers(protections: Protection[] | undefined): ProtectionTier[] {
+  const paid = [...(protections ?? [])].sort((a, b) => a.pricePerDay - b.pricePerDay).map(toTier);
+  return [STANDARD_TIER, ...paid];
 }

@@ -10,7 +10,6 @@ import { buttonVariants } from "@/components/ui/button";
 import { useAsync } from "@/hooks/use-async";
 import { ADMIN_SESSION_PATH } from "@/lib/api/config";
 import { adminApi, carsApi } from "@/lib/api/services";
-import { FALLBACK_CAR_IMAGE } from "@/lib/cars";
 import { carFeatures, carImages, carName, enumLabel, money } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -46,7 +45,7 @@ export default function CarDetail({ id }: { id: string }) {
 
   const car = data;
   const images = carImages(car);
-  const gallery = images.length ? images : [FALLBACK_CAR_IMAGE];
+  const gallery = images;
   const features = carFeatures(car);
   // Only the driver's name is shown: the licence details in `driverInfo` are personal and stay private.
   const driverAssigned = Boolean(car.driverInfoId || car.driverInfo);
