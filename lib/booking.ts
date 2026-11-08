@@ -1,7 +1,7 @@
-import { RENTAL_ADDRESS } from "@/lib/locations";
+import { RENTAL_LOCATION_LABEL } from "@/lib/locations";
 import type { Booking, CreateBookingInput, Estimate as ApiEstimate, Payment, PaymentOption, PriceLine, TripInput } from "@/lib/api/types";
 
-export const steps = ["Vehicle", "Extras", "Your Details", "Payment", "Confirmation"] as const;
+export const steps = ["Vehicle", "Protection & Extras", "Your Details", "Payment", "Confirmation"] as const;
 export const LAST_STEP = steps.length;
 
 export type BookingData = {
@@ -28,7 +28,7 @@ export type BookingData = {
 export function initialBooking(prefill: URLSearchParams | null): BookingData {
   const get = (k: string) => prefill?.get(k) ?? "";
   return {
-    pickupLocation: get("pickupLocation") || RENTAL_ADDRESS,
+    pickupLocation: get("pickupLocation") || RENTAL_LOCATION_LABEL,
     returnLocation: get("returnLocation"),
     pickupDate: get("pickupDate"),
     pickupTime: get("pickupTime"),

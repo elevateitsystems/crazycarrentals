@@ -12,6 +12,8 @@ type HeroSectionProp = {
   bedgeText: string;
   description: string;
   isCtaOpen?: boolean;
+  /** Replaces the default accident replacement buttons (primary first, then secondary). */
+  actions?: { label: string; href: string }[];
 };
 
 export default function CommonHeroSection({
@@ -23,6 +25,10 @@ export default function CommonHeroSection({
   bedgeText,
   description,
   isCtaOpen = true,
+  actions = [
+    { label: "Check Eligibility", href: "/accident-replacement/eligibility" },
+    { label: "How It Works", href: "/accident-replacement/how-it-works" },
+  ],
 }: HeroSectionProp) {
   return (
     <section className="relative flex w-full items-center min-h-[75vh]">
@@ -77,20 +83,20 @@ export default function CommonHeroSection({
         {isCtaOpen && (
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
-              href="/accident-replacement/eligibility"
+              href={actions[0].href}
               className="group inline-flex h-11 items-center gap-3 rounded-lg bg-primary py-1.5 pl-4 pr-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-secondary"
             >
-              Check Eligibility
+              {actions[0].label}
               <span className="flex size-8 items-center justify-center rounded-md bg-secondary text-primary transition-transform group-hover:scale-105">
                 <ArrowUpRight className="size-4" />
               </span>
             </Link>
 
             <Link
-              href="/accident-replacement/how-it-works"
+              href={actions[1].href}
               className="group inline-flex h-11 items-center gap-3 rounded-lg bg-secondary-foreground py-1.5 pl-4 pr-1.5 text-sm font-medium text-secondary transition-colors hover:bg-secondary-foreground/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-secondary"
             >
-              How It Works
+              {actions[1].label}
               <span className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground transition-transform group-hover:scale-105">
                 <ArrowUpRight className="size-4" />
               </span>

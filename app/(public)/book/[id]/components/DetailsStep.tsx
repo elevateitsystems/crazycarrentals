@@ -59,10 +59,10 @@ export default function DetailsStep({ data, update, onNext, onBack }: StepProps)
         <div className="mt-2 flex items-center justify-between gap-4 rounded-2xl border border-border bg-muted/30 p-5">
           <div className="flex flex-col gap-1">
             <Label htmlFor="airportShuttle" className="text-base font-semibold">
-              Airport Shuttle
+              Complimentary Airport Transfers
             </Label>
             <span className="text-sm text-muted-foreground">
-              Add a convenient airport shuttle transfer (priced in your order summary)
+              Airport transfers are complimentary. We do not charge for this service.
             </span>
           </div>
           <Switch

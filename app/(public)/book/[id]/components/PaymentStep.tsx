@@ -8,6 +8,7 @@ import type { Estimate, StepProps } from "@/lib/booking";
 import { money } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import FormField from "./FormField";
+import PolicyReminders from "./PolicyReminders";
 import StepCard from "./StepCard";
 
 const methods = ["Credit Card", "Debit Card"] as const;
@@ -186,6 +187,8 @@ export default function PaymentStep({ total, estimate, unavailable, submitting, 
       ) : (
         <Notice kind="info">Your vehicle is held for you. Payment is collected by our team at the desk on pickup.</Notice>
       )}
+
+      <PolicyReminders />
 
       <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
         {trust.map((item) => (

@@ -42,7 +42,7 @@ export default function StepCard({
       }}
     >
       <Card className="gap-0 rounded-2xl border-border py-0 shadow-sm">
-        <CardContent className="p-6 sm:p-10">
+        <CardContent className="p-5 sm:p-8">
           <h2 className="text-2xl font-bold tracking-tight text-foreground">{title}</h2>
           <p className="mt-2 text-[15px] leading-6 text-muted-foreground">{description}</p>
 

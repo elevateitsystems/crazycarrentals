@@ -2,14 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
-type Props = {
-  /** Small pill above the heading. */
-  badge?: string;
-  /** Replaces the default heading. */
-  heading?: React.ReactNode;
-};
-
-export default function CtaSection({ badge = "Tasmania's Vehicle Partner", heading }: Props = {}) {
+export default function CtaSection() {
   return (
     <section className="relative isolate flex min-h-105 items-center justify-center overflow-hidden text-secondary-foreground sm:min-h-120 lg:min-h-140">
       {/* Background image */}
@@ -30,21 +23,17 @@ export default function CtaSection({ badge = "Tasmania's Vehicle Partner", headi
         {/* Badge */}
         <span className="inline-flex items-center gap-2 rounded-full border border-secondary-foreground/15 bg-secondary/40 px-3 py-1.5 text-xs font-medium text-secondary-foreground/90 backdrop-blur-md">
           <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)]" />
-          {badge}
+          Tasmania&apos;s Trusted Vehicle Partner
         </span>
 
         {/* Heading */}
         <h2 className="mt-6 max-w-3xl text-balance font-heading text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-          {heading ?? (
-            <>
-              Wherever the road takes you, <span className="text-primary">TasDrive</span> can help.
-            </>
-          )}
+          Wherever the road takes you, <span className="text-primary">TasDrive</span> is by your side.
         </h2>
 
         {/* Description */}
         <p className="mt-4 max-w-xl text-sm text-secondary-foreground/70 sm:text-base">
-          Book your next rental or get support after an accident.
+          We deliver vehicles to locations all over Tasmania and our team is here to help 24/7. Whether you need to book your next holiday rental or require immediate support after an accident, we&apos;ve got you covered.
         </p>
 
         {/* Actions */}
@@ -58,10 +47,10 @@ export default function CtaSection({ badge = "Tasmania's Vehicle Partner", headi
           </Link>
 
           <Link
-            href="/accident-replacement"
+            href="/accident-replacement/eligibility"
             className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-secondary-foreground/15 bg-secondary/60 px-6 text-sm font-medium text-secondary-foreground backdrop-blur-md transition-colors hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-secondary sm:w-auto"
           >
-            Accident Replacement
+            Check My Eligibility
             <ChevronRight className="size-4" />
           </Link>
         </div>

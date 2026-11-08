@@ -124,7 +124,7 @@ function Detail({ id }: { id: string }) {
                     <div className="mt-6 border-t border-border pt-4">
                       <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Extras</p>
                       <div className="mt-2 flex flex-wrap gap-2">
-                        {[...extras, ...(shuttle ? ["Airport shuttle"] : [])].map((x) => (
+                        {[...extras, ...(shuttle ? ["Complimentary airport transfer"] : [])].map((x) => (
                           <span key={x} className="rounded-full bg-muted px-3 py-1 text-xs font-medium">{x}</span>
                         ))}
                       </div>

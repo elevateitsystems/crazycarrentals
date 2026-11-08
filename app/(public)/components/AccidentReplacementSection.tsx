@@ -19,7 +19,7 @@ export default function AccidentReplacementSection() {
       <div className="flex items-center bg-[#a1dd3e] px-6 py-12 lg:pl-21.25 lg:pr-10">
         <div className="max-w-130">
           <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-neutral-900">
-            Accident Replacement
+            Accident Replacement Vehicles
           </span>
 
           <h2 className="mt-4 text-[2.4rem] font-bold leading-[1.4] tracking-tight text-neutral-900">
@@ -37,7 +37,7 @@ export default function AccidentReplacementSection() {
           </p>
 
           <Link
-            href="/accident-replacement"
+            href="/accident-replacement/eligibility"
             className={cn(
               buttonVariants({ variant: "secondary" }),
               "mt-7 h-10.5 gap-2 rounded-[10px] bg-white pl-5.5 pr-2 text-sm font-medium text-neutral-900 shadow-[0_4px_14px_rgba(0,0,0,0.12)] hover:bg-white/90"

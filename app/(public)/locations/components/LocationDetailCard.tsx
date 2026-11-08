@@ -1,14 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Check, ChevronRight, Clock, Mail, MapPin, Navigation, Phone } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { DIRECTIONS_URL } from "@/lib/business";
+import { DIRECTIONS_URL, MAP_EMBED_URL } from "@/lib/business";
 import type { Location } from "@/lib/locations";
 import { cn } from "@/lib/utils";
 
 export default function LocationDetailCard({ location }: { location: Location }) {
-  const { region, name, address, phone, email, image, hours, offers } = location;
+  const { region, name, address, phone, email, hours, offers } = location;
 
   const contacts = [
     { icon: MapPin, label: "Address", text: address, href: DIRECTIONS_URL, external: true },
@@ -19,15 +18,14 @@ export default function LocationDetailCard({ location }: { location: Location })
   return (
     <Card className="grid gap-0 overflow-hidden rounded-3xl border-border py-0 shadow-sm lg:grid-cols-[1.1fr_1fr]">
       <div className="relative min-h-72 lg:min-h-[32rem]">
-        <Image
-          src={image}
-          alt={`${name} building and surroundings`}
-          fill
-          sizes="(min-width: 1024px) 640px, 100vw"
-          className="object-cover"
+        <iframe
+          title={`Map showing ${name}, ${address}`}
+          src={MAP_EMBED_URL}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          className="absolute inset-0 size-full border-0"
         />
-        <div aria-hidden className="absolute inset-0 bg-linear-to-t from-black/55 via-transparent to-transparent" />
-        <span className="absolute bottom-5 left-5 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
+        <span className="pointer-events-none absolute left-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">
           <MapPin className="size-4" aria-hidden />
           {name}
         </span>
@@ -71,14 +69,16 @@ export default function LocationDetailCard({ location }: { location: Location })
           ))}
         </dl>
 
-        <ul className="mt-5 space-y-2">
-          {offers.map((offer) => (
-            <li key={offer} className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Check className="size-4 shrink-0 text-primary" strokeWidth={3} aria-hidden />
-              {offer}
-            </li>
-          ))}
-        </ul>
+        {offers.length > 0 && (
+          <ul className="mt-5 space-y-2">
+            {offers.map((offer) => (
+              <li key={offer} className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Check className="size-4 shrink-0 text-primary" strokeWidth={3} aria-hidden />
+                {offer}
+              </li>
+            ))}
+          </ul>
+        )}
 
         <div className="mt-7 flex flex-col gap-3 sm:flex-row">
           <a

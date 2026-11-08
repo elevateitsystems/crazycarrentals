@@ -7,7 +7,6 @@ export type Location = {
   address: string;
   phone: string;
   email: string;
-  image: string;
   hours: { label: string; time: string }[];
   summaryHours: string;
   offers: string[];
@@ -15,6 +14,9 @@ export type Location = {
 
 /** Regular car rentals operate from this single location. Do not list other pickup points for rentals. */
 export const RENTAL_ADDRESS = BUSINESS_ADDRESS;
+
+/** How the pickup location reads on the reservation form (client wording). */
+export const RENTAL_LOCATION_LABEL = "Launceston Downtown, Tasmania Australia";
 
 /** Accident replacement vehicles are delivered anywhere in Tasmania. */
 export const ACCIDENT_SERVICE_AREA = "Statewide across Tasmania";
@@ -27,9 +29,8 @@ export const locations: Location[] = [
     address: BUSINESS_ADDRESS,
     phone: BUSINESS_PHONE,
     email: BUSINESS_EMAIL,
-    image: "/location-image.jpg",
     hours: BUSINESS_HOURS,
     summaryHours: BUSINESS_HOURS_SUMMARY,
-    offers: ["Regular car rental pickup and drop-off"],
+    offers: [],
   },
 ];

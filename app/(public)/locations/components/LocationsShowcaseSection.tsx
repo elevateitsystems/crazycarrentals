@@ -39,7 +39,7 @@ export default function LocationsShowcaseSection() {
           <div>
             <h2 className="text-base font-bold tracking-tight text-foreground">Accident replacement: delivered statewide</h2>
             <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-              Regular car rentals operate from our Launceston branch. Accident replacement vehicles are delivered Tasmania-wide, so wherever you are in the state, we can get one to you.
+              Accident replacement vehicles are delivered Tasmania-wide, so wherever you are in the state, we can get one to you.
             </p>
           </div>
         </div>

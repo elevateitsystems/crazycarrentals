@@ -135,7 +135,7 @@ export default function AdminBookingDetail({ id }: { id: string }) {
                 ["Return", `${formatDateTime(b.returnDate, b.returnTime)}${b.returnLocation ? ` · ${b.returnLocation}` : ""}`],
                 ["Rental days", b.rentalDays ?? "—"],
                 ["Extras", b.extraServices?.length ? b.extraServices.map((e) => e.name).join(", ") : "None"],
-                ["Airport shuttle", shuttle ? money(shuttle.price) : "No"],
+                ["Airport transfer (complimentary)", shuttle ? money(shuttle.price) : "No"],
                 ["Driver licence", b.driverInfo ? `${b.driverInfo.licenseState ?? ""} ${b.driverInfo.licenseNumber ?? ""} · exp. ${formatDate(b.driverInfo.licenseExpiry)}` : "—"],
               ]}
             />
