@@ -6,27 +6,28 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   extras: ExtraService[];
+  selected: ProtectionKey;
   selectedIds: string[];
-  onChange: (extraIds: string[]) => void;
+  /** The chosen package and the extra ids to send (the package's own extra, when the backend has one, plus other extras). */
+  onChange: (protection: ProtectionKey, extraIds: string[]) => void;
 };
 
 /**
- * "Choose your protection". Standard Cover is included. Medium and Platinum are priced by the backend: they are
- * offered when the backend has an extra with the package's name, and the selection is sent as that extra.
+ * "Choose your protection". All three packages can always be selected. Standard Cover is included in the rental price.
+ * Medium and Platinum are priced by the backend: when it has an extra with the package's name, that extra is sent (and
+ * charged); otherwise the choice is kept and the summary says the price is confirmed by our team.
  */
-export default function ProtectionPicker({ extras, selectedIds, onChange }: Props) {
+export default function ProtectionPicker({ extras, selected: selectedKey, selectedIds, onChange }: Props) {
   const byKey = new Map<ProtectionKey, ExtraService>();
   for (const e of extras) {
     const key = protectionKeyFor(e.name);
     if (key && !byKey.has(key)) byKey.set(key, e);
   }
   const protectionIds = [...byKey.values()].map((e) => e.id);
-  const selectedKey: ProtectionKey = ([...byKey].find(([, e]) => selectedIds.includes(e.id))?.[0]) ?? "standard";
-
   const choose = (key: ProtectionKey) => {
     const rest = selectedIds.filter((id) => !protectionIds.includes(id));
     const extra = byKey.get(key);
-    onChange(extra ? [...rest, extra.id] : rest);
+    onChange(key, extra ? [...rest, extra.id] : rest);
   };
 
   return (
@@ -39,7 +40,6 @@ export default function ProtectionPicker({ extras, selectedIds, onChange }: Prop
       <div role="radiogroup" aria-labelledby="protection-heading" className="mt-6 grid gap-4 pt-3 @min-[40rem]:grid-cols-3">
         {protectionTiers.map((tier) => {
           const extra = byKey.get(tier.key);
-          const available = tier.free || Boolean(extra);
           const selected = selectedKey === tier.key;
           const price = tier.free ? 0 : extra?.pricePerDay;
 
@@ -48,8 +48,7 @@ export default function ProtectionPicker({ extras, selectedIds, onChange }: Prop
               key={tier.key}
               className={cn(
                 "relative flex min-w-0 flex-col rounded-2xl border bg-card p-4 @min-[56rem]:p-5",
-                selected ? "border-primary ring-2 ring-primary/30" : "border-border",
-                !available && "opacity-70"
+                selected ? "border-primary ring-2 ring-primary/30" : "border-border"
               )}
             >
               {tier.popular && (
@@ -59,9 +58,10 @@ export default function ProtectionPicker({ extras, selectedIds, onChange }: Prop
               )}
               <h4 className="text-base font-bold text-foreground">{tier.name}</h4>
               <p className="mt-2 text-2xl font-bold text-foreground">
-                {price != null ? money(price) : "—"}
-                <span className="text-sm font-medium text-muted-foreground"> / day</span>
+                {price != null ? money(price) : "TBC"}
+                {price != null && <span className="text-sm font-medium text-muted-foreground"> / day</span>}
               </p>
+              {price == null && <p className="mt-0.5 text-xs text-muted-foreground">Price confirmed by our team</p>}
 
               <ul className="mt-4 space-y-1.5 text-[13px]">
                 {tier.included.map((x) => (
@@ -96,14 +96,13 @@ export default function ProtectionPicker({ extras, selectedIds, onChange }: Prop
                 type="button"
                 role="radio"
                 aria-checked={selected}
-                disabled={!available}
                 onClick={() => choose(tier.key)}
                 className={cn(
-                  "min-h-11 w-full rounded-xl border px-3 py-2 text-center text-sm font-semibold leading-tight transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed",
+                  "min-h-11 w-full rounded-xl border px-3 py-2 text-center text-sm font-semibold leading-tight transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
                   selected ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background hover:border-primary/60 hover:bg-muted"
                 )}
               >
-                {!available ? "Not available online yet" : selected ? `${tier.name} selected` : `Select ${tier.key === "standard" ? "Standard" : tier.key === "medium" ? "Medium" : "Platinum"}`}
+                {selected ? `${tier.name} selected` : `Select ${tier.key === "standard" ? "Standard" : tier.key === "medium" ? "Medium" : "Platinum"}`}
               </button>
             </div>
           );

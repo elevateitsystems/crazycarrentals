@@ -33,7 +33,12 @@ export default function ExtrasStep({ data, update, onNext, onBack }: StepProps) 
         <ErrorState message={error} onRetry={reload} />
       ) : (
         <>
-          <ProtectionPicker extras={allExtras} selectedIds={data.extras} onChange={(ids) => update({ extras: ids })} />
+          <ProtectionPicker
+            extras={allExtras}
+            selected={data.protection}
+            selectedIds={data.extras}
+            onChange={(protection, ids) => update({ protection, extras: ids })}
+          />
 
           <h3 className="mb-1 mt-10 text-lg font-semibold text-foreground">Optional extras and additional services</h3>
           <p className="mb-5 text-sm text-muted-foreground">Tick any extra you would like to add.</p>
