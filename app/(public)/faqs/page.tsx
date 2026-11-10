@@ -1,4 +1,4 @@
-import CommonHeroSection from "@/components/CommonHeroSection";
+import PageHeader from "@/components/PageHeader";
 import React from "react";
 import LocationHelpSection from "../locations/components/LocationHelpSection";
 import FaqSection from "./components/FaqSection";
@@ -7,11 +7,10 @@ import StillHaveQuestionSection from "./components/StillHaveQuestionSection";
 export default function Page() {
   return (
     <>
-      <CommonHeroSection
-        bedgeText="FAQs"
+      <PageHeader
+        badge="FAQs"
         title="Frequently asked"
-        hightlightTitle="questions."
-        image="/rent-a-car-hero.jpg"
+        highlight="questions."
         description="Answers about regular rentals and about accident replacement vehicles across Tasmania."
       />
 

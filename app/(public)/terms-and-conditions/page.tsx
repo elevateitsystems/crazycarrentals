@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import CommonHeroSection from "@/components/CommonHeroSection";
+import PageHeader from "@/components/PageHeader";
 import RichText from "@/components/RichText";
 import { termsMarkdown } from "@/lib/legal/terms";
 import { sectionHeadings } from "@/lib/rich-text";
@@ -14,13 +14,11 @@ const sections = sectionHeadings(termsMarkdown);
 export default function TermsPage() {
   return (
     <>
-      <CommonHeroSection
-        bedgeText="Legal"
+      <PageHeader
+        badge="Legal"
         title="Terms and"
-        hightlightTitle="Conditions."
-        image="/rent-a-car-hero.jpg"
+        highlight="Conditions."
         description="The terms that apply to every TasDrive Rentals vehicle hire. Please read them before you book."
-        isCtaOpen={false}
       />
 
       <section className="bg-background py-14">

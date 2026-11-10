@@ -1,4 +1,4 @@
-import CommonHeroSection from '@/components/CommonHeroSection'
+import PageHeader from "@/components/PageHeader";
 import React from 'react'
 import LocationsShowcaseSection from './components/LocationsShowcaseSection'
 import LocationHelpSection from './components/LocationHelpSection'
@@ -6,11 +6,10 @@ import LocationHelpSection from './components/LocationHelpSection'
 export default function Page() {
   return (
     <>
-      <CommonHeroSection
-        bedgeText="Launceston Branch"
+      <PageHeader
+        badge="Launceston Branch"
         title="Our"
-        hightlightTitle="Location"
-        image="/rent-a-car-hero.jpg"
+        highlight="Location"
         description="Wherever you're headed, start here."
       />
 

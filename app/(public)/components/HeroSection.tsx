@@ -19,7 +19,7 @@ const services = [
     title: "Accident Replacement",
     description: "Need a vehicle after an accident? We can help get you back on the road.",
     ctaLabel: "Check Eligibility",
-    href: "/accident-replacement",
+    href: "/accident-replacement/eligibility",
     button: "bg-neutral-900 text-[#9be33a] shadow-[0_6px_16px_rgba(0,0,0,0.3)]",
     arrow: "bg-[#9be33a] text-neutral-900",
   },

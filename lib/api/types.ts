@@ -143,6 +143,24 @@ export type BookingPerson = { firstName?: string; lastName?: string; email?: str
 
 export type PriceLine = { label: string; amount: number };
 
+/** One date's rate. `isCustom` is set when the admin overrode the car's normal rate for that date. */
+export type DailyRate = { date: string; price: number; isCustom?: boolean };
+
+/** Calendar date price management: `GET/PUT /cars/:id/daily-rates`. */
+export type DailyRatesResult = {
+  carId: string;
+  basePricePerDay: number;
+  from?: string;
+  to?: string;
+  days: DailyRate[];
+};
+
+/** Body of `PUT /cars/:id/daily-rates`. A `null` price in `rates` clears that date back to the car's normal rate. */
+export type DailyRatesInput = {
+  ranges?: { from: string; to: string; price: number }[];
+  rates?: { date: string; price: number | null }[];
+};
+
 export type Booking = {
   id: string;
   bookingReference?: string;
@@ -207,6 +225,13 @@ export type Estimate = {
   pricing?: {
     dailyCarRate?: number;
     rentalDays?: number;
+    /** Vehicle charge for the whole stay, built from the per-date rates (see `dailyRates`). */
+    baseCarPrice?: number;
+    /** The rate charged for each night of the stay (calendar date pricing). */
+    dailyRates?: DailyRate[];
+    protectionTotal?: number;
+    extrasTotal?: number;
+    airportShuttlePrice?: number;
     subtotal?: number;
     discount?: number;
     discountPercentage?: number;

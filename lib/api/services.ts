@@ -7,6 +7,8 @@ import type {
   DashboardStats,
   Driver,
   Estimate,
+  DailyRatesInput,
+  DailyRatesResult,
   ExtraService,
   Protection,
   ProtectionInput,
@@ -85,6 +87,11 @@ export const adminApi = {
   cars: (query?: Query) => request<Car[]>("/cars", { ...admin, query }),
   createCar: (body: FormData) => request<Car>("/cars/add-new-car", { ...admin, method: "POST", body }),
   updateCar: (id: string, body: FormData) => request<Car>(`/cars/update-car/${id}`, { ...admin, method: "PATCH", body }),
+  /** Calendar date prices for one car, for the dates from..to (YYYY-MM-DD). */
+  dailyRates: (carId: string, query: { from: string; to: string }) =>
+    request<DailyRatesResult>(`/cars/${carId}/daily-rates`, { ...admin, query }),
+  saveDailyRates: (carId: string, body: DailyRatesInput) =>
+    request<DailyRatesResult>(`/cars/${carId}/daily-rates`, { ...admin, method: "PUT", body }),
   deleteCar: (id: string) => request<unknown>(`/cars/delete-car/${id}`, { ...admin, method: "DELETE" }),
   /** `null` removes the assigned driver. */
   assignDriver: (id: string, driverId: string | null) => request<Car>(`/cars/${id}/assign-driver`, { ...admin, method: "PATCH", body: { driverId } }),

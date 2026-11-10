@@ -1,17 +1,15 @@
-import CommonHeroSection from "@/components/CommonHeroSection";
+import PageHeader from "@/components/PageHeader";
 import AccidentProcessSection from "../../components/AccidentProcessSection";
 import CtaSection from "../../components/CtaSection";
 
 export default function HowItWorksPage() {
   return (
     <>
-      <CommonHeroSection
-        bedgeText="Accident Replacement Vehicles"
+      <PageHeader
+        badge="Accident Replacement Vehicles"
         title="How it"
-        hightlightTitle="works."
-        image="/generic-hero.jpg"
+        highlight="works."
         description="Three simple steps from your accident to a replacement vehicle."
-        isCtaOpen={false}
       />
       <AccidentProcessSection />
       <div className="mx-auto my-22 max-w-7xl overflow-hidden rounded-[19px]">

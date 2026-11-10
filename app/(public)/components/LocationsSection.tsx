@@ -23,7 +23,7 @@ const services = [
     title: ACCIDENT_SERVICE_AREA,
     detail: "Delivered to you anywhere in Tasmania.",
     note: "If you were not at fault, we bring the replacement vehicle to you.",
-    href: "/accident-replacement",
+    href: "/accident-replacement/eligibility",
     cta: "Check eligibility",
   },
 ];

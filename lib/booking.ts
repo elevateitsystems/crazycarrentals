@@ -1,6 +1,6 @@
 import { RENTAL_LOCATION_LABEL } from "@/lib/locations";
 import { STANDARD_TIER } from "@/lib/protection";
-import type { Booking, CreateBookingInput, Estimate as ApiEstimate, Payment, PaymentOption, PriceLine, TripInput } from "@/lib/api/types";
+import type { Booking, CreateBookingInput, DailyRate, Estimate as ApiEstimate, Payment, PaymentOption, PriceLine, TripInput } from "@/lib/api/types";
 
 export const steps = ["Vehicle", "Protection & Extras", "Your Details", "Payment", "Confirmation"] as const;
 export const LAST_STEP = steps.length;
@@ -108,6 +108,10 @@ export type Estimate = {
   payNowTotal?: number;
   payAtDeskTotal?: number;
   rentalDays?: number;
+  /** Vehicle charge for the stay. The Pay Now discount is a percentage of this amount only. */
+  vehicleTotal?: number;
+  /** The rate charged for each night: it differs between dates when calendar date prices are set. */
+  dailyRates: DailyRate[];
   gstIncluded?: boolean;
   available: boolean;
   unavailableReason?: string | null;
@@ -123,6 +127,8 @@ export function readEstimate(raw: ApiEstimate | null | undefined): Estimate {
     payNowTotal: pricing?.payNowTotal,
     payAtDeskTotal: pricing?.payAtDeskTotal,
     rentalDays: pricing?.rentalDays ?? raw?.rentalDetails?.rentalDays,
+    vehicleTotal: pricing?.baseCarPrice,
+    dailyRates: (pricing?.dailyRates ?? []).filter((d) => d && typeof d.date === "string" && typeof d.price === "number"),
     gstIncluded: pricing?.gstIncluded,
     available: raw?.isAvailable !== false,
     unavailableReason: raw?.unavailableReason,

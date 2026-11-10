@@ -1,10 +1,9 @@
 import React from "react";
-import CommonHeroSection from "@/components/CommonHeroSection";
+import PageHeader from "@/components/PageHeader";
 import AccidentBenefitsSection from "../components/AccidentBenefitsSection";
 import AccidentProcessSection from "../components/AccidentProcessSection";
 import AccidentReplacementSection from "../components/AccidentReplacementSection";
 import CtaSection from "../components/CtaSection";
-import EligibilitySection from "../components/EligibilitySection";
 
 const steps = [
   {
@@ -27,15 +26,12 @@ const steps = [
 export default function Page() {
   return (
     <>
-      <CommonHeroSection
-        bedgeText="Accident Replacement  Vehicles"
+      <PageHeader
+        badge="Accident Replacement Vehicles"
         title="Accident Replacement Cars for Not-at-Fault Drivers"
-        subtitle="Had an accident? Let's get you moving again."
-        description="We know how stressful the aftermath of a car accident can be. We're here to make your next step as simple as possible. If you were not at fault, you are legally entitled to a like-for-like replacement vehicle at zero out-of-pocket cost while yours is being repaired or until your total loss claim is settled."
-        image="/accident-hero.jpg"
-        imageAlt="Tow truck carrying a replacement car along a wet city road at dusk"
+        description="Had an accident? Let's get you moving again. We know how stressful the aftermath of a car accident can be. We're here to make your next step as simple as possible. If you were not at fault, you are legally entitled to a like-for-like replacement vehicle at zero out-of-pocket cost while yours is being repaired or until your total loss claim is settled."
+        actions={[{ label: "Check Eligibility", href: "/accident-replacement/eligibility" }, { label: "How It Works", href: "/accident-replacement/how-it-works" }]}
       />
-      <EligibilitySection />
       <AccidentProcessSection
         eyebrow="Three simple steps"
         heading="How It Works"

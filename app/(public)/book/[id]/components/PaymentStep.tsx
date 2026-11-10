@@ -77,7 +77,7 @@ export default function PaymentStep({ total, estimate, unavailable, submitting, 
               {payNow && <span className="size-3 rounded-full bg-primary" />}
             </span>
           </div>
-          <span className="text-sm text-muted-foreground">Pay online by card{percent > 0 ? ` and save ${percent}% on your booking` : ""}.</span>
+          <span className="text-sm text-muted-foreground">Pay online by card{percent > 0 ? ` and save ${percent}% on the vehicle rate` : ""}.</span>
         </button>
         <button
           type="button"
@@ -100,8 +100,8 @@ export default function PaymentStep({ total, estimate, unavailable, submitting, 
           <div role="status" className="mb-5 flex items-start gap-3 rounded-xl border border-primary/40 bg-primary/10 px-4 py-3.5 text-sm">
             <BadgePercent className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden />
             <p className="text-foreground">
-              <span className="font-semibold">{percent}% Pay Now discount applied.</span>{" "}
-              {saving ? `You save ${money(saving)}${total != null ? `, bringing your total to ${money(total)}` : ""}.` : "Choose your dates to see how much you save."}
+              <span className="font-semibold">{percent}% Pay Now discount applied to the vehicle rate.</span>{" "}
+              {saving ? `You save ${money(saving)}${total != null ? `, bringing your total to ${money(total)}` : ""}. Protection and extras are not discounted.` : "Choose your dates to see how much you save."}
             </p>
           </div>
         )
