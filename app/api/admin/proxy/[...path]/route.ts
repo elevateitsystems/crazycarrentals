@@ -47,4 +47,4 @@ async function forward(req: NextRequest, { params }: Ctx) {
   return res;
 }
 
-export { forward as GET, forward as POST, forward as PATCH, forward as DELETE };
+export { forward as GET, forward as POST, forward as PUT, forward as PATCH, forward as DELETE };

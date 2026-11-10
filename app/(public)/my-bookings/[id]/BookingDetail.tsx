@@ -1,5 +1,6 @@
 "use client";
 
+import PriceBreakdown from "@/components/PriceBreakdown";
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, CreditCard, MapPin } from "lucide-react";
@@ -16,7 +17,6 @@ import { useAsync } from "@/hooks/use-async";
 import { bookingsApi } from "@/lib/api/services";
 import { bookingReference, bookingTotal, canCancel, latestPayment } from "@/lib/booking";
 import { carImage, carName, enumLabel, formatDateTime, formatTimestamp, money } from "@/lib/format";
-import { cn } from "@/lib/utils";
 
 function Detail({ id }: { id: string }) {
   const { data: b, error, loading, refreshing, reload } = useAsync(async () => (await bookingsApi.mineById(id)).data, id);
@@ -150,14 +150,7 @@ function Detail({ id }: { id: string }) {
               <aside className="space-y-6">
                 <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
                   <h2 className="text-base font-semibold">Price summary</h2>
-                  <dl className="mt-4 space-y-2.5 text-sm">
-                    {(b.summary ?? []).map((l, i) => (
-                      <div key={`${l.label}-${i}`} className="flex justify-between gap-3">
-                        <dt className="text-muted-foreground">{l.label}</dt>
-                        <dd className={cn("font-medium", l.amount < 0 && "text-green-700")}>{money(l.amount)}</dd>
-                      </div>
-                    ))}
-                  </dl>
+                  <PriceBreakdown lines={b.summary} className="mt-4 text-sm" />
                   <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">
                     <span className="font-semibold">Total</span>
                     <span className="text-2xl font-bold tracking-tight">{money(bookingTotal(b))}</span>

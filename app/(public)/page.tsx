@@ -1,7 +1,6 @@
 import AccidentProcessSection from './components/AccidentProcessSection'
 import AccidentReplacementSection from './components/AccidentReplacementSection'
 import CtaSection from './components/CtaSection'
-import EligibilitySection from './components/EligibilitySection'
 import FleetSection from './components/FleetSection'
 import HeroSection from './components/HeroSection'
 import LocationsSection from './components/LocationsSection'
@@ -16,7 +15,6 @@ export default function HomePage() {
     <SearchSection/>
     <WhyChooseSection/>
     <AccidentReplacementSection/>
-    <EligibilitySection/>
     <AccidentProcessSection/>
     <FleetSection/>
     <TestimonialsSection/>

@@ -12,7 +12,7 @@ export default function BookingStepper({ current }: { current: number }) {
           const active = n === current;
 
           return (
-            <li key={label} className="relative flex flex-1 flex-col items-center">
+            <li key={label} aria-current={active ? "step" : undefined} className="relative flex min-w-0 flex-1 flex-col items-center">
               {n < steps.length && (
                 <span
                   className={cn(
@@ -33,7 +33,7 @@ export default function BookingStepper({ current }: { current: number }) {
               </span>
               <span
                 className={cn(
-                  "mt-2 text-xs font-medium sm:text-sm",
+                  "mt-2 hidden px-1 text-center text-xs font-medium sm:block sm:text-sm",
                   done && "text-primary",
                   active && "font-semibold text-foreground",
                   !done && !active && "text-muted-foreground"
@@ -45,6 +45,10 @@ export default function BookingStepper({ current }: { current: number }) {
           );
         })}
       </ol>
+      {/* Narrow screens have no room for five labels, so only the current step is named. */}
+      <p className="mt-3 text-center text-sm font-semibold text-foreground sm:hidden">
+        Step {Math.min(current, steps.length)} of {steps.length}: {steps[Math.min(current, steps.length) - 1]}
+      </p>
     </header>
   );
 }

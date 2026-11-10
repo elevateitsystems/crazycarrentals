@@ -1,5 +1,6 @@
 "use client";
 
+import PriceBreakdown from "@/components/PriceBreakdown";
 import { BUSINESS_PHONE_HREF, BUSINESS_PHONE, BUSINESS_EMAIL } from "@/lib/business";
 import CarImage from "@/components/CarImage";
 import Link from "next/link";
@@ -97,14 +98,7 @@ export default function ConfirmationStep({ car, data, booking }: Props) {
           </div>
 
           {Boolean(booking.summary?.length) && (
-            <div className="mt-5 space-y-2.5 border-t border-border pt-4 text-[15px] text-muted-foreground">
-              {booking.summary?.map((line, i) => (
-                <div key={`${line.label}-${i}`} className="flex justify-between">
-                  <span>{line.label}</span>
-                  <span className="font-medium text-foreground">{money(line.amount)}</span>
-                </div>
-              ))}
-            </div>
+            <PriceBreakdown lines={booking.summary} className="mt-5 border-t border-border pt-4" />
           )}
           {booking.totalPrice != null && (
             <div className="mt-3 flex items-center justify-between border-t border-border pt-3">

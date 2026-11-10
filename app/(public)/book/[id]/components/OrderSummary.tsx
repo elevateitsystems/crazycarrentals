@@ -4,6 +4,7 @@ import CarImage from "@/components/CarImage";
 import type { Car } from "@/components/CarCard";
 import type { Estimate } from "@/lib/booking";
 import { money } from "@/lib/format";
+import PriceBreakdown from "@/components/PriceBreakdown";
 import InfoNote from "./InfoNote";
 
 type Props = {
@@ -38,16 +39,11 @@ export default function OrderSummary({ car, estimate, estimating, error, hasDate
             </div>
           )}
           <div className="flex justify-between text-muted-foreground">
-            <dt>Daily rate</dt>
+            <dt>Standard daily rate</dt>
             <dd className="font-medium text-foreground">{money(car.price)}</dd>
           </div>
-          {estimate?.lines.map((line, i) => (
-            <div key={`${line.label}-${i}`} className="flex justify-between text-muted-foreground">
-              <dt>{line.label}</dt>
-              <dd className={line.amount < 0 ? "font-medium text-green-700" : "font-medium text-foreground"}>{money(line.amount)}</dd>
-            </div>
-          ))}
         </dl>
+        {estimate && estimate.lines.length > 0 && <PriceBreakdown lines={estimate.lines} dailyRates={estimate.dailyRates} className="mt-3 border-t border-border pt-3" />}
 
         <div className="mt-4 flex items-center justify-between border-t border-border pt-4">
           <span className="text-base font-bold text-foreground">Total</span>
