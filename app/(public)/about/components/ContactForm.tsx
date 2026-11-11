@@ -26,8 +26,8 @@ export default function ContactForm() {
   };
 
   return (
-    <Card className="gap-0 rounded-3xl border-border bg-card py-0 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
-      <CardContent className="p-7">
+    <Card className="gap-0 rounded-3xl border-border bg-white py-0 shadow-[0_30px_60px_-34px_rgba(17,21,18,0.3)]">
+      <CardContent className="p-6 sm:p-9">
         <h2 className="text-lg font-bold tracking-tight text-foreground">Send us a message</h2>
         <p className="mt-1.5 text-[13px] text-muted-foreground">
           Sending opens your email app with your message ready to go. We respond within one business day.

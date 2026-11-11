@@ -1,5 +1,5 @@
 import { Award, Check, Heart, Users } from "lucide-react";
-import SectionBadge from "./SectionBadge";
+import SectionHeading from "@/components/SectionHeading";
 import ValueCard from "./ValueCard";
 
 const values = [
@@ -31,20 +31,15 @@ const values = [
 
 export default function ValuesSection() {
   return (
-    <section className="bg-background py-18">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
-        <div className="text-center">
-          <SectionBadge>What We Stand For</SectionBadge>
-          <h2 className="mt-4 text-[2.4rem] font-bold leading-[1.15] tracking-tight text-foreground">
-            Our values
-          </h2>
-        </div>
+    <section className="bg-background py-16 sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <SectionHeading eyebrow="What We Stand For" title="Our values" />
 
-        <div className="mt-12 grid gap-4.5 sm:grid-cols-2 lg:grid-cols-4">
-          {values.map((value) => (
-            <ValueCard key={value.title} {...value} />
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2 sm:gap-5 lg:mt-14 lg:grid-cols-4">
+          {values.map((value, i) => (
+            <ValueCard key={value.title} {...value} index={i + 1} />
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

@@ -34,9 +34,9 @@ export default function VehicleTypes({ className }: { className?: string }) {
   if (loading) {
     return (
       <div role="status" aria-busy="true" aria-label="Loading vehicle types…" className={className}>
-        <div className="grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }, (_, i) => (
-            <Skeleton key={i} className="aspect-[4/3] rounded-2xl" />
+            <Skeleton key={i} className="h-72 rounded-2xl" />
           ))}
         </div>
         <span className="sr-only">Loading vehicle types…</span>
@@ -47,27 +47,34 @@ export default function VehicleTypes({ className }: { className?: string }) {
   if (!categories.length) return <EmptyState>Our vehicle range will appear here soon.</EmptyState>;
 
   return (
-    <ul className={`grid gap-5 sm:grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] ${className ?? ""}`}>
+    <ul className={`grid gap-5 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(17rem,1fr))] ${className ?? ""}`}>
       {categories.map(({ type, representative, count }) => (
         <li key={type}>
           <Link
             href={`/rent-a-car?carType=${encodeURIComponent(type)}`}
-            className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-muted shadow-sm ring-1 ring-border transition-all hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-[0_1px_2px_rgba(17,21,18,0.04)] transition duration-300 hover:border-primary/50 hover:shadow-[0_22px_44px_-22px_rgba(17,21,18,0.3)] motion-safe:hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
-            <CarImage
-              src={carImage(representative)}
-              alt={`${enumLabel(type)}: ${carName(representative)}`}
-              className="transition-transform duration-500 group-hover:scale-105"
-            />
-            <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-              <h3 className="text-xl font-bold tracking-tight">{enumLabel(type)}</h3>
-              <p className="mt-0.5 truncate text-sm text-white/75">
-                {carName(representative)}
-                {count > 1 ? ` + ${count - 1} more` : ""}
-              </p>
-              <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                Learn more <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden />
+            
+            <div className="relative aspect-[4/3] overflow-hidden bg-linear-to-b from-[#f4f6f2] to-[#e9ede5]">
+              <CarImage
+                src={carImage(representative)}
+                alt={`${enumLabel(type)}: ${carName(representative)}`}
+                className="transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+            <div className="flex flex-1 items-center justify-between gap-4 p-5">
+              <div className="min-w-0">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#4f9a0e]">{enumLabel(type)}</p>
+                <h3 className="mt-1 truncate text-lg font-semibold leading-tight tracking-tight text-foreground">{carName(representative)}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {count > 1 ? `+ ${count - 1} more ${enumLabel(type).toLowerCase()}` : `1 ${enumLabel(type).toLowerCase()} available`}
+                </p>
+              </div>
+              <span
+                aria-label="Learn more"
+                className="flex size-10 shrink-0 items-center justify-center rounded-full bg-secondary text-primary transition group-hover:bg-primary group-hover:text-secondary"
+              >
+                <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
               </span>
             </div>
           </Link>

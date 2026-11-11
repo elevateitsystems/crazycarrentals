@@ -1,54 +1,50 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import SectionHeading from "@/components/SectionHeading";
 
 export default function CtaSection() {
   return (
-    <section className="relative isolate flex min-h-105 items-center justify-center overflow-hidden text-secondary-foreground sm:min-h-120 lg:min-h-140">
-      {/* Background image */}
-      <Image
-        src="/cta-section-car.jpg"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="-z-20 object-cover object-center"
-      />
+    <section className="relative overflow-hidden bg-white text-foreground">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[radial-gradient(55%_100%_at_50%_0%,rgba(139,214,47,0.14),transparent_75%)]" />
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center px-4 pb-14 pt-14 text-center sm:px-6 sm:pb-16 sm:pt-16 lg:pb-20 lg:pt-20">
 
-      {/* Dark overlay for text contrast (uses the secondary token) */}
-      <div className="absolute inset-0 -z-10 bg-secondary/55" />
-      <div className="absolute inset-0 -z-10 bg-linear-to-t from-secondary/60 via-transparent to-secondary/20" />
+        <SectionHeading
+          title={
+            <>
+              Wherever the road takes you, <span className="text-[#4f9a0e]">TasDrive</span> is by your side.
+            </>
+          }
+          className="max-w-3xl"
+        />
 
-      <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 py-16 text-center sm:px-6 lg:py-24">
-        {/* Badge */}
-        <span className="inline-flex items-center gap-2 rounded-full border border-secondary-foreground/15 bg-secondary/40 px-3 py-1.5 text-xs font-medium text-secondary-foreground/90 backdrop-blur-md">
-          <span className="size-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--primary)]" />
-          Tasmania&apos;s Trusted Vehicle Partner
-        </span>
+        {/* The photo has empty white space above the vehicles, so it is cropped to just the line-up. */}
+        <div className="relative mt-8 aspect-[1779/390] w-full overflow-hidden">
+          <Image
+            src="/cta-vehicles.jpeg"
+            alt="Six TasDrive vehicles in a row, from a hatchback and SUVs to a ute and a delivery truck"
+            fill
+            sizes="(min-width: 1152px) 1152px, 100vw"
+            className="object-cover object-[center_72%]"
+          />
+        </div>
 
-        {/* Heading */}
-        <h2 className="mt-6 max-w-3xl text-balance font-heading text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-          Wherever the road takes you, <span className="text-primary">TasDrive</span> is by your side.
-        </h2>
-
-        {/* Description */}
-        <p className="mt-4 max-w-xl text-sm text-secondary-foreground/70 sm:text-base">
+        <p className="mt-8 max-w-2xl text-[15px] leading-7 text-muted-foreground sm:text-base">
           We deliver vehicles to locations all over Tasmania and our team is here to help 24/7. Whether you need to book your next holiday rental or require immediate support after an accident, we&apos;ve got you covered.
         </p>
 
-        {/* Actions */}
-        <div className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
+        <div className="mt-9 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row sm:gap-4">
           <Link
             href="/rent-a-car"
-            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-secondary sm:w-auto"
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-7 text-sm font-semibold text-primary-foreground shadow-[0_12px_26px_-10px_rgba(139,214,47,0.8)] transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-safe:hover:-translate-y-0.5 sm:w-auto"
           >
             Book a Car
             <ChevronRight className="size-4" />
           </Link>
 
           <Link
-            href="/accident-replacement/eligibility"
-            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-secondary-foreground/15 bg-secondary/60 px-6 text-sm font-medium text-secondary-foreground backdrop-blur-md transition-colors hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-secondary sm:w-auto"
+            href="/accident-replacement#eligibility"
+            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-foreground/15 bg-white px-7 text-sm font-semibold text-foreground transition hover:border-foreground/40 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:w-auto"
           >
             Check My Eligibility
             <ChevronRight className="size-4" />

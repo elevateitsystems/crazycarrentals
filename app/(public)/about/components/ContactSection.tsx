@@ -1,25 +1,21 @@
+import SectionHeading from "@/components/SectionHeading";
 import { contactInfo } from "@/lib/contact";
 import ContactForm from "./ContactForm";
 import ContactInfoItem from "./ContactInfoItem";
-import SectionBadge from "./SectionBadge";
 
 export default function ContactSection() {
   return (
-    <section className="bg-background py-18">
-      <div className="mx-auto grid max-w-7xl items-start gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-24 lg:px-0">
+    <section className="bg-background py-16 sm:py-20 lg:py-24">
+      <div className="mx-auto grid max-w-[88rem] items-start gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
         <div className="lg:pt-2">
-          <SectionBadge>Get in Touch</SectionBadge>
+          <SectionHeading align="left" eyebrow="Get in Touch" title="We'd love to hear from you." />
 
-          <h1 className="mt-4 max-w-md text-[2.4rem] font-bold leading-[1.15] tracking-tight text-foreground">
-            We&apos;d love to hear from you.
-          </h1>
-
-          <p className="mt-5 max-w-md text-[15px] leading-6.5 text-muted-foreground">
+          <p className="mt-5 max-w-md text-base leading-7 text-muted-foreground">
             Whether you have a question about a rental, need help with an accident replacement application, or
             just want to talk to a real person — we&apos;re here.
           </p>
 
-          <ul className="mt-8 space-y-5">
+          <ul className="mt-8 space-y-4">
             {contactInfo.map((item) => (
               <ContactInfoItem key={item.label} {...item} />
             ))}

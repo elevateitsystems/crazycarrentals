@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { Check, Star } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
+import { Check, Quote, Star } from "lucide-react";
+import SectionHeading from "@/components/SectionHeading";
 
 const testimonials = [
   {
@@ -32,75 +31,52 @@ const trustPoints = [
 
 export default function TestimonialsSection() {
   return (
-    <section className="relative isolate overflow-hidden pb-21.5 pt-22">
-      <Image
-        src="/testimonials-section-car.jpg"
-        alt=""
-        fill
-        className="-z-20 object-cover"
-      />
-      <div className="absolute inset-0 -z-10 bg-black/80" />
+    <section className="relative isolate overflow-hidden bg-secondary py-16 sm:py-20 lg:py-24">
+      <Image src="/testimonials-section-car.jpg" alt="" fill sizes="100vw" className="-z-20 object-cover opacity-40" />
+      <div aria-hidden className="absolute inset-0 -z-10 bg-linear-to-b from-secondary/90 via-secondary/85 to-secondary" />
+      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-72 bg-[radial-gradient(50%_100%_at_50%_0%,rgba(139,214,47,0.16),transparent_75%)]" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
-        <div className="text-center">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9cdc33]">
-            Testimonials
-          </span>
-          <h2 className="mt-4 text-[2.4rem] font-bold leading-[1.15] tracking-tight text-white">
-            Trusted by drivers across Tasmania.
-          </h2>
-        </div>
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <SectionHeading tone="dark" eyebrow="Testimonials" title="Trusted by drivers across Tasmania." />
 
-        <div className="mt-14 grid gap-5 md:grid-cols-3">
+        <ul className="mt-12 grid gap-5 md:grid-cols-3 lg:mt-14">
           {testimonials.map(({ name, location, quote }) => (
-            <Card
+            <li
               key={name}
-              className="gap-0 rounded-2xl border-white/9 bg-white/6 py-0 shadow-none backdrop-blur-[2px]"
+              className="relative flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-7 backdrop-blur-sm transition duration-300 hover:border-primary/40 hover:bg-white/[0.07] sm:p-8"
             >
-              <CardContent className="px-6 pb-7 pt-7">
-                <div className="flex gap-0.75 text-primary">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      size={13}
-                      fill="currentColor"
-                      strokeWidth={0}
-                    />
-                  ))}
-                </div>
+              <Quote aria-hidden className="absolute right-6 top-6 size-9 text-primary/20" strokeWidth={1.5} />
+              <div className="flex gap-1 text-primary" role="img" aria-label="Rated 5 out of 5 stars">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} size={15} fill="currentColor" strokeWidth={0} aria-hidden />
+                ))}
+              </div>
 
-                <p className="mt-4.5 text-[13.5px] leading-5.75 text-[#c9ccca]">
-                  &ldquo;{quote}&rdquo;
-                </p>
+              <blockquote className="mt-5 flex-1 text-[15px] leading-7 text-white/80">&ldquo;{quote}&rdquo;</blockquote>
 
-                <div className="mt-5.5 flex items-center gap-3">
-                  <div className="size-9">
-                    <div className="bg-primary/20 flex items-center justify-center rounded-full size-9 text-[13px] font-semibold text-primary">
-                      {name[0]}
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold leading-4 text-white">
-                      {name}
-                    </p>
-                    <p className="mt-0.75 text-[11px] leading-3.5 text-white/45">
-                      {location}
-                    </p>
-                  </div>
+              <div className="mt-7 flex items-center gap-3.5 border-t border-white/10 pt-6">
+                <div aria-hidden className="flex size-11 items-center justify-center rounded-full bg-linear-to-br from-primary to-[#4f9a0e] text-base font-bold text-secondary">
+                  {name[0]}
                 </div>
-              </CardContent>
-            </Card>
+                <div>
+                  <p className="text-sm font-semibold leading-5 text-white">{name}</p>
+                  <p className="text-xs leading-5 text-white/50">{location}</p>
+                </div>
+              </div>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <div className="mt-13 flex flex-wrap justify-center gap-x-8.5 gap-y-3 text-[13px] text-[#9ea19f]">
+        <ul className="mx-auto mt-12 grid max-w-4xl divide-white/10 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] sm:grid-cols-3 sm:divide-x">
           {trustPoints.map((point) => (
-            <span key={point} className="flex items-center gap-2">
-              <Check size={14} className="text-primary" />
+            <li key={point} className="flex items-center justify-center gap-2.5 px-5 py-4 text-sm font-medium text-white/80 max-sm:border-t max-sm:border-white/10 max-sm:first:border-t-0">
+              <span className="flex size-5 items-center justify-center rounded-full bg-primary/20 text-primary">
+                <Check size={12} strokeWidth={3} aria-hidden />
+              </span>
               {point}
-            </span>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

@@ -14,7 +14,12 @@ export default function FaqItem({ id, question, answer, open, onToggle }: Props)
   const Icon = open ? Minus : Plus;
 
   return (
-    <div className="rounded-lg border border-border bg-card">
+    <div
+      className={cn(
+        "rounded-2xl border bg-white transition duration-200",
+        open ? "border-primary/60 shadow-[0_18px_40px_-26px_rgba(17,21,18,0.35)]" : "border-border hover:border-foreground/25"
+      )}
+    >
       <h3>
         <button
           type="button"
@@ -22,10 +27,17 @@ export default function FaqItem({ id, question, answer, open, onToggle }: Props)
           aria-expanded={open}
           aria-controls={`${id}-panel`}
           onClick={onToggle}
-          className="flex min-h-12.5 w-full items-center py-3 justify-between gap-4 rounded-xl px-5 text-left text-[13.5px] font-medium text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="flex min-h-16 w-full items-center justify-between gap-4 rounded-2xl px-5 py-4 text-left text-[15px] font-semibold leading-snug text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:px-6"
         >
           {question}
-          <Icon size={14} className="shrink-0 text-primary" />
+          <span
+            className={cn(
+              "flex size-8 shrink-0 items-center justify-center rounded-full transition-colors",
+              open ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
+            )}
+          >
+            <Icon size={15} aria-hidden />
+          </span>
         </button>
       </h3>
 
@@ -39,7 +51,9 @@ export default function FaqItem({ id, question, answer, open, onToggle }: Props)
         )}
       >
         <div className="overflow-hidden">
-          <RichText source={answer} headings={false} className="px-5 pb-5 text-[13.5px] leading-6" />
+          <div className="mx-5 border-t border-border pt-4 sm:mx-6">
+            <RichText source={answer} headings={false} className="pb-5 text-[14.5px] leading-7" />
+          </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import SectionHeading from "@/components/SectionHeading";
 import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 type Step = { number: string; title: string; description: string };
@@ -37,54 +37,41 @@ export default function AccidentProcessSection({
   subheading,
   steps = defaultSteps,
 }: Props) {
+  // The dashed line joins the centres of the first and last step circles (md and up).
+  const inset = `${50 / steps.length}%`;
   return (
-    <section className="bg-background py-22">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
-        <div className="text-center">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#9cdc33]">
-            {eyebrow}
-          </span>
-          <h2 className="mt-4 text-[2.4rem] font-bold leading-[1.15] tracking-tight text-[#131414]">
-            {heading}
-          </h2>
-          {subheading && <p className="mx-auto mt-3 max-w-xl text-[15px] leading-6 text-[#747d79]">{subheading}</p>}
-        </div>
+    <section className="bg-background py-16 sm:py-20 lg:py-24">
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <SectionHeading eyebrow={eyebrow} title={heading} description={subheading} />
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {steps.map(({ number, title, description }) => (
-            <Card
-              key={number}
-              className="gap-0 rounded-2xl border-[#e9ede7] bg-white py-0 shadow-none"
-            >
-              <CardContent className="px-6 pb-8 pt-8">
-                <div className="flex items-center gap-7.25">
-                  <span className="text-[32px] font-bold leading-9 text-[#9cdc33]">
-                    {number}
-                  </span>
-                  <span className="h-px flex-1 bg-linear-to-r from-[#e7f5f5] to-transparent" />
+        <div className="relative mt-14 lg:mt-16">
+          <div aria-hidden className="absolute top-7 hidden border-t border-dashed border-foreground/20 md:block" style={{ left: inset, right: inset }} />
+          <ol className="relative grid gap-x-6 gap-y-12 md:grid-cols-[repeat(var(--steps),minmax(0,1fr))]" style={{ ["--steps" as string]: steps.length }}>
+            {steps.map(({ number, title, description }) => (
+              <li key={number} className="relative">
+                <div className="relative z-10 mx-auto flex size-14 items-center justify-center rounded-full bg-secondary font-heading text-lg font-bold tabular-nums text-primary shadow-[0_0_0_6px_var(--background),0_10px_24px_-8px_rgba(17,21,18,0.5)]">
+                  {number}
                 </div>
-                <CardTitle className="mt-4 text-base font-semibold leading-5.5 text-[#131414]">
-                  {title}
-                </CardTitle>
-                <CardDescription className="mt-2.5 text-[13.5px] leading-5.5 text-[#747d79]">
-                  {description}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          ))}
+                <div className="-mt-7 rounded-2xl border border-border bg-white px-6 pb-8 pt-12 text-center shadow-[0_1px_2px_rgba(17,21,18,0.04),0_16px_36px_-24px_rgba(17,21,18,0.28)]">
+                  <h3 className="text-[17px] font-semibold leading-snug tracking-tight text-foreground">{title}</h3>
+                  <p className="mx-auto mt-2.5 max-w-xs text-sm leading-6 text-muted-foreground">{description}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
 
-        <div className="mt-10 flex justify-center">
+        <div className="mt-12 flex justify-center">
           <Link
-            href="/accident-replacement/eligibility"
+            href="/accident-replacement#eligibility"
             className={cn(
               buttonVariants(),
-              "h-10.5 gap-2 rounded-[10px] bg-[#9cdc33] pl-5.5 pr-2 text-[13.5px] font-medium text-[#111512] shadow-[0_6px_16px_rgba(156,220,51,0.45)] hover:bg-[#8fce2b]"
+              "h-11 gap-3 rounded-xl bg-primary pl-6 pr-1.5 text-sm font-semibold text-primary-foreground shadow-[0_10px_24px_-8px_rgba(139,214,47,0.7)] transition hover:bg-primary/90 motion-safe:hover:-translate-y-0.5"
             )}
           >
             Check Eligibility
-            <span className="flex size-7 items-center justify-center rounded-md bg-[#111512] text-[#9cdc33]">
-              <ArrowUpRight size={14} />
+            <span className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary">
+              <ArrowUpRight size={15} aria-hidden />
             </span>
           </Link>
         </div>

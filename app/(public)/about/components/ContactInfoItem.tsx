@@ -4,9 +4,9 @@ export default function ContactInfoItem({ icon: Icon, label, value, caption, hre
   const valueClass = "mt-1 block text-[15px] font-semibold leading-5 text-foreground";
 
   return (
-    <li className="flex gap-3.5">
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-        <Icon size={17} strokeWidth={1.5} />
+    <li className="flex items-start gap-4 rounded-2xl border border-border bg-white p-4 shadow-[0_1px_2px_rgba(17,21,18,0.04)]">
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-secondary text-primary">
+        <Icon size={18} strokeWidth={1.75} aria-hidden />
       </span>
 
       <div>
@@ -14,7 +14,7 @@ export default function ContactInfoItem({ icon: Icon, label, value, caption, hre
           {label}
         </span>
         {href ? (
-          <a href={href} {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})} className={`${valueClass} transition hover:text-primary`}>
+          <a href={href} {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})} className={`${valueClass} transition hover:text-[#4f9a0e]`}>
             {value}
           </a>
         ) : (

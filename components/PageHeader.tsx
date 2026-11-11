@@ -22,15 +22,16 @@ type Props = {
  */
 export default function PageHeader({ badge, title, highlight, description, actions, className }: Props) {
   return (
-    <header className={cn("border-b border-border bg-background", className)}>
-      <div className="mx-auto w-full max-w-[88rem] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+    <header className={cn("relative isolate overflow-hidden border-b border-border bg-white", className)}>
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_130%_at_88%_-30%,rgba(139,214,47,0.18),transparent_70%)]" />
+      <div className="mx-auto w-full max-w-[88rem] px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         {badge && (
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[11px] font-semibold text-[#4f9a0e]">
-            <span className="size-1.5 rounded-full bg-primary" aria-hidden />
+          <span className="inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#4f9a0e]">
+            <span aria-hidden className="h-px w-7 bg-current opacity-60" />
             {badge}
           </span>
         )}
-        <h1 className={cn("font-heading text-3xl font-semibold leading-tight tracking-tight text-foreground sm:text-4xl", badge && "mt-3")}>
+        <h1 className={cn("text-balance font-heading text-3xl font-bold leading-[1.1] tracking-tight text-foreground sm:text-4xl lg:text-5xl", badge && "mt-4")}>
           {title}
           {highlight && (
             <>
@@ -39,16 +40,18 @@ export default function PageHeader({ badge, title, highlight, description, actio
             </>
           )}
         </h1>
-        {description && <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-muted-foreground">{description}</p>}
+        {description && <p className="mt-4 max-w-3xl text-base leading-7 text-muted-foreground">{description}</p>}
         {actions && actions.length > 0 && (
-          <div className="mt-5 flex flex-wrap items-center gap-3">
+          <div className="mt-6 flex flex-wrap items-center gap-3">
             {actions.map((a, i) => (
               <Link
                 key={a.href}
                 href={a.href}
                 className={cn(
-                  "group inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                  i === 0 ? "bg-primary text-primary-foreground hover:bg-primary/90" : "border border-border bg-card text-foreground hover:bg-muted"
+                  "group inline-flex h-11 items-center gap-2 rounded-xl px-5 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                  i === 0
+                    ? "bg-primary text-primary-foreground shadow-[0_10px_24px_-10px_rgba(139,214,47,0.8)] hover:bg-primary/90"
+                    : "border border-foreground/15 bg-white text-foreground hover:border-foreground/40 hover:bg-muted"
                 )}
               >
                 {a.label}

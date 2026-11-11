@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import CarCard from "@/components/CarCard";
 import { CardGridSkeleton, EmptyState, ErrorState } from "@/components/Feedback";
-import { Button } from "@/components/ui/button";
 import { useAsync } from "@/hooks/use-async";
 import { toList } from "@/lib/api/client";
 import { carsApi } from "@/lib/api/services";
@@ -23,35 +22,47 @@ export default function FleetBrowser({ limit = 100, className }: { limit?: numbe
     [data, active],
   );
 
-  if (loading) return <CardGridSkeleton label="Loading vehicles…" className="mt-8 lg:grid-cols-3" />;
+  if (loading) return <CardGridSkeleton label="Loading vehicles…" className="mt-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" />;
   if (error) return <ErrorState message={error} onRetry={reload} />;
+
+  const countFor = (type: string) => (type === "All" ? (data ?? []).length : (data ?? []).filter((c) => c.carType === type).length);
 
   return (
     <div className={className}>
-      <div className="flex flex-wrap gap-2">
-        {["All", ...types].map((type) => (
-          <Button
-            key={type}
-            type="button"
-            variant="outline"
-            aria-pressed={active === type}
-            onClick={() => setActive(type)}
-            className={cn(
-              "h-9.5 rounded-[10px] px-4 text-xs font-medium text-foreground shadow-none",
-              active === type
-                ? "border-primary bg-primary text-primary-foreground hover:bg-primary"
-                : "border-border bg-card hover:bg-muted"
-            )}
-          >
-            {type === "All" ? "All" : enumLabel(type)}
-          </Button>
-        ))}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div role="group" aria-label="Filter by vehicle type" className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+          {["All", ...types].map((type) => {
+            const selected = active === type;
+            return (
+              <button
+                key={type}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => setActive(type)}
+                className={cn(
+                  "inline-flex h-11 shrink-0 items-center gap-2 rounded-full border px-5 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+                  selected
+                    ? "border-secondary bg-secondary text-white shadow-[0_10px_22px_-12px_rgba(17,21,18,0.7)]"
+                    : "border-border bg-white text-foreground hover:border-foreground/30 hover:bg-muted"
+                )}
+              >
+                {type === "All" ? "All vehicles" : enumLabel(type)}
+                <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-bold tabular-nums", selected ? "bg-primary text-secondary" : "bg-muted text-muted-foreground")}>
+                  {countFor(type)}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-sm text-muted-foreground" aria-live="polite">
+          Showing <span className="font-bold text-foreground">{visible.length}</span> {visible.length === 1 ? "vehicle" : "vehicles"}
+        </p>
       </div>
 
       {visible.length === 0 ? (
         <EmptyState>No vehicles in this category yet.</EmptyState>
       ) : (
-        <div className="mt-8 grid gap-x-4 gap-y-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
           {visible.map((car) => (
             <CarCard key={car.id} car={car} />
           ))}
