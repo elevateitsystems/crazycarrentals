@@ -11,8 +11,8 @@ export default function LocationsShowcaseSection() {
   const active = locations.find((l) => l.slug === activeSlug) ?? locations[0];
 
   return (
-    <section className="bg-background pb-18 pt-10">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
+    <section className="bg-background pb-16 pt-8 sm:pb-20 sm:pt-10 lg:pb-24">
+      <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
         {locations.length > 1 && <LocationTabs locations={locations} activeSlug={activeSlug} onSelect={setActiveSlug} />}
 
         <div className="mt-5">
@@ -32,13 +32,14 @@ export default function LocationsShowcaseSection() {
           </div>
         )}
 
-        <div className="mt-6 flex items-start gap-4 rounded-2xl border border-primary/30 bg-primary/10 p-6">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <Truck className="size-5" aria-hidden />
+        <div className="relative mt-6 flex items-start gap-5 overflow-hidden rounded-3xl bg-secondary p-6 text-secondary-foreground sm:items-center sm:p-8">
+          <div aria-hidden className="pointer-events-none absolute -right-10 -top-16 size-56 rounded-full bg-primary/15 blur-3xl" />
+          <span className="relative flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
+            <Truck className="size-6" strokeWidth={1.75} aria-hidden />
           </span>
-          <div>
-            <h2 className="text-base font-bold tracking-tight text-foreground">Accident replacement: delivered statewide</h2>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+          <div className="relative">
+            <h2 className="text-lg font-bold tracking-tight text-white">Accident replacement: delivered statewide</h2>
+            <p className="mt-1 text-sm leading-6 text-white/65">
               Accident replacement vehicles are delivered Tasmania-wide, so wherever you are in the state, we can get one to you.
             </p>
           </div>

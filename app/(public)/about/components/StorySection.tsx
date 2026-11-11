@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import SectionHeading from "@/components/SectionHeading";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import SectionBadge from "./SectionBadge";
 
 const paragraphs = [
   "While TasDrive Rentals is a fresh name on the island, our team brings a proven history of industry expertise dating back to 2015.",
@@ -13,19 +13,17 @@ const paragraphs = [
 ];
 
 export default function StorySection() {
+  const [lead, ...rest] = paragraphs;
   return (
-    <section className="bg-card py-18">
-      <div className="mx-auto grid max-w-7xl px-4 sm:px-6 md:px-0 items-center gap-10 lg:grid-cols-2 lg:gap-12">
+    <section className="bg-white py-16 sm:py-20 lg:py-24">
+      <div className="mx-auto grid max-w-[88rem] items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-16 lg:px-8">
         <div>
-          <SectionBadge>Our Story</SectionBadge>
+          <SectionHeading align="left" eyebrow="Our Story" title="Built for Tasmania, by Tasmanians." />
 
-          <h1 className="mt-4 max-w-md text-[2.4rem] font-bold leading-[1.15] tracking-tight text-foreground">
-            Built for Tasmania, by Tasmanians.
-          </h1>
-
-          <div className="mt-5 space-y-4">
-            {paragraphs.map((text) => (
-              <p key={text} className="text-sm leading-6.5 text-muted-foreground">
+          <p className="mt-6 text-lg font-medium leading-8 text-foreground">{lead}</p>
+          <div className="mt-4 space-y-4">
+            {rest.map((text) => (
+              <p key={text} className="text-[15px] leading-7 text-muted-foreground">
                 {text}
               </p>
             ))}
@@ -35,22 +33,25 @@ export default function StorySection() {
             href="/fleet"
             className={cn(
               buttonVariants(),
-              "mt-7 h-10.5 gap-2 rounded-[10px] bg-primary px-5 text-[13px] font-semibold text-primary-foreground shadow-none hover:bg-primary/90"
+              "mt-8 h-12 gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-[0_12px_26px_-10px_rgba(139,214,47,0.8)] transition hover:bg-primary/90 motion-safe:hover:-translate-y-0.5"
             )}
           >
             View Our Fleet
-            <ChevronRight size={14} />
+            <ChevronRight size={16} aria-hidden />
           </Link>
         </div>
 
-        <div className="relative h-72 overflow-hidden rounded-2xl lg:h-84">
-          <Image
-            src="/car-3.jpg"
-            alt="Silver SUV driving on a Tasmanian road"
-            fill
-            sizes="(min-width: 1024px) 488px, 100vw"
-            className="object-cover"
-          />
+        <div className="relative">
+          <div aria-hidden className="absolute -bottom-4 -right-4 -z-10 size-3/4 rounded-3xl bg-primary/25" />
+          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-[0_30px_60px_-30px_rgba(17,21,18,0.45)] ring-1 ring-black/5">
+            <Image
+              src="/car-3.jpg"
+              alt="Silver SUV driving on a Tasmanian road"
+              fill
+              sizes="(min-width: 1024px) 640px, 100vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </div>
     </section>

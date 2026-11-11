@@ -60,19 +60,19 @@ export default function FleetListing() {
   const total = results.data?.meta?.total ?? visibleCars.length;
 
   return (
-    <section className="bg-background pb-16 pt-4 md:pb-20">
+    <section className="bg-background pb-16 pt-2 md:pb-24">
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-white px-4 py-3 shadow-[0_1px_2px_rgba(17,21,18,0.04)] sm:px-5">
           <div className="flex flex-wrap items-center gap-3">
             <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">{results.loading && !results.refreshing ? "…" : total}</span>{" "}
+              <span className="text-base font-bold text-foreground">{results.loading && !results.refreshing ? "…" : total}</span>{" "}
               {total === 1 ? "vehicle" : "vehicles"} {hasTrip ? "available for your dates" : "available"}
             </p>
             {carType && (
               <Link
                 href="/rent-a-car"
                 aria-label={`Remove ${enumLabel(carType)} filter`}
-                className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-foreground transition-colors hover:bg-primary/25"
+                className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-primary transition-opacity hover:opacity-85"
               >
                 {enumLabel(carType)} <X className="size-3.5" aria-hidden />
               </Link>
@@ -87,7 +87,7 @@ export default function FleetListing() {
                 setSort(e.target.value);
                 setPage(1);
               }}
-              className="h-10 rounded-lg border border-border bg-card px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="h-10 rounded-xl border border-border bg-white px-3 text-sm font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -99,14 +99,14 @@ export default function FleetListing() {
         </div>
 
         {results.loading && !results.refreshing ? (
-          <CardGridSkeleton label="Loading vehicles…" count={PAGE_SIZE} className="sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" />
+          <CardGridSkeleton label="Loading vehicles…" count={PAGE_SIZE} className="mt-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6" />
         ) : results.error ? (
           <ErrorState message={results.error} onRetry={results.reload} />
         ) : visibleCars.length === 0 ? (
           <EmptyState>{hasTrip ? "No vehicles are available for those dates. Try different dates or times." : "No vehicles found."}</EmptyState>
         ) : (
-          <Refreshing active={results.refreshing} className="mt-5">
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <Refreshing active={results.refreshing} className="mt-6">
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6">
               {visibleCars.map((car) => (
                 <CarCard key={car.id} car={car} trip={hasTrip ? trip : undefined} />
               ))}

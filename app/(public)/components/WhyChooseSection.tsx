@@ -1,5 +1,5 @@
 import { Headphones, Tag, Truck, Zap } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import SectionHeading from "@/components/SectionHeading";
 
 const features = [
   {
@@ -26,39 +26,33 @@ const features = [
 
 export default function WhyChooseSection() {
   return (
-    <section className="bg-white pb-20 pt-22">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-0">
-        <div className="text-center">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#86d72f]">
-            Why TasDrive
-          </span>
-          <h2 className="mx-auto mt-3 max-w-md text-[2.4rem] font-bold leading-[1.15] tracking-tight text-neutral-900">
-            Everything you need to get moving.
-          </h2>
-        </div>
+    <section className="relative overflow-hidden bg-white py-16 sm:py-20 lg:py-24">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-64 bg-[radial-gradient(55%_100%_at_50%_0%,rgba(139,214,47,0.10),transparent_75%)]" />
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map(({ icon: Icon, title, description }) => (
-            <Card
+      <div className="relative mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+        <SectionHeading eyebrow="Why TasDrive" title="Everything you need to get moving." />
+
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2 sm:gap-5 lg:mt-14 lg:grid-cols-4">
+          {features.map(({ icon: Icon, title, description }, i) => (
+            <li
               key={title}
-              className="gap-0 rounded-2xl border-[#e9e9e4] bg-[#f6f6f3] py-0 shadow-none"
+              className="group relative overflow-hidden rounded-2xl border border-border bg-white p-6 shadow-[0_1px_2px_rgba(17,21,18,0.04)] transition duration-300 motion-safe:hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_18px_40px_-18px_rgba(17,21,18,0.25)] sm:p-7"
             >
-              <CardHeader className="gap-0 space-y-0 p-0 px-[26px] pt-7">
-                <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-[#e7f6d3] text-[#86d72f]">
-                  <Icon size={18} strokeWidth={1.5} />
+              {/* lime accent that grows in along the top edge on hover */}
+              <span aria-hidden className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
+              <div className="flex items-start justify-between">
+                <div className="flex size-12 items-center justify-center rounded-xl bg-secondary text-primary shadow-[0_8px_18px_-8px_rgba(17,21,18,0.6)]">
+                  <Icon size={20} strokeWidth={1.75} aria-hidden />
                 </div>
-                <CardTitle className="text-base font-semibold leading-snug text-neutral-900">
-                  {title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="px-[26px] pb-7 pt-2.5">
-                <CardDescription className="text-[13.5px] leading-[22px] text-neutral-500">
-                  {description}
-                </CardDescription>
-              </CardContent>
-            </Card>
+                <span aria-hidden className="text-sm font-semibold tabular-nums text-foreground/20">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </div>
+              <h3 className="mt-6 text-[17px] font-semibold leading-snug tracking-tight text-foreground">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

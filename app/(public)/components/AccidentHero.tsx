@@ -33,7 +33,7 @@ export default function AccidentHero() {
       <div className="border-t border-white/10 px-4 py-6 sm:px-6">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 md:justify-start">
           <Link
-            href="/accident-replacement/eligibility"
+            href="/accident-replacement#eligibility"
             className="group inline-flex h-11 items-center gap-3 rounded-lg bg-primary py-1.5 pl-4 pr-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-secondary"
           >
             Check Eligibility

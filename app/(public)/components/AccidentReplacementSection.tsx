@@ -31,16 +31,16 @@ export default function AccidentReplacementSection() {
             total-loss claim is paid out.
           </p>
 
-          <p className="mt-4 inline-flex items-center gap-2 rounded-full bg-neutral-900/10 px-3.5 py-1.5 text-[13px] font-semibold text-neutral-900">
+          <p className="mt-5 flex w-fit items-center gap-2 rounded-full bg-neutral-900/10 px-3.5 py-1.5 text-[13px] font-semibold text-neutral-900">
             <MapPin className="size-4" aria-hidden />
             Delivered statewide across Tasmania
           </p>
 
           <Link
-            href="/accident-replacement/eligibility"
+            href="/accident-replacement#eligibility"
             className={cn(
               buttonVariants({ variant: "secondary" }),
-              "mt-7 h-10.5 gap-2 rounded-[10px] bg-white pl-5.5 pr-2 text-sm font-medium text-neutral-900 shadow-[0_4px_14px_rgba(0,0,0,0.12)] hover:bg-white/90"
+              "mt-6 flex h-11 w-fit gap-2 rounded-[10px] bg-white pl-5.5 pr-2 text-sm font-medium text-neutral-900 shadow-[0_4px_14px_rgba(0,0,0,0.12)] hover:bg-white/90"
             )}
           >
             Check Eligibility

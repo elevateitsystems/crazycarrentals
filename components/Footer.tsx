@@ -14,7 +14,7 @@ const navbarItems =[
 
 const accidentReplacementLinks: FooterLink[] = [
   { label: "How It Works", href: "/accident-replacement/how-it-works" },
-  { label: "Eligibility", href: "/accident-replacement/eligibility" },
+  { label: "Eligibility", href: "/accident-replacement#eligibility" },
   { label: "Apply", href: "/accident-replacement/apply" },
   { label: "FAQs", href: "/accident-replacement/faqs" },
 ];

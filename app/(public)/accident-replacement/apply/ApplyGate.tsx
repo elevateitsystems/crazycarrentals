@@ -1,20 +1,36 @@
 "use client";
 
-import { CircleCheck } from "lucide-react";
-import EligibilityChecker from "@/components/EligibilityChecker";
+import Link from "next/link";
+import { ArrowUpRight, CircleCheck, ClipboardCheck } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { revokeEligibility, useGrantedEligibility } from "@/lib/eligibility";
+import { cn } from "@/lib/utils";
 import ApplyForm from "./ApplyForm";
 
-/** The application is only shown once the three eligibility questions have been answered in an eligible way. */
+/**
+ * The application is only shown once the eligibility questions (on the Accident Replacement page) have been answered
+ * in an eligible way. Anyone arriving here without that is sent back to the questions.
+ */
 export default function ApplyGate() {
   const eligibility = useGrantedEligibility();
 
   if (!eligibility) {
     return (
-      <div>
-        <h2 className="text-lg font-bold tracking-tight">Before you apply</h2>
-        <p className="mt-1.5 text-[13px] text-muted-foreground">Please answer these questions first to confirm you&apos;re eligible.</p>
-        <EligibilityChecker className="mt-6" />
+      <div className="rounded-2xl border border-border bg-card p-6 text-center sm:p-8">
+        <ClipboardCheck className="mx-auto size-8 text-primary" aria-hidden />
+        <h2 className="mt-3 text-lg font-bold tracking-tight">Check your eligibility first</h2>
+        <p className="mx-auto mt-1.5 max-w-md text-[13px] text-muted-foreground">
+          Please answer the three eligibility questions before you apply. It only takes a moment.
+        </p>
+        <Link
+          href="/accident-replacement#eligibility"
+          className={cn(buttonVariants(), "mt-5 h-11 gap-2 rounded-lg bg-[#9cdc33] pl-5 pr-2 text-sm font-semibold text-[#111512] hover:bg-[#8fce2b]")}
+        >
+          Check My Eligibility
+          <span className="flex size-7 items-center justify-center rounded-md bg-[#111512] text-[#9cdc33]">
+            <ArrowUpRight size={14} />
+          </span>
+        </Link>
       </div>
     );
   }
