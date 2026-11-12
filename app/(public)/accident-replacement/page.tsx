@@ -32,6 +32,7 @@ export default function Page() {
         badge="Accident Replacement Vehicles"
         title="Accident Replacement Cars for Not-at-Fault Drivers"
         description="Had an accident? Let's get you moving again. We know how stressful the aftermath of a car accident can be. We're here to make your next step as simple as possible. If you were not at fault, you are legally entitled to a like-for-like replacement vehicle at zero out-of-pocket cost while yours is being repaired or until your total loss claim is settled."
+        image={{ src: "/accident-hero.jpg", alt: "Tow truck carrying a replacement car along a wet city road at dusk" }}
         actions={[
           { label: "Check Eligibility", href: "/accident-replacement#eligibility" },
           { label: "How It Works", href: "/accident-replacement/how-it-works" },
