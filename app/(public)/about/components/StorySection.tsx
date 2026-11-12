@@ -45,8 +45,8 @@ export default function StorySection() {
           <div aria-hidden className="absolute -bottom-4 -right-4 -z-10 size-3/4 rounded-3xl bg-primary/25" />
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-[0_30px_60px_-30px_rgba(17,21,18,0.45)] ring-1 ring-black/5">
             <Image
-              src="/car-3.jpg"
-              alt="Silver SUV driving on a Tasmanian road"
+              src="/about-welcome-sign.jpg"
+              alt="Welcome to TAS Drive Rentals sign outside the branch, with a white SUV parked behind it"
               fill
               sizes="(min-width: 1024px) 640px, 100vw"
               className="object-cover"

@@ -52,8 +52,8 @@ export default function LocationsSection() {
         <div className="mt-10 grid gap-5 lg:mt-12 lg:grid-cols-[1.1fr_1fr] lg:gap-6">
           <div className="relative min-h-72 overflow-hidden rounded-3xl shadow-[0_30px_60px_-30px_rgba(17,21,18,0.45)] ring-1 ring-black/5 lg:min-h-full">
             <Image
-              src="/hero-section-car.png"
-              alt="SUV parked on a coastal road at sunset"
+              src="/locations-forest-road.jpg"
+              alt="A sealed road curving through tall Tasmanian eucalyptus forest"
               fill
               sizes="(min-width: 1024px) 55vw, 100vw"
               className="object-cover transition-transform duration-700 motion-safe:hover:scale-105"

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,8 @@ type Props = {
   description?: string;
   /** Up to two buttons: the first is the primary one. */
   actions?: Action[];
+  /** Optional picture shown beside the text (below it on phones). */
+  image?: { src: string; alt: string };
   className?: string;
 };
 
@@ -20,11 +23,12 @@ type Props = {
  * Compact heading for inner pages: text only, no banner image, so the page content starts right under the navbar.
  * (The home page keeps its own full-size hero.)
  */
-export default function PageHeader({ badge, title, highlight, description, actions, className }: Props) {
+export default function PageHeader({ badge, title, highlight, description, actions, image, className }: Props) {
   return (
     <header className={cn("relative isolate overflow-hidden border-b border-border bg-white", className)}>
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_130%_at_88%_-30%,rgba(139,214,47,0.18),transparent_70%)]" />
-      <div className="mx-auto w-full max-w-[88rem] px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <div className={cn("mx-auto w-full max-w-[88rem] px-4 py-10 sm:px-6 sm:py-14 lg:px-8", image && "grid items-center gap-8 lg:grid-cols-[1.15fr_1fr] lg:gap-14")}>
+        <div>
         {badge && (
           <span className="inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#4f9a0e]">
             <span aria-hidden className="h-px w-7 bg-current opacity-60" />
@@ -58,6 +62,13 @@ export default function PageHeader({ badge, title, highlight, description, actio
                 <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
               </Link>
             ))}
+          </div>
+        )}
+        </div>
+
+        {image && (
+          <div className="relative aspect-[16/10] overflow-hidden rounded-3xl shadow-[0_30px_60px_-30px_rgba(17,21,18,0.45)] ring-1 ring-black/5">
+            <Image src={image.src} alt={image.alt} fill priority sizes="(min-width: 1024px) 42vw, 100vw" className="object-cover" />
           </div>
         )}
       </div>
