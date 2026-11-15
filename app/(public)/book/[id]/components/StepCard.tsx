@@ -15,6 +15,7 @@ type StepCardProps = {
   backHref?: string;
   backLabel?: string;
   submitting?: boolean;
+  nextDisabled?: boolean;
   error?: string | null;
   footerNote?: React.ReactNode;
 };
@@ -31,6 +32,7 @@ export default function StepCard({
   backHref,
   backLabel = "Back",
   submitting = false,
+  nextDisabled = false,
   error,
   footerNote,
 }: StepCardProps) {
@@ -79,6 +81,7 @@ export default function StepCard({
             <Button
               type="submit"
               loading={submitting}
+              disabled={nextDisabled}
               className={cn(footerButton, "gap-1.5 bg-primary px-5 font-semibold text-primary-foreground hover:bg-primary/90")}
             >
               {submitting ? "Please wait…" : nextLabel}

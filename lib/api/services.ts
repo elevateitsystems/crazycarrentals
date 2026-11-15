@@ -50,7 +50,8 @@ export const authApi = {
 export const carsApi = {
   list: (query?: Query) => request<Car[]>("/cars", { query }),
   search: (query: Query) => request<Car[]>("/cars/search", { query }),
-  get: (id: string) => request<Car>(`/cars/${id}`),
+  /** With dates, `soldOut` reflects bookings and holds for those dates. */
+  get: (id: string, query?: Query) => request<Car>(`/cars/${id}`, { query }),
 };
 
 export const bookingsApi = {
@@ -112,8 +113,8 @@ export const adminApi = {
 
   /** Not paginated: the backend returns every extra, active or not. */
   extras: () => request<ExtraService[]>("/admin/extras/all", admin),
-  createExtra: (body: { name: string; pricePerDay: number }) => request<ExtraService>("/admin/extras/add", { ...admin, method: "POST", body }),
-  updateExtra: (id: string, body: { name?: string; pricePerDay?: number; isActive?: boolean }) =>
+  createExtra: (body: { name: string; description?: string; pricePerDay: number }) => request<ExtraService>("/admin/extras/add", { ...admin, method: "POST", body }),
+  updateExtra: (id: string, body: { name?: string; description?: string; pricePerDay?: number; isActive?: boolean }) =>
     request<ExtraService>(`/admin/extras/update/${id}`, { ...admin, method: "PATCH", body }),
   deleteExtra: (id: string) => request<unknown>(`/admin/extras/delete/${id}`, { ...admin, method: "DELETE" }),
 

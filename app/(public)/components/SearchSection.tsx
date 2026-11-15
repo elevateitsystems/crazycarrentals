@@ -8,6 +8,7 @@ import SectionHeading from "@/components/SectionHeading";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { slotLabel, useTimeSlots } from "@/hooks/use-time-slots";
 import { RENTAL_LOCATION_LABEL } from "@/lib/locations";
 import { cn } from "@/lib/utils";
 
@@ -41,6 +42,7 @@ export default function SearchSection() {
   const [sameLocation, setSameLocation] = useState(true);
   const [airportShuttle, setAirportShuttle] = useState(false);
   const router = useRouter();
+  const timeSlots = useTimeSlots();
   const today = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD in the visitor's timezone
 
   // Hands the trip details to /rent-a-car, which queries the backend's availability search.
@@ -60,6 +62,24 @@ export default function SearchSection() {
       <Label htmlFor={f.id} className={labelStyles}>
         {f.label}
       </Label>
+      {f.type === "time" ? (
+        <select
+          id={f.id}
+          name={f.id}
+          required
+          defaultValue=""
+          className={`${inputStyles} w-full border bg-white outline-none focus-visible:ring-3 [&:invalid]:text-neutral-400`}
+        >
+          <option value="" disabled>
+            Select time
+          </option>
+          {timeSlots.map((t) => (
+            <option key={t} value={t}>
+              {slotLabel(t)}
+            </option>
+          ))}
+        </select>
+      ) : (
       <Input
         id={f.id}
         name={f.id}
@@ -71,6 +91,7 @@ export default function SearchSection() {
         onClick={f.type === "text" ? undefined : (e) => e.currentTarget.showPicker?.()}
         className={`${inputStyles} ${f.type === "text" ? "" : pickerStyles}`}
       />
+      )}
     </div>
   );
   const byId = (id: Field["id"]) => fields.find((f) => f.id === id)!;

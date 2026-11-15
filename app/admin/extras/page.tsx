@@ -18,8 +18,8 @@ import type { ExtraService } from "@/lib/api/types";
 import { formatTimestamp, money } from "@/lib/format";
 import { FilterSelect, SearchBox } from "../components/ListControls";
 
-type Form = { name: string; pricePerDay: string; isActive: boolean };
-const empty: Form = { name: "", pricePerDay: "", isActive: true };
+type Form = { name: string; description: string; pricePerDay: string; isActive: boolean };
+const empty: Form = { name: "", description: "", pricePerDay: "", isActive: true };
 
 const STATUSES = ["ACTIVE", "INACTIVE"] as const;
 
@@ -52,7 +52,7 @@ export default function ExtrasPage() {
   };
   const openEdit = (e: ExtraService) => {
     setEditing(e);
-    setForm({ name: e.name ?? "", pricePerDay: e.pricePerDay == null ? "" : String(e.pricePerDay), isActive: e.isActive !== false });
+    setForm({ name: e.name ?? "", description: e.description ?? "", pricePerDay: e.pricePerDay == null ? "" : String(e.pricePerDay), isActive: e.isActive !== false });
     setFormError(null);
     setOpen(true);
   };
@@ -66,8 +66,8 @@ export default function ExtrasPage() {
     void run(async () => {
       setFormError(null);
       try {
-        if (editing) await adminApi.updateExtra(editing.id, { name, pricePerDay: price, isActive: form.isActive });
-        else await adminApi.createExtra({ name, pricePerDay: price });
+        if (editing) await adminApi.updateExtra(editing.id, { name, description: form.description.trim(), pricePerDay: price, isActive: form.isActive });
+        else await adminApi.createExtra({ name, description: form.description.trim(), pricePerDay: price });
         setOpen(false);
         setFlash({ kind: "success", text: editing ? `“${name}” updated.` : `“${name}” added.` });
         extras.reload();
@@ -203,6 +203,19 @@ export default function ExtrasPage() {
             <div className="space-y-2">
               <Label htmlFor="extra-name">Name</Label>
               <Input id="extra-name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Child Seat" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="extra-description">Description</Label>
+              <textarea
+                id="extra-description"
+                rows={3}
+                maxLength={1000}
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                placeholder="Shown to customers under the name"
+                className="w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+              />
+              <p className="text-xs text-muted-foreground">{form.description.length}/1000</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="extra-price">Price per day ($)</Label>

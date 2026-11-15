@@ -75,7 +75,31 @@ export type Car = {
   driverInfoId?: string | null;
   driverInfo?: DriverInfo | null;
   bookedDates?: unknown[];
+  /** Ready-made "Brand Model or similar" title. Show as-is; don't append "or similar" again. */
+  displayName?: string;
+  /** Pay Now banner text for Book Now, e.g. "Save 9% when you Pay Now". */
+  payNowLabel?: string;
+  /** With dates: booked or held for them. Without: the admin's switch for closing the vehicle. */
+  soldOut?: boolean;
+  suitcases?: number;
+  airConditioning?: boolean;
+  minimumDriverAge?: number;
+  unlimitedMileage?: boolean;
+  /** The only fields the public "View details" view may show. */
+  publicDetails?: PublicDetails;
   [key: string]: unknown;
+};
+
+export type PublicDetails = {
+  seats?: number;
+  doors?: number;
+  suitcases?: number;
+  transmission?: string;
+  mileage?: string | number;
+  airConditioning?: boolean;
+  minimumDriverAge?: number;
+  includedCover?: string;
+  protectionNote?: string;
 };
 
 export type ExtraService = {
@@ -115,6 +139,10 @@ export type ExtrasCatalog = {
   protections?: Protection[];
   airportShuttle?: { name?: string; price?: number; type?: string; description?: string };
   discounts?: { payNowDiscountPercent?: number; description?: string };
+  /** Pickup/return times, 08:00 to 20:00 in 15-minute steps. Use in the order given. */
+  timeSlots?: string[];
+  company?: { abn?: string; [key: string]: unknown };
+  terms?: { acknowledgement?: string; [key: string]: unknown };
 };
 
 export type PaymentOption = "PAY_NOW" | "PAY_AT_DESK";
@@ -255,6 +283,7 @@ export type TripInput = {
 };
 
 export type CreateBookingInput = TripInput & {
+  acceptedTerms: boolean;
   pickupLocation: string;
   returnLocation: string;
   bookingPersonDetails: { firstName: string; lastName: string; email: string; phoneNumber: string };
