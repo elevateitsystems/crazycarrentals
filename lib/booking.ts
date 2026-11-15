@@ -27,6 +27,7 @@ export type BookingData = {
   suburb: string;
   state: string;
   postcode: string;
+  acceptedTerms: boolean;
 };
 
 export function initialBooking(prefill: URLSearchParams | null): BookingData {
@@ -52,6 +53,7 @@ export function initialBooking(prefill: URLSearchParams | null): BookingData {
     suburb: "",
     state: "",
     postcode: "",
+    acceptedTerms: false,
   };
 }
 
@@ -80,6 +82,7 @@ export function toCreateInput(carId: string, d: BookingData): CreateBookingInput
   const payNow = d.paymentTiming === "payNow";
   return {
     ...toTripInput(carId, d),
+    acceptedTerms: d.acceptedTerms,
     pickupLocation: d.pickupLocation,
     returnLocation: d.returnLocation || d.pickupLocation,
     bookingPersonDetails: { firstName: d.firstName, lastName: d.lastName, email: d.email, phoneNumber: d.phone },

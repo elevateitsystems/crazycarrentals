@@ -14,7 +14,7 @@ export function money(value: unknown) {
 
 export function carName(car?: Car | null) {
   if (!car) return "Vehicle";
-  return [car.brand, car.model].filter(Boolean).join(" ") || "Vehicle";
+  return car.displayName || [car.brand, car.model].filter(Boolean).join(" ") || "Vehicle";
 }
 
 export function carImage(car?: Car | null): string | null {

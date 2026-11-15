@@ -16,5 +16,8 @@ export function toCar(car: ApiCar): Car {
     doors: Number(car.doors) || 0,
     transmission: enumLabel(car.transmission) || "—",
     fuel: enumLabel(car.fuelType) || "—",
+    soldOut: car.soldOut === true,
+    payNowLabel: car.payNowLabel,
+    details: car.publicDetails,
   };
 }

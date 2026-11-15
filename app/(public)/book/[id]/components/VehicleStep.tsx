@@ -2,10 +2,31 @@ import CarImage from "@/components/CarImage";
 import Link from "next/link";
 import type { Car } from "@/components/CarCard";
 import type { StepProps } from "@/lib/booking";
-import FormField from "./FormField";
+import { slotLabel, useTimeSlots } from "@/hooks/use-time-slots";
+import FormField, { inputStyles } from "./FormField";
 import StepCard from "./StepCard";
 
 export default function VehicleStep({ car, data, update, onNext }: StepProps & { car: Car }) {
+  const timeSlots = useTimeSlots();
+  const timeSelect = (id: "pickupTime" | "returnTime") => (
+    <select
+      id={id}
+      name={id}
+      required
+      value={data[id]}
+      onChange={(e) => update({ [id]: e.target.value })}
+      className={`${inputStyles} w-full border`}
+    >
+      <option value="" disabled>
+        Select time
+      </option>
+      {timeSlots.map((t) => (
+        <option key={t} value={t}>
+          {slotLabel(t)}
+        </option>
+      ))}
+    </select>
+  );
   const specs = [
     { label: "Seats", value: car.seats },
     { label: "Trans.", value: car.transmission === "Automatic" ? "Auto" : car.transmission },
@@ -75,14 +96,9 @@ export default function VehicleStep({ car, data, update, onNext }: StepProps & {
             value={data.pickupDate}
             onChange={(e) => update({ pickupDate: e.target.value })}
           />
-          <FormField
-            id="pickupTime"
-            label="Pickup time"
-            type="time"
-            required
-            value={data.pickupTime}
-            onChange={(e) => update({ pickupTime: e.target.value })}
-          />
+          <FormField id="pickupTime" label="Pickup time">
+            {timeSelect("pickupTime")}
+          </FormField>
           <FormField
             id="returnDate"
             label="Return date"
@@ -92,14 +108,9 @@ export default function VehicleStep({ car, data, update, onNext }: StepProps & {
             value={data.returnDate}
             onChange={(e) => update({ returnDate: e.target.value })}
           />
-          <FormField
-            id="returnTime"
-            label="Return time"
-            type="time"
-            required
-            value={data.returnTime}
-            onChange={(e) => update({ returnTime: e.target.value })}
-          />
+          <FormField id="returnTime" label="Return time">
+            {timeSelect("returnTime")}
+          </FormField>
         </div>
       </div>
 

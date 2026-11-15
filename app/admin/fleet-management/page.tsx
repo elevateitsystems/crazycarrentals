@@ -36,17 +36,23 @@ type FormState = {
   description: string;
   features: string;
   safetyRatings: string;
+  suitcases: string;
+  minimumDriverAge: string;
+  airConditioning: boolean;
+  unlimitedMileage: boolean;
+  soldOut: boolean;
 };
 
 const emptyForm: FormState = {
   brand: "", model: "", year: "", color: "", plate: "", pricePerDay: "", totalSeat: "", doors: "", mileage: "",
   fuelType: "", transmission: "", carType: "", description: "", features: "", safetyRatings: "",
+  suitcases: "", minimumDriverAge: "21", airConditioning: true, unlimitedMileage: true, soldOut: false,
 };
 
 // Values the backend accepts (checked against the live API). It answers anything else with a 500 instead of a
 // validation error, so these are fixed choices rather than free text.
 const OPTIONS = {
-  carType: ["SEDAN", "HATCHBACK", "LUXURY", "ELECTRIC_CARS", "COMMERCIAL"],
+  carType: ["SEDAN", "HATCHBACK", "SUV", "SEVEN_SEATER", "LUXURY", "ELECTRIC_CARS", "COMMERCIAL"],
   fuelType: ["PETROL", "DIESEL", "HYBRID", "ELECTRIC", "LPG"],
   transmission: ["AUTOMATIC", "MANUAL"],
 } as const;
@@ -58,6 +64,8 @@ function fromCar(car: Car): FormState {
     pricePerDay: s(car.pricePerDay), totalSeat: s(car.totalSeat), doors: s(car.doors), mileage: s(car.mileage),
     fuelType: s(car.fuelType), transmission: s(car.transmission), carType: s(car.carType),
     description: s(car.description), features: carFeatures(car).join(", "), safetyRatings: listField(car.safetyRatings).join(", "),
+    suitcases: s(car.suitcases), minimumDriverAge: s(car.minimumDriverAge ?? "21"),
+    airConditioning: car.airConditioning !== false, unlimitedMileage: car.unlimitedMileage !== false, soldOut: car.soldOut === true,
   };
 }
 
@@ -110,7 +118,9 @@ export default function FleetManagementPage() {
     setFormOpen(true);
   };
 
-  const set = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+  const setFlag = (k: "airConditioning" | "unlimitedMileage" | "soldOut") => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm((f) => ({ ...f, [k]: e.target.checked }));
+  const set = (k: Exclude<keyof FormState, "airConditioning" | "unlimitedMileage" | "soldOut">) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [k]: e.target.value }));
 
   const save = (e: React.FormEvent) => {
@@ -123,7 +133,7 @@ export default function FleetManagementPage() {
     void run(async () => {
       const fieldsBody = () => {
         const body = new FormData();
-        for (const [k, v] of Object.entries(form)) if (v !== "") body.append(k, v);
+        for (const [k, v] of Object.entries(form)) if (v !== "") body.append(k, String(v));
         return body;
       };
       const withImages = () => {
@@ -200,7 +210,7 @@ export default function FleetManagementPage() {
   };
 
   // Keep a car's current value selectable even if it isn't in the known list.
-  const choices = (k: keyof typeof OPTIONS) => [...new Set([...OPTIONS[k], ...(form[k] ? [form[k]] : [])])];
+  const choices = (k: keyof typeof OPTIONS) => [...new Set<string>([...OPTIONS[k], ...(form[k] ? [form[k]] : [])])];
 
   return (
     <div className="space-y-6">
@@ -373,6 +383,8 @@ export default function FleetManagementPage() {
               <Field label="Price per day ($)" id="pricePerDay"><Input id="pricePerDay" type="number" min="0" step="0.01" required value={form.pricePerDay} onChange={set("pricePerDay")} /></Field>
               <Field label="Seats" id="totalSeat"><Input id="totalSeat" type="number" min="1" required value={form.totalSeat} onChange={set("totalSeat")} /></Field>
               <Field label="Doors" id="doors"><Input id="doors" type="number" min="1" required value={form.doors} onChange={set("doors")} /></Field>
+              <Field label="Suitcases" id="suitcases"><Input id="suitcases" type="number" min="0" required value={form.suitcases} onChange={set("suitcases")} /></Field>
+              <Field label="Minimum driver age" id="minimumDriverAge"><Input id="minimumDriverAge" type="number" min="16" required value={form.minimumDriverAge} onChange={set("minimumDriverAge")} /></Field>
               <Field label="Mileage (km)" id="mileage"><Input id="mileage" type="number" min="0" required value={form.mileage} onChange={set("mileage")} /></Field>
               <Field label="Car type" id="carType">
                 <select id="carType" required className={selectClass} value={form.carType} onChange={set("carType")}>
@@ -394,6 +406,19 @@ export default function FleetManagementPage() {
               </Field>
               <Field label="Safety ratings (comma separated)" id="safetyRatings"><Input id="safetyRatings" value={form.safetyRatings} onChange={set("safetyRatings")} placeholder="5-Star ANCAP" /></Field>
               <Field label="Features (comma separated)" id="features"><Input id="features" value={form.features} onChange={set("features")} placeholder="Bluetooth, Backup Camera" /></Field>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              {([
+                ["airConditioning", "Air conditioning"],
+                ["unlimitedMileage", "Unlimited mileage"],
+                ["soldOut", "Sold out (close this vehicle)"],
+              ] as const).map(([k, label]) => (
+                <label key={k} className="flex items-center gap-2 rounded-lg border p-3 text-sm">
+                  <input type="checkbox" checked={form[k]} onChange={setFlag(k)} className="size-4" />
+                  {label}
+                </label>
+              ))}
             </div>
 
             <Field label="Description" id="description">

@@ -38,7 +38,8 @@ export default function PaymentStep({ total, estimate, unavailable, submitting, 
       title="Payment"
       description="Choose when to pay. Your booking is created when you continue."
       nextLabel={payNow ? (total != null ? `Continue to pay ${money(total)}` : "Continue to payment") : "Reserve Now, Pay Later"}
-      onSubmit={unavailable ? () => {} : onNext}
+      onSubmit={unavailable || !data.acceptedTerms ? () => {} : onNext}
+      nextDisabled={!data.acceptedTerms}
       onBack={onBack}
       submitting={submitting}
       error={unavailable ?? error}
@@ -189,6 +190,20 @@ export default function PaymentStep({ total, estimate, unavailable, submitting, 
       )}
 
       <PolicyReminders />
+
+      <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-muted/40 p-4 text-sm text-foreground">
+        <input
+          type="checkbox"
+          required
+          checked={data.acceptedTerms}
+          onChange={(e) => update({ acceptedTerms: e.target.checked })}
+          className="mt-0.5 size-4 shrink-0 accent-[#4f9a0e]"
+        />
+        <span>
+          {catalog.data?.terms?.acknowledgement ?? "I acknowledge that I have read, understood and agree to the TasDrive Rentals Terms and Conditions"}{" "}
+          (<Link href="/terms-and-conditions" target="_blank" className="font-semibold underline">view</Link>)
+        </span>
+      </label>
 
       <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
         {trust.map((item) => (

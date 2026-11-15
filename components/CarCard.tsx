@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight, Cog, DoorClosed, Fuel, Users, type LucideIcon } from "lucide-react";
 import CarImage from "@/components/CarImage";
 import { buttonVariants } from "@/components/ui/button";
+import type { PublicDetails } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
 
 export type Car = {
@@ -15,10 +16,15 @@ export type Car = {
   doors: number;
   transmission: string;
   fuel: string;
+  soldOut?: boolean;
+  payNowLabel?: string;
+  details?: PublicDetails;
 };
 
 export default function CarCard({ car, trip }: { car: Car; trip?: Record<string, string> }) {
-  const bookHref = trip ? `/book/${car.id}?${new URLSearchParams(trip)}` : `/book/${car.id}`;
+  const query = trip ? `?${new URLSearchParams(trip)}` : "";
+  const bookHref = `/book/${car.id}${query}`;
+  const detailsHref = `/fleet/${car.id}${query}`;
   const specs: { icon: LucideIcon; label: string; value: string | number }[] = [
     { icon: Users, label: "Seats", value: `${car.seats} ${car.seats === 1 ? "seat" : "seats"}` },
     { icon: DoorClosed, label: "Doors", value: `${car.doors} ${car.doors === 1 ? "door" : "doors"}` },
@@ -29,8 +35,9 @@ export default function CarCard({ car, trip }: { car: Car; trip?: Record<string,
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-[0_1px_2px_rgba(17,21,18,0.04)] transition duration-300 hover:border-primary/50 hover:shadow-[0_24px_48px_-24px_rgba(17,21,18,0.35)] motion-safe:hover:-translate-y-1">
       {/* The whole image is a link to the details page. */}
-      <Link href={`/fleet/${car.id}`} aria-label={`View details for ${car.name}`} className="relative block aspect-[4/3] overflow-hidden bg-[#eef0ec] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary">
+      <Link href={detailsHref} aria-label={`View details for ${car.name}`} className="relative block aspect-[4/3] overflow-hidden bg-[#eef0ec] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary">
         <CarImage src={car.image} alt={car.name} className="transition-transform duration-500 group-hover:scale-105" />
+        {car.soldOut && <span className="absolute left-3 top-3 rounded-full bg-foreground px-3 py-1 text-xs font-bold uppercase tracking-wider text-background">Sold out</span>}
       </Link>
 
       <div className="flex flex-1 flex-col p-5">
@@ -59,20 +66,27 @@ export default function CarCard({ car, trip }: { car: Car; trip?: Record<string,
           </div>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-2.5">
+        {car.payNowLabel && !car.soldOut && <p className="mt-4 text-center text-xs font-semibold text-[#4f9a0e]">{car.payNowLabel}</p>}
+        <div className="mt-3 grid grid-cols-2 gap-2.5">
           <Link
-            href={`/fleet/${car.id}`}
+            href={detailsHref}
             className={cn(buttonVariants({ variant: "outline" }), "h-11 rounded-xl border-foreground/15 bg-white text-sm font-semibold text-foreground shadow-none hover:border-foreground/40 hover:bg-muted")}
           >
             View Details
           </Link>
-          <Link
-            href={bookHref}
-            className={cn(buttonVariants(), "h-11 gap-1.5 rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-[0_10px_22px_-10px_rgba(139,214,47,0.9)] hover:bg-primary/90")}
-          >
-            Book Now
-            <ArrowUpRight className="size-4" aria-hidden />
-          </Link>
+          {car.soldOut ? (
+            <button type="button" disabled className="h-11 cursor-not-allowed rounded-xl bg-muted text-sm font-semibold text-muted-foreground">
+              Sold out
+            </button>
+          ) : (
+            <Link
+              href={bookHref}
+              className={cn(buttonVariants(), "h-11 gap-1.5 rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-[0_10px_22px_-10px_rgba(139,214,47,0.9)] hover:bg-primary/90")}
+            >
+              Book Now
+              <ArrowUpRight className="size-4" aria-hidden />
+            </Link>
+          )}
         </div>
       </div>
     </article>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import FooterAbn from "@/components/FooterAbn";
 import { contactInfo } from "@/lib/contact";
 
 type FooterLink = { label: string; href: string };
@@ -159,7 +160,7 @@ export default function Footer() {
         <div className="mt-14 flex flex-col gap-2 border-t border-secondary-foreground/10 py-6 text-xs text-secondary-foreground/55 sm:flex-row sm:items-center sm:justify-between">
           <p>
             &copy; {new Date().getFullYear()} TasDrive Rentals. All rights
-            reserved. ABN XX XXX XXX XXX
+            reserved. <FooterAbn />
           </p>
           <p>Tasmania, Australia</p>
         </div>
