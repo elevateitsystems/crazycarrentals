@@ -8,8 +8,9 @@ import SectionHeading from "@/components/SectionHeading";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { slotLabel, useTimeSlots } from "@/hooks/use-time-slots";
+import { slotLabel, useBookingExtras, useTimeSlots } from "@/hooks/use-time-slots";
 import { RENTAL_LOCATION_LABEL } from "@/lib/locations";
+import { money } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 const fields = [
@@ -42,7 +43,9 @@ export default function SearchSection() {
   const [sameLocation, setSameLocation] = useState(true);
   const [airportShuttle, setAirportShuttle] = useState(false);
   const router = useRouter();
-  const timeSlots = useTimeSlots();
+  const { pickupTimes, returnTimes } = useTimeSlots();
+  const { data: catalog } = useBookingExtras();
+  const airportTransfer = catalog?.airportShuttle;
   const today = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD in the visitor's timezone
 
   // Hands the trip details to /rent-a-car, which queries the backend's availability search.
@@ -53,6 +56,7 @@ export default function SearchSection() {
     for (const [key, value] of form.entries()) {
       if (typeof value === "string" && value) params.set(key, value);
     }
+    if (sameLocation && params.get("pickupLocation")) params.set("returnLocation", params.get("pickupLocation")!);
     if (airportShuttle) params.set("airportShuttle", "1");
     router.push(`/rent-a-car?${params}`);
   };
@@ -73,7 +77,7 @@ export default function SearchSection() {
           <option value="" disabled>
             Select time
           </option>
-          {timeSlots.map((t) => (
+          {(f.id === "pickupTime" ? pickupTimes : returnTimes).map((t) => (
             <option key={t} value={t}>
               {slotLabel(t)}
             </option>
@@ -116,9 +120,11 @@ export default function SearchSection() {
             <div className="flex items-center gap-3">
               <Switch id="airportShuttle" checked={airportShuttle} onCheckedChange={setAirportShuttle} className="data-[state=checked]:bg-[#86d72f]" />
               <Label htmlFor="airportShuttle" className="text-sm font-medium">
-                Complimentary Airport Transfers
+                {airportTransfer?.name ?? "Airport transfer"}
               </Label>
+              {airportTransfer?.price != null && <span className="text-sm text-muted-foreground">{money(airportTransfer.price)}</span>}
             </div>
+            {airportTransfer?.description && <p className="basis-full pl-9 text-xs text-muted-foreground">{airportTransfer.description}</p>}
           </div>
 
           <div className="space-y-6 p-5 sm:p-8">

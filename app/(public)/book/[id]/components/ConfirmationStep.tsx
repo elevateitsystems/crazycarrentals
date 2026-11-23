@@ -21,7 +21,7 @@ export default function ConfirmationStep({ car, data, booking }: Props) {
   const payment = latestPayment(booking);
   const paymentStatus = payment?.status;
   const payNow = data.paymentTiming === "payNow";
-  const pending = payNow && paymentStatus !== "COMPLETED";
+  const pending = payNow && (booking.isActive === false || status === "PENDING" || (paymentStatus != null && paymentStatus !== "COMPLETED"));
   const card = payment?.cardLast4 ? `${enumLabel(payment.cardBrand ?? "Card")} •••• ${payment.cardLast4}` : null;
 
   const pickup = formatDateTime(data.pickupDate, data.pickupTime);

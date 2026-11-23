@@ -32,7 +32,15 @@ import CardPayment from "./CardPayment";
 export default function BookingFlow({ carId }: { carId: string }) {
   const searchParams = useSearchParams();
   const { user } = useAuth();
-  const carState = useAsync(async () => (await carsApi.get(carId)).data, carId);
+  const availabilityQuery = {
+    pickupDate: searchParams.get("pickupDate") ?? undefined,
+    pickupTime: searchParams.get("pickupTime") ?? undefined,
+    returnDate: searchParams.get("returnDate") ?? undefined,
+    returnTime: searchParams.get("returnTime") ?? undefined,
+    pickupLocation: searchParams.get("pickupLocation") ?? undefined,
+    age: searchParams.get("age") ?? undefined,
+  };
+  const carState = useAsync(async () => (await carsApi.get(carId, availabilityQuery)).data, `${carId}:${searchParams.toString()}`);
 
   const [step, setStep] = useState(1);
   const [data, setData] = useState<BookingData>(() => initialBooking(searchParams));
@@ -44,8 +52,10 @@ export default function BookingFlow({ carId }: { carId: string }) {
   const [needsLogin, setNeedsLogin] = useState(false);
 
   const [estimate, setEstimate] = useState<Estimate | null>(null);
+  const [estimatedKey, setEstimatedKey] = useState<string | null>(null);
   const [estimating, setEstimating] = useState(false);
   const [estimateError, setEstimateError] = useState<string | null>(null);
+  const [estimateErrorKey, setEstimateErrorKey] = useState<string | null>(null);
 
   const update = (patch: Partial<BookingData>) => setData((prev) => ({ ...prev, ...patch }));
 
@@ -74,13 +84,18 @@ export default function BookingFlow({ carId }: { carId: string }) {
     const timer = setTimeout(async () => {
       setEstimating(true);
       setEstimateError(null);
+      setEstimateErrorKey(null);
       try {
         const res = await bookingsApi.estimate({ ...toTripInput(carId, data), paymentOption: paymentOption(data) });
-        if (!cancelled) setEstimate(readEstimate(res.data));
+        if (!cancelled) {
+          setEstimate(readEstimate(res.data));
+          setEstimatedKey(estimateKey);
+        }
       } catch (err) {
         if (!cancelled) {
           setEstimate(null);
           setEstimateError(err instanceof Error ? err.message : "Could not calculate the price.");
+          setEstimateErrorKey(estimateKey);
         }
       } finally {
         if (!cancelled) setEstimating(false);
@@ -94,6 +109,10 @@ export default function BookingFlow({ carId }: { carId: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carId, canEstimate, estimateKey]);
 
+  const currentEstimate = estimatedKey === estimateKey ? estimate : null;
+  const currentEstimateError = estimateErrorKey === estimateKey ? estimateError : null;
+  const estimateReady = Boolean(currentEstimate && !estimating);
+
   const go = (to: number) => {
     setStep(to);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -102,6 +121,20 @@ export default function BookingFlow({ carId }: { carId: string }) {
   const onBack = () => go(Math.max(step - 1, 1));
 
   const submit = async () => {
+    const validEmail = /^\S+@\S+\.\S+$/.test(data.email);
+    const validPhone = data.phone.trim().length >= 6;
+    if (!data.firstName.trim() || !data.lastName.trim() || !validEmail || !validPhone || !data.pickupLocation.trim() || !(data.returnLocation || data.pickupLocation).trim() || !data.pickupTime || !data.returnTime || !data.acceptedTerms) {
+      setSubmitError("Please complete all renter details, locations, dates, times, and accept the terms before continuing.");
+      return;
+    }
+    if (!estimateReady || !currentEstimate) {
+      setSubmitError("Please wait for the latest availability and price check to finish.");
+      return;
+    }
+    if (!currentEstimate.available) {
+      setSubmitError(currentEstimate.unavailableReason ?? "This vehicle is not available for these dates.");
+      return;
+    }
     setSubmitting(true);
     setSubmitError(null);
     setNeedsLogin(false);
@@ -133,6 +166,7 @@ export default function BookingFlow({ carId }: { carId: string }) {
     );
   }
   const car = toCar(carState.data);
+  const vehicleUnavailable = car.soldOut ? "Sold out" : null;
   const stepProps = { data, update, onNext, onBack };
 
   return (
@@ -145,7 +179,7 @@ export default function BookingFlow({ carId }: { carId: string }) {
         ) : (
           <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]">
             <div>
-              {step === 1 && <VehicleStep car={car} {...stepProps} />}
+              {step === 1 && <VehicleStep car={car} unavailable={vehicleUnavailable} {...stepProps} />}
               {step === 2 && <ExtrasStep {...stepProps} />}
               {step === 3 && <DetailsStep {...stepProps} />}
               {step === 4 && hold && (
@@ -164,9 +198,10 @@ export default function BookingFlow({ carId }: { carId: string }) {
               )}
               {step === 4 && !hold && (
                 <PaymentStep
-                  total={estimate?.total}
-                  estimate={estimate}
-                  unavailable={estimate && !estimate.available ? estimate.unavailableReason ?? "This vehicle isn't available for those dates." : null}
+                  total={currentEstimate?.total}
+                  estimate={currentEstimate}
+                  estimateReady={estimateReady}
+                  unavailable={currentEstimate && !currentEstimate.available ? currentEstimate.unavailableReason ?? "This vehicle isn't available for those dates." : null}
                   submitting={submitting}
                   error={submitError}
                   needsLogin={needsLogin}
@@ -175,7 +210,7 @@ export default function BookingFlow({ carId }: { carId: string }) {
                 />
               )}
             </div>
-            <OrderSummary car={car} estimate={estimate} estimating={estimating} error={estimateError} hasDates={canEstimate} protectionName={data.protectionName} />
+            <OrderSummary car={car} estimate={currentEstimate} estimating={estimating} error={currentEstimateError} hasDates={canEstimate} protectionName={data.protectionName} />
           </div>
         )}
       </div>

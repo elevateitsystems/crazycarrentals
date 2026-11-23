@@ -107,6 +107,11 @@ function CheckoutForm({ booking, data, carId, onPaid, onReset }: Props) {
     setPaidIntentId(paymentIntentId);
     try {
       const res = await bookingsApi.confirmPayment(booking.id, { email, stripePaymentIntentId: paymentIntentId });
+      const confirmed = res.data?.isActive === true || res.data?.status === "CONFIRMED";
+      if (!confirmed) {
+        setError("Your payment was received, but the booking is still awaiting backend confirmation. Please try again shortly; you will not be charged twice.");
+        return;
+      }
       pendingPayment.clear();
       onPaid(res.data);
     } catch (err) {

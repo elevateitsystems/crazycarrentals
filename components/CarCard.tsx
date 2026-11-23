@@ -12,6 +12,7 @@ export type Car = {
   type: string;
   image: string;
   price: number;
+  basePrice: number;
   seats: number;
   doors: number;
   transmission: string;
@@ -26,11 +27,12 @@ export default function CarCard({ car, trip }: { car: Car; trip?: Record<string,
   const bookHref = `/book/${car.id}${query}`;
   const detailsHref = `/fleet/${car.id}${query}`;
   const specs: { icon: LucideIcon; label: string; value: string | number }[] = [
-    { icon: Users, label: "Seats", value: `${car.seats} ${car.seats === 1 ? "seat" : "seats"}` },
-    { icon: DoorClosed, label: "Doors", value: `${car.doors} ${car.doors === 1 ? "door" : "doors"}` },
+    { icon: Users, label: "Seats", value: car.details?.seats != null ? `${car.details.seats} ${car.details.seats === 1 ? "seat" : "seats"}` : `${car.seats} seats` },
+    { icon: DoorClosed, label: "Doors", value: car.details?.doors != null ? `${car.details.doors} ${car.details.doors === 1 ? "door" : "doors"}` : `${car.doors} doors` },
     { icon: Cog, label: "Transmission", value: car.transmission },
     { icon: Fuel, label: "Fuel", value: car.fuel },
   ];
+  if (car.details?.mileage != null) specs.push({ icon: Fuel, label: "Mileage", value: String(car.details.mileage) });
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-[0_1px_2px_rgba(17,21,18,0.04)] transition duration-300 hover:border-primary/50 hover:shadow-[0_24px_48px_-24px_rgba(17,21,18,0.35)] motion-safe:hover:-translate-y-1">

@@ -27,7 +27,7 @@ export default function FleetListing() {
 
   // Trip details from the reservation form; when present the backend's availability search is used.
   const trip = useMemo(() => {
-    const keys = ["pickupLocation", "pickupDate", "pickupTime", "returnDate", "returnTime", "age", "returnLocation", "airportShuttle"] as const;
+    const keys = ["pickupLocation", "pickupDate", "pickupTime", "returnDate", "returnTime", "age", "returnLocation", "airportShuttle", "transmission", "fuelType", "brand", "searchTerm", "minPrice", "maxPrice"] as const;
     const out: Record<string, string> = {};
     for (const k of keys) {
       const v = params.get(k);
@@ -35,13 +35,12 @@ export default function FleetListing() {
     }
     return out;
   }, [params]);
-  const hasTrip = Boolean(trip.pickupDate && trip.returnDate);
+  const hasTrip = Boolean(trip.pickupDate && trip.pickupTime && trip.returnDate && trip.returnTime);
   // Set by the homepage's Vehicle Types cards (/rent-a-car?carType=SEDAN).
   const carType = params.get("carType") ?? undefined;
 
   const [sortBy, sortOrder] = sort.split(":");
-  const { returnLocation: _r, airportShuttle: _a, ...searchTrip } = trip; // booking-only params
-  void _r;
+  const { airportShuttle: _a, ...searchTrip } = trip; // airportShuttle is sent to estimates, not vehicle search
   void _a;
   const query = {
     ...(hasTrip ? searchTrip : {}),
