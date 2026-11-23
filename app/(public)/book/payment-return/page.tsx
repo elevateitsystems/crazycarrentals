@@ -45,7 +45,10 @@ function PaymentReturn() {
         try {
           const res = await bookingsApi.confirmPayment(pending.bookingId, { email: pending.email, stripePaymentIntentId: intentId });
           pendingPayment.clear();
-          if (!cancelled) setOutcome({ kind: "paid", booking: res.data });
+          if (!cancelled) {
+            const confirmed = res.data?.isActive === true || res.data?.status === "CONFIRMED";
+            setOutcome(confirmed ? { kind: "paid", booking: res.data } : { kind: "unconfirmed", reference: pending.reference, message: "Payment was received, but the backend is still activating the booking." });
+          }
         } catch (err) {
           if (!cancelled)
             setOutcome({

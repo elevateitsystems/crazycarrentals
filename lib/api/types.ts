@@ -81,6 +81,8 @@ export type Car = {
   payNowLabel?: string;
   /** With dates: booked or held for them. Without: the admin's switch for closing the vehicle. */
   soldOut?: boolean;
+  /** Search/list responses may include the undiscounted base rate alongside pricePerDay. */
+  basePricePerDay?: number | string;
   suitcases?: number;
   airConditioning?: boolean;
   minimumDriverAge?: number;
@@ -139,8 +141,10 @@ export type ExtrasCatalog = {
   protections?: Protection[];
   airportShuttle?: { name?: string; price?: number; type?: string; description?: string };
   discounts?: { payNowDiscountPercent?: number; description?: string };
-  /** Pickup/return times, 08:00 to 20:00 in 15-minute steps. Use in the order given. */
+  /** Legacy shared time list. Prefer the separate pickup and return lists below. */
   timeSlots?: string[];
+  pickupTimeSlots?: string[];
+  returnTimeSlots?: string[];
   company?: { abn?: string; [key: string]: unknown };
   terms?: { acknowledgement?: string; [key: string]: unknown };
 };
@@ -296,6 +300,7 @@ export type CreateBookingInput = TripInput & {
 
 export type SearchQuery = {
   pickupLocation?: string;
+  returnLocation?: string;
   pickupDate?: string;
   pickupTime?: string;
   returnDate?: string;
@@ -303,4 +308,11 @@ export type SearchQuery = {
   age?: string | number;
   carType?: string;
   transmission?: string;
+  fuelType?: string;
+  brand?: string;
+  searchTerm?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  page?: number;
+  limit?: number;
 };

@@ -1,4 +1,4 @@
-export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4001/api").replace(/\/+$/, "");
+export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "https://backend.tasdriverentals.com.au/api").replace(/\/+$/, "");
 export const TOKEN_KEY = "crazycar.token";
 export const AUTH_EXPIRED_EVENT = "crazycar:auth-expired";
 

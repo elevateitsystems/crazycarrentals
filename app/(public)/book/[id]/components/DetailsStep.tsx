@@ -1,11 +1,15 @@
 import type { StepProps } from "@/lib/booking";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useBookingExtras } from "@/hooks/use-time-slots";
+import { money } from "@/lib/format";
 import FormField from "./FormField";
 import InfoNote from "./InfoNote";
 import StepCard from "./StepCard";
 
 export default function DetailsStep({ data, update, onNext, onBack }: StepProps) {
+  const { data: catalog } = useBookingExtras();
+  const airportTransfer = catalog?.airportShuttle;
   return (
     <StepCard
       title="Your details"
@@ -59,11 +63,12 @@ export default function DetailsStep({ data, update, onNext, onBack }: StepProps)
         <div className="mt-2 flex items-center justify-between gap-4 rounded-2xl border border-border bg-muted/30 p-5">
           <div className="flex flex-col gap-1">
             <Label htmlFor="airportShuttle" className="text-base font-semibold">
-              Complimentary Airport Transfers
+              {airportTransfer?.name ?? "Airport transfer"}
             </Label>
             <span className="text-sm text-muted-foreground">
-              Airport transfers are complimentary. We do not charge for this service.
+              {airportTransfer?.description ?? "Add an airport transfer to your booking."}
             </span>
+            {airportTransfer?.price != null && <span className="text-sm font-semibold text-foreground">{money(airportTransfer.price)}</span>}
           </div>
           <Switch
             id="airportShuttle"

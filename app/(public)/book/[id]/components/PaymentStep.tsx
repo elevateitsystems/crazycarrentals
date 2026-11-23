@@ -20,26 +20,29 @@ type Props = StepProps & {
   estimate?: Estimate | null;
   /** Set when the price check says the car can't be booked for these dates. */
   unavailable?: string | null;
+  /** Prevents checkout with an estimate from an earlier selection. */
+  estimateReady: boolean;
   submitting: boolean;
   error: string | null;
   needsLogin: boolean;
 };
 
-export default function PaymentStep({ total, estimate, unavailable, submitting, error, needsLogin, data, update, onNext, onBack }: Props) {
+export default function PaymentStep({ total, estimate, unavailable, estimateReady, submitting, error, needsLogin, data, update, onNext, onBack }: Props) {
   const payNow = data.paymentTiming === "payNow";
   const pathname = usePathname();
   // The discount percentage is owned by the backend; never hardcode it here.
   const catalog = useAsync(async () => (await bookingsApi.extras()).data, "pay-now-discount");
   const percent = catalog.data?.discounts?.payNowDiscountPercent ?? (payNow ? estimate?.discountPercentage : undefined) ?? 0;
   const saving = payNow ? estimate?.discount : undefined;
+  const optionTotal = payNow ? estimate?.payNowTotal ?? total : estimate?.payAtDeskTotal ?? total;
 
   return (
     <StepCard
       title="Payment"
       description="Choose when to pay. Your booking is created when you continue."
-      nextLabel={payNow ? (total != null ? `Continue to pay ${money(total)}` : "Continue to payment") : "Reserve Now, Pay Later"}
-      onSubmit={unavailable || !data.acceptedTerms ? () => {} : onNext}
-      nextDisabled={!data.acceptedTerms}
+      nextLabel={payNow ? (optionTotal != null ? `Continue to pay ${money(optionTotal)}` : "Continue to payment") : optionTotal != null ? `Reserve for ${money(optionTotal)}` : "Reserve Now, Pay Later"}
+      onSubmit={unavailable || !estimateReady || !data.acceptedTerms ? () => {} : onNext}
+      nextDisabled={Boolean(unavailable) || !estimateReady || !data.acceptedTerms}
       onBack={onBack}
       submitting={submitting}
       error={unavailable ?? error}
@@ -102,7 +105,7 @@ export default function PaymentStep({ total, estimate, unavailable, submitting, 
             <BadgePercent className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden />
             <p className="text-foreground">
               <span className="font-semibold">{percent}% Pay Now discount applied to the vehicle rate.</span>{" "}
-              {saving ? `You save ${money(saving)}${total != null ? `, bringing your total to ${money(total)}` : ""}. Protection and extras are not discounted.` : "Choose your dates to see how much you save."}
+              {saving ? `You save ${money(saving)}${optionTotal != null ? `, bringing your total to ${money(optionTotal)}` : ""}. Protection and extras are not discounted.` : "Choose your dates to see how much you save."}
             </p>
           </div>
         )

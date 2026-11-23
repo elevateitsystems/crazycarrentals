@@ -62,7 +62,7 @@ export const bookingsApi = {
   confirmPayment: (id: string, body: { email: string; stripePaymentIntentId: string }) =>
     request<Booking>(`/bookings/${id}/confirm-payment`, { method: "POST", body }),
   mine: () => request<Booking[]>("/bookings/my-bookings"),
-  mineById: (id: string) => request<Booking>(`/bookings/my-bookings/${id}`),
+  mineById: (id: string, email?: string) => request<Booking>(`/bookings/my-bookings/${id}`, { query: { email } }),
   /** A signed-in renter is identified by their token; a guest must send the booking email. */
   cancel: (id: string, body: { reason?: string; email?: string }) => request<unknown>(`/bookings/${id}/cancel`, { method: "POST", body }),
 };

@@ -6,8 +6,8 @@ import { slotLabel, useTimeSlots } from "@/hooks/use-time-slots";
 import FormField, { inputStyles } from "./FormField";
 import StepCard from "./StepCard";
 
-export default function VehicleStep({ car, data, update, onNext }: StepProps & { car: Car }) {
-  const timeSlots = useTimeSlots();
+export default function VehicleStep({ car, data, update, onNext, unavailable }: StepProps & { car: Car; unavailable?: string | null }) {
+  const { pickupTimes, returnTimes } = useTimeSlots();
   const timeSelect = (id: "pickupTime" | "returnTime") => (
     <select
       id={id}
@@ -20,7 +20,7 @@ export default function VehicleStep({ car, data, update, onNext }: StepProps & {
       <option value="" disabled>
         Select time
       </option>
-      {timeSlots.map((t) => (
+      {(id === "pickupTime" ? pickupTimes : returnTimes).map((t) => (
         <option key={t} value={t}>
           {slotLabel(t)}
         </option>
@@ -41,6 +41,8 @@ export default function VehicleStep({ car, data, update, onNext }: StepProps & {
       backHref="/fleet"
       backLabel="Back to Fleet"
       onSubmit={onNext}
+      nextDisabled={Boolean(unavailable)}
+      error={unavailable}
     >
       <div className="grid overflow-hidden rounded-2xl border-2 border-primary bg-card sm:grid-cols-[1fr_1.6fr]">
         <div className="relative h-52 sm:h-auto sm:min-h-56">

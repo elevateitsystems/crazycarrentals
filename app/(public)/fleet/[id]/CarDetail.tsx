@@ -9,6 +9,7 @@ import BrandLoader from "@/components/BrandLoader";
 import { ErrorState } from "@/components/Feedback";
 import { useAsync } from "@/hooks/use-async";
 import { carsApi } from "@/lib/api/services";
+import { publicMileage } from "@/lib/cars";
 import { carImages, carName, enumLabel, money } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -16,8 +17,17 @@ export default function CarDetail({ id }: { id: string }) {
   const params = useSearchParams();
   const pickupDate = params.get("pickupDate") ?? "";
   const returnDate = params.get("returnDate") ?? "";
-  const tripQuery = pickupDate && returnDate ? { pickupDate, returnDate } : undefined;
-  const { data, error, loading, reload } = useAsync(async () => (await carsApi.get(id, tripQuery)).data, `${id}:${pickupDate}:${returnDate}`);
+  const tripQuery = pickupDate && returnDate
+    ? {
+        pickupDate,
+        returnDate,
+        pickupTime: params.get("pickupTime") ?? undefined,
+        returnTime: params.get("returnTime") ?? undefined,
+        pickupLocation: params.get("pickupLocation") ?? undefined,
+        age: params.get("age") ?? undefined,
+      }
+    : undefined;
+  const { data, error, loading, reload } = useAsync(async () => (await carsApi.get(id, tripQuery)).data, `${id}:${params.toString()}`);
   const [selected, setSelected] = useState(0);
 
   if (loading) return <BrandLoader label="Loading vehicle…" />;
@@ -40,15 +50,15 @@ export default function CarDetail({ id }: { id: string }) {
     { icon: DoorClosed, label: "Doors", value: d?.doors != null ? `${d.doors} doors` : undefined },
     { icon: Briefcase, label: "Suitcases", value: d?.suitcases != null ? `${d.suitcases} suitcases` : undefined },
     { icon: Cog, label: "Transmission", value: d?.transmission ? enumLabel(d.transmission) : undefined },
-    { icon: Gauge, label: "Mileage", value: d?.mileage != null ? String(d.mileage) : undefined },
-    { icon: Snowflake, label: "Air conditioning", value: d?.airConditioning ? "Air-condition" : undefined },
+    { icon: Gauge, label: "Mileage", value: publicMileage(car) != null ? String(publicMileage(car)) : undefined },
+    { icon: Snowflake, label: "Air conditioning", value: d?.airConditioning != null ? (d.airConditioning ? "Yes" : "No") : undefined },
     { icon: UserRound, label: "Minimum driving age", value: d?.minimumDriverAge != null ? `Minimum Driving Age ${d.minimumDriverAge} years old` : undefined },
   ];
 
   return (
     <section className="bg-background py-8 md:py-12">
       <div className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
-        <Link href="/fleet" className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3.5 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-foreground/30 hover:text-foreground">
+        <Link href={tripQuery ? `/rent-a-car?${params.toString()}` : "/rent-a-car"} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-3.5 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-foreground/30 hover:text-foreground">
           <ArrowLeft className="size-3.5" aria-hidden /> Back to fleet
         </Link>
 
